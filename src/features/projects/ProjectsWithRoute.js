@@ -15,33 +15,15 @@ import Project from './Project';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProjects} from '../projects/projectsSlice';
 
-function Divider() {
-  return (
-    <View
-      style={{
-        margin: 6,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 20,
-      }}>
-      <View style={{height: '100%', width: 1, backgroundColor: 'black'}} />
-    </View>
-  );
-}
-
-function ProjectsList() {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const {projects} = useSelector((state) => state.projects);
-
-  useEffect(() => {
-    dispatch(getProjects());
-  }, [dispatch]);
+// Usage is identical to ../ProjectsList but this components accepts params
+// Using this for now to prevent spaghetti variables in a single component
+function ProjectsList({route}) {
+  const projects = route.params.projects;
 
   return (
     <View style={{padding: 10}}>
       {projects.map((project) => {
-        return <Project project={project} viewAs="coach" />;
+        return <Project project={project} viewAs="sub" />;
       })}
     </View>
   );

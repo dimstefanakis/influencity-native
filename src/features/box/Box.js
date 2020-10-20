@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, Text, TouchableNativeFeedback} from 'react-native';
-import {useTheme} from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import {View, TouchableNativeFeedback} from 'react-native';
+import {useTheme, Text} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PostBox from './PostsBox';
 
@@ -18,8 +18,8 @@ function getRandomColor() {
 function Box({item}) {
   const theme = useTheme();
   const navigation = useNavigation();
-  function handlePress(){
-    if(item.value == 'posts'){
+  function handlePress() {
+    if (item.value == 'posts') {
       navigation.navigate('NewPostsScreen');
     }
   }
@@ -52,7 +52,7 @@ function Box({item}) {
           ) : null}
           <Text
             style={{
-              fontWeight: 'bold',
+              ...theme.fonts.medium,
               fontSize: 18,
               color: theme.colors.textPrimary,
             }}>

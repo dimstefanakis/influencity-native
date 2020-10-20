@@ -29,7 +29,7 @@ function CoachActionsList() {
 
   return (
     <View>
-      <Text style={{margin: 10, fontSize: 40, fontFamily: 'RFlexBold-VGzLZ'}}>
+      <Text style={{margin: 10, fontSize: 40, fontFamily: 'Nunito-ExtraBold'}}>
         {user.coach.name}
       </Text>
       <ScrollView

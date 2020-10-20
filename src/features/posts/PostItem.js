@@ -7,7 +7,7 @@ import Config from 'react-native-config';
 
 const {width: screenWidth} = Dimensions.get('window');
 
-function PostItem({post}) {
+function PostItem({post, showProfile = true}) {
   function renderItem({item, index}, parallaxProps) {
     return (
       <View style={styles.item}>
@@ -26,7 +26,7 @@ function PostItem({post}) {
   }
   return (
     <View>
-      <View style={{padding: 10, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{margin: 20, flexDirection: 'row', alignItems: 'center'}}>
         <Avatar.Image
           size={40}
           source={{uri: Config.DOMAIN + post.coach.avatar}}
@@ -35,8 +35,8 @@ function PostItem({post}) {
           {post.coach.name}
         </Subheading>
       </View>
-      <View style={{padding: 10}}>
-        <Text>{post.text}</Text>
+      <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
+        <Text style={{fontSize: 16}}>{post.text}</Text>
       </View>
       <Carousel
         sliderWidth={screenWidth}

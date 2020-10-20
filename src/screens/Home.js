@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, ScrollView, Image, Text} from 'react-native';
+import {View, ScrollView, Image} from 'react-native';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
 import CoachActionsList from '../features/coachActionsList/CoachActionsList';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Text} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 
 let url =
@@ -36,7 +36,7 @@ function Home() {
     <ScrollView style={{height: '100%'}}>
       {user.is_coach ? <CoachActionsList /> : null}
 
-      <Text style={{margin: 10, fontSize: 40, fontFamily: 'RFlexBold-VGzLZ'}}>
+      <Text style={{margin: 10, fontSize: 40, fontFamily: 'Nunito-ExtraBold'}}>
         Your coaches
       </Text>
       <CoachHorizontalList />
@@ -45,7 +45,8 @@ function Home() {
           margin: 10,
           color: 'black',//'#1890ff',
           fontSize: 40,
-          fontFamily: 'RFlexBold-VGzLZ',
+          //fontFamily: 'RFlexBold-VGzLZ',
+          fontFamily: 'Nunito-ExtraBold',
         }}>
         Dashboard
       </Text>
