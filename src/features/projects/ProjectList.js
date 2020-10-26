@@ -13,12 +13,13 @@ import {
 } from 'react-native-paper';
 import Project from './Project';
 import {useDispatch, useSelector} from 'react-redux';
-import {getProjects} from '../projects/projectsSlice';
+import {getProjects} from './projectsSlice';
 
-// Usage is identical to ../ProjectsList but this components accepts params
+// Usage is identical to ./MyCreatedProjects and ./MyProjects
+// but this components accepts params and a "projectList" prop
 // Using this for now to prevent spaghetti variables in a single component
-function ProjectsList({route}) {
-  const projects = route.params.projects;
+function ProjectsList({route, projectList = []}) {
+  const projects = route ? route.params.projects : projectList;
 
   return (
     <View style={{padding: 10}}>

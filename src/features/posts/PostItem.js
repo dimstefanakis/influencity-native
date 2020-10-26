@@ -26,7 +26,7 @@ function PostItem({post, showProfile = true}) {
   }
   return (
     <View>
-      <View style={{margin: 20, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}>
         <Avatar.Image
           size={40}
           source={{uri: Config.DOMAIN + post.coach.avatar}}
@@ -35,7 +35,7 @@ function PostItem({post, showProfile = true}) {
           {post.coach.name}
         </Subheading>
       </View>
-      <View style={{marginLeft: 20, marginRight: 20, marginBottom: 10}}>
+      <View style={{marginLeft: 10, marginRight: 10, marginBottom: 10}}>
         <Text style={{fontSize: 16}}>{post.text}</Text>
       </View>
       <Carousel

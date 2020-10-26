@@ -4,6 +4,7 @@ import {View, ScrollView, Image} from 'react-native';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
 import CoachActionsList from '../features/coachActionsList/CoachActionsList';
+import PostList from '../features/posts/PostList';
 import {useTheme, Text} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 
@@ -12,7 +13,7 @@ let url =
 let colOneItems = [
   {
     value: 'posts',
-    title: 'New Posts',
+    title: 'Your feed',
   },
   {
     title: 'Milestones',
@@ -33,7 +34,7 @@ function Home() {
   const {user} = useSelector((state) => state.authentication);
 
   return (
-    <ScrollView style={{height: '100%'}}>
+    /*<ScrollView style={{height: '100%'}}>
       {user.is_coach ? <CoachActionsList /> : null}
 
       <Text style={{margin: 10, fontSize: 40, fontFamily: 'Nunito-ExtraBold'}}>
@@ -43,7 +44,7 @@ function Home() {
       <Text
         style={{
           margin: 10,
-          color: 'black',//'#1890ff',
+          color: 'black', //'#1890ff',
           fontSize: 40,
           //fontFamily: 'RFlexBold-VGzLZ',
           fontFamily: 'Nunito-ExtraBold',
@@ -68,7 +69,26 @@ function Home() {
           })}
         </View>
       </View>
-    </ScrollView>
+    </ScrollView>*/
+    <PostList ListHeaderComponent={FeedHeaderComponent}/>
+  );
+}
+
+function FeedHeaderComponent() {
+  const {user} = useSelector((state) => state.authentication);
+
+  return (
+    <>
+      {user.is_coach ? <CoachActionsList /> : null}
+
+      <Text style={{margin: 10, fontSize: 35, fontFamily: 'Nunito-ExtraBold'}}>
+        Your coaches
+      </Text>
+      <CoachHorizontalList />
+      <Text style={{margin: 10, fontSize: 35, fontFamily: 'Nunito-ExtraBold'}}>
+        Your feed
+      </Text>
+    </>
   );
 }
 

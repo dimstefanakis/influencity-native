@@ -12,14 +12,21 @@ import {
   Chip,
   useTheme,
 } from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProjects} from '../projects/projectsSlice';
 
 function Project({project, viewAs = 'sub'}) {
   const theme = useTheme();
+  const navigation = useNavigation();
+  function handleProjectClick() {
+    if (viewAs == 'sub') {
+      navigation.navigate('ProjectDashboardScreen', {project: project});
+    }
+  }
 
   return (
-    <TouchableNativeFeedback onPress={() => {}}>
+    <TouchableNativeFeedback onPress={handleProjectClick}>
       <Surface style={styles.surface}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Avatar.Icon size={30} icon="code-tags" color="white" />

@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useTheme, Avatar, Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
@@ -19,12 +19,12 @@ function CoachActionsList() {
   const navigation = useNavigation();
   console.log(user);
 
-  function handleCreatePostPress(){
+  function handleCreatePostPress() {
     navigation.navigate('PostEditor');
-  } 
+  }
 
-  function handleViewProjectsPress(){
-    navigation.navigate('ProjectsScreen');
+  function handleViewProjectsPress() {
+    navigation.navigate('MyCreatedProjectsScreen');
   }
 
   return (
@@ -53,7 +53,7 @@ function CoachActionsList() {
           mode="outlined"
           style={{borderRadius: 50, justifyContent: 'center'}}
           color="#1890ff"
-          contentStyle={{padding: 10, height:60}}
+          contentStyle={{padding: 10, height: 60}}
           dark={true}
           onPress={handleCreatePostPress}>
           Create post

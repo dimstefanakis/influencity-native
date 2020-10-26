@@ -34,9 +34,12 @@ import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
 import NewPostsScreen from './src/screens/NewPostsScreen';
 import {
-  ProjectsScreen,
-  ProjectsWithRouteScreen,
+  MyProjectsScreen,
+  MyCreatedProjectsScreen,
+  ProjectListScreen,
 } from './src/screens/ProjectsScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import ProjectDashboardScreen from './src/screens/ProjectDashboardScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
@@ -108,6 +111,8 @@ const App: () => React$Node = () => {
             swipeEnabled={false}
             tabBarPosition="bottom"
             tabBarOptions={{
+              tabStyle: {backgroundColor: 'white'},
+              style: {backgroundColor: 'white'},
               renderIndicator: () => null,
               showIcon: true,
               showLabel: false,
@@ -116,6 +121,13 @@ const App: () => React$Node = () => {
               tabBarIcon: ({focused, color, size}) => {
                 let iconName;
 
+                if (route.name === 'Projects') {
+                  return <AntDesign name="rocket1" size={24} color={color} />;
+                }
+
+                if (route.name === 'ProfileScreen') {
+                  return <AntDesign name={'user'} size={24} color={color} />;
+                }
                 if (route.name === 'Home') {
                   iconName = 'home';
                 } else {
@@ -129,8 +141,22 @@ const App: () => React$Node = () => {
                 return <AntDesign name={iconName} size={24} color={color} />;
               },
             })}>
-            <BottomStack.Screen name="Home" component={HomeStack} />
-            <BottomStack.Screen name="Search" component={SearchScreen} />
+            {token ? (
+              <>
+                <BottomStack.Screen name="Home" component={HomeStack} />
+                <BottomStack.Screen name="Search" component={SearchScreen} />
+                <BottomStack.Screen
+                  name="Projects"
+                  component={MyProjectsScreen}
+                />
+                <BottomStack.Screen
+                  name="ProfileScreen"
+                  component={ProfileScreen}
+                />
+              </>
+            ) : (
+              <BottomStack.Screen name="Login" component={Login} />
+            )}
           </BottomStack.Navigator>
         </NavigationContainer>
       </SafeAreaView>
@@ -139,14 +165,6 @@ const App: () => React$Node = () => {
 };
 
 function HomeStack() {
-  const {token} = useSelector((state) => state.authentication);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getUserData());
-  }, [dispatch, token]);
-
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -158,53 +176,61 @@ function HomeStack() {
           shadowOpacity: 0, // remove shadow on iOS
         },
       }}>
-      {token ? (
-        <>
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="CoachMainScreen"
-            component={CoachScreen}
+      <>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CoachMainScreen"
+          component={CoachScreen}
+          options={({route}) => {
+            //return {title: route.params.coach.name};
+            return {title: ''};
+          }}
+          //options={({route}) => ({title: route.params.coach.name})}
+          sharedElements={(route, otherRoute, showing) => {
+            if (otherRoute.name !== 'ProjectListScreen') {
+              const coach = route.params.coach;
+              console.log(coach, otherRoute.name);
+              return [`coach.${coach.name}.avatar`];
+            }
+          }}
+        />
+        <Stack.Screen
+          name="PostEditor"
+          component={PostEditor}
+          options={{title: 'Create post'}}
+        />
+        <Stack.Screen
+          name="NewPostsScreen"
+          component={NewPostsScreen}
+          options={{title: ''}}
+        />
+        {/*<Stack.Screen
+            name="MyProjectsScreen"
+            component={MyProjectsScreen}
+            options={{title: 'My projects'}}
+          />*/}
+        <Stack.Screen
+          name="MyCreatedProjectsScreen"
+          component={MyCreatedProjectsScreen}
+          options={{title: 'My projects'}}
+        />
+        <Stack.Screen
+          name="ProjectListScreen"
+          component={ProjectListScreen}
+          options={{title: ''}}
+        />
+        {/*<Stack.Screen
+            name="ProjectDashboardScreen"
+            component={ProjectDashboardScreen}
             options={({route}) => {
-              //return {title: route.params.coach.name};
-              return {title: ''};
+              return {title: route.params.project.name};
             }}
-            //options={({route}) => ({title: route.params.coach.name})}
-            sharedElements={(route, otherRoute, showing) => {
-              if (otherRoute.name !== 'ProjectsWithRouteScreen') {
-                const coach = route.params.coach;
-                console.log(coach, otherRoute.name);
-                return [`coach.${coach.name}.avatar`];
-              }
-            }}
-          />
-          <Stack.Screen
-            name="PostEditor"
-            component={PostEditor}
-            options={{title: 'Create post'}}
-          />
-          <Stack.Screen
-            name="NewPostsScreen"
-            component={NewPostsScreen}
-            options={{title: ''}}
-          />
-          <Stack.Screen
-            name="ProjectsScreen"
-            component={ProjectsScreen}
-            options={{title: ''}}
-          />
-          <Stack.Screen
-            name="ProjectsWithRouteScreen"
-            component={ProjectsWithRouteScreen}
-            options={{title: ''}}
-          />
-        </>
-      ) : (
-        <Stack.Screen name="Login" component={Login} />
-      )}
+          />*/}
+      </>
     </Stack.Navigator>
   );
 }

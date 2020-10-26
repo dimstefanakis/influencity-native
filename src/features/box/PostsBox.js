@@ -1,51 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {Avatar, Text} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
-import {getPosts} from '../posts/postsSlice';
+import {getPosts, getNewPosts} from '../posts/postsSlice';
 
 function PostBox() {
-  const {posts} = useSelector((state) => state.posts);
+  const {newPosts} = useSelector((state) => state.posts);
   const navigation = useNavigation();
-  const [results, setResults] = useState(posts);
+  const [results, setResults] = useState(newPosts);
   const [coaches, setCoaches] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getPosts());
+    dispatch(getNewPosts());
   }, [dispatch]);
 
-  function getCoaches() {
-    let coaches = [];
-    let postsPerCoach = {};
-    posts.map((p) => {
-      // search "p"'s coach in coaches, if he doesn't exists add him to the list
-      if (!coaches.some((c) => c.name == p.coach.name)) {
-        coaches.push(p.coach);
-      }
-    });
-
-    posts.map((p) => {
-      if (!postsPerCoach[p.coach.name]) {
-        postsPerCoach[p.coach.name] = {};
-      }
-      let currCoachPosts = postsPerCoach[p.coach.name].posts;
-      postsPerCoach[p.coach.name].posts = currCoachPosts
-        ? [...currCoachPosts, p]
-        : [];
-    });
-    setResults(postsPerCoach);
-  }
-
-  useEffect(() => {
-    console.log('results', results);
-  }, [results]);
-  useEffect(() => {
-    getCoaches();
-  }, [posts]);
-
-  return <View />;
+  console.log(newPosts);
+  return newPosts && newPosts.length > 0 ? (
+    <View style={{marginTop: 10}}>
+      {newPosts.map((bundle) => {
+        console.log(bundle);
+        return (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Avatar.Image
+              size={24}
+              source={{uri: Config.DOMAIN + bundle.coach.avatar}}
+            />
+            <Text style={{marginLeft: 5}}>
+              {bundle.new_posts.length} new posts
+            </Text>
+          </View>
+        );
+      })}
+    </View>
+  ) : null;
 }
 
 export default PostBox;

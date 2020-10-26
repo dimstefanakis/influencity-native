@@ -266,7 +266,7 @@ function Projects({coach}) {
         <Chip
           mode="outlined"
           onPress={() =>
-            navigation.navigate('ProjectsWithRouteScreen', {
+            navigation.navigate('ProjectListScreen', {
               projects: [projects[0]],
             })
           }

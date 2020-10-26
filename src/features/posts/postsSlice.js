@@ -18,10 +18,25 @@ export const getPosts = createAsyncThunk(
   },
 );
 
+export const getNewPosts = createAsyncThunk(
+  'posts/getNewPosts',
+  async (arg, thunkApi) => {
+    const url = Config.API_URL + '/v1/new_posts/';
+    try {
+      console.log(url);
+      let response = await axios.get(url);
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
 export const postsSlice = createSlice({
   name: 'posts',
   initialState: {
     posts: [],
+    newPosts: [],
     loading: false,
   },
   extraReducers: {
@@ -35,5 +50,10 @@ export const postsSlice = createSlice({
     [getPosts.rejected]: (state, action) => {
       state.loading = false;
     },
+    [getNewPosts.fulfilled]: (state, action) => {
+      state.newPosts = action.payload;
+    },
+    [getNewPosts.pending]: (state, action) => {},
+    [getNewPosts.rejected]: (state, action) => {},
   },
 });
