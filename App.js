@@ -41,8 +41,10 @@ import {
 import ProfileScreen from './src/screens/ProfileScreen';
 import ProjectDashboardScreen from './src/screens/ProjectDashboardScreen';
 import SearchScreen from './src/screens/SearchScreen';
+import SelectTierScreen from './src/screens/SelectTierScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
+import {getMyTiers} from './src/features/tiers/tiersSlice';
 
 const fontConfig = {
   default: {
@@ -96,6 +98,7 @@ const App: () => React$Node = () => {
 
   useEffect(() => {
     dispatch(getUserData());
+    dispatch(getMyTiers());
   }, [dispatch, token]);
 
   console.log(user);
@@ -222,6 +225,11 @@ function HomeStack() {
           name="ProjectListScreen"
           component={ProjectListScreen}
           options={{title: ''}}
+        />
+        <Stack.Screen
+          name="SelectTierScreen"
+          component={SelectTierScreen}
+          options={{title: 'Select tier'}}
         />
         {/*<Stack.Screen
             name="ProjectDashboardScreen"

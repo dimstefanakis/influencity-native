@@ -3,6 +3,7 @@ import {authenticationSlice} from './features/authentication/authenticationSlice
 import {postsSlice} from './features/posts/postsSlice';
 import {projectsSlice} from './features/projects/projectsSlice';
 import {expertiseSlice} from './features/expertise/expertiseSlice';
+import {tiersSlice} from './features/tiers/tiersSlice';
 
 export default configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export default configureStore({
     posts: postsSlice.reducer,
     projects: projectsSlice.reducer,
     expertiseFields: expertiseSlice.reducer,
+    tiers: tiersSlice.reducer,
   },
 });

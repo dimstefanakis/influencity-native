@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
   Text,
   View,
@@ -8,6 +8,8 @@ import {
   Keyboard,
   Dimensions,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+
 import {TextInput, Button, Subheading} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -43,36 +45,98 @@ function useKeyboardOpen() {
   return isKeyboardVisible;
 }
 function ChainedPostsCarousel() {
-  const [postCount, setPostCount] = useState(1);
+  const navigation = useNavigation();
   const [posts, setPosts] = useState([
     {
-      index: 1,
+      index: 0,
       text: '',
       images: [],
     },
   ]);
 
-  function renderItem({item, index}) {
-    return <PostEditor post={item} index={index} posts={posts} />;
+  async function handleCreatePosts() {
+    let newPostIds = [];
+
+    // first create each post separetaly
+    for await (let post of posts) {
+      try {
+        let url = Config.API_URL + '/v1/posts/';
+        let formData = new FormData();
+        formData.append('text', post.text);
+        let response = await axios.post(url, formData);
+        let {id} = response.data;
+        newPostIds.push(id);
+        console.log(response);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // then chain them all together
+    // doing this until a new endpoint is added which handle everything at once
+    console.log(posts.length);
+    if (posts.length > 1) {
+      try {
+        let url = Config.API_URL + '/v1/chain_posts/';
+        let formData = new FormData();
+        formData.append('post_ids', JSON.stringify(newPostIds));
+        let response = await axios.post(url, formData);
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }
+
+  function handleSelectTier() {
+    navigation.navigate('SelectTierScreen');
+  }
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          onPress={handleSelectTier /*handleCreatePosts*/}
+          mode="contained"
+          labelStyle={{color: 'white'}}
+          style={{marginRight: 10, borderRadius: 100}}>
+          Post
+        </Button>
+      ),
+    });
+  }, [navigation]);
+
+  function renderItem({item, index}) {
+    return (
+      <PostEditor post={item} index={index} posts={posts} setPosts={setPosts} />
+    );
+  }
+
+  console.log('posts', posts);
 
   return (
     <Carousel
       sliderWidth={screenWidth}
       sliderHeight={screenWidth}
-      itemWidth={screenWidth - 60}
+      itemWidth={screenWidth}
       data={posts}
       renderItem={renderItem}
     />
   );
 }
 
-function PostEditor({post, index}) {
+function PostEditor({post, posts, setPosts, index}) {
   const isKeyboardVisible = useKeyboardOpen();
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
   function handleChangeText(value) {
-    setText(value);
+    let _post = post;
+    _post.text = value;
+    setPosts((oldPosts) => {
+      let foundIndex = oldPosts.findIndex((element) => element.index === index);
+      oldPosts[foundIndex] = _post;
+      return oldPosts;
+    });
+    //setText(value);
   }
 
   async function handleCreatePost() {
@@ -90,10 +154,30 @@ function PostEditor({post, index}) {
     ImagePicker.openPicker({
       multiple: true,
     }).then((results) => {
+      let _post = post;
+      _post.images = results;
+
+      setPosts((oldPosts) => {
+        let foundIndex = oldPosts.findIndex(
+          (element) => element.index === index,
+        );
+        oldPosts[foundIndex] = _post;
+        return oldPosts;
+      });
       console.log(images);
-      setImages([...images, ...results]);
+      //setImages([...images, ...results]);
     });
   }
+
+  function chainNewPost() {
+    setPosts((oldPosts) => {
+      const lastIndex = oldPosts[oldPosts.length - 1].index;
+      return [...oldPosts, {index: lastIndex + 1, text: '', images: []}];
+    });
+  }
+
+  console.log('post', post);
+
   return (
     <View
       style={{
@@ -120,7 +204,7 @@ function PostEditor({post, index}) {
               alignItems: 'center',
               width: '100%',
             }}>
-            {images.map((im) => {
+            {post.images.map((im) => {
               return (
                 <Image
                   source={{uri: im.path}}
@@ -149,7 +233,7 @@ function PostEditor({post, index}) {
                 <Subheading>Add media</Subheading>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={() => {}}>
+            <TouchableNativeFeedback onPress={chainNewPost}>
               <View
                 style={{
                   width: '50%',
@@ -178,4 +262,4 @@ function PostEditor({post, index}) {
   );
 }
 
-export default PostEditor;
+export default ChainedPostsCarousel;

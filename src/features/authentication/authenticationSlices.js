@@ -87,7 +87,6 @@ export const authenticationSlice = createSlice({
       state.loading = true;
     },
     [getUserData.fulfilled]: (state, action) => {
-      console.log(action);
       state.checkingForToken = false;
       state.token = action.payload.token;
       state.user = action.payload.user;
