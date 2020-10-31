@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, TouchableNativeFeedback} from 'react-native';
-import {Text, Title} from 'react-native-paper';
+import {Text, Title, useTheme} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -16,18 +16,19 @@ function getExpertisePreferences(value) {
 }
 
 export function SearchBox({expertise}) {
+  const theme = useTheme();
   let {colors, icon} = getExpertisePreferences(expertise.name);
   return (
     <View
       style={{
-        height: 150,
-        width: '40%',
-        margin: 20,
-        borderRadius: 25,
+        height: 130,
+        width: '45%',
+        margin: 4,
+        borderRadius: 5,
         overflow: 'hidden',
       }}>
       <TouchableNativeFeedback
-        style={{borderRadius: 25}}
+        style={{borderRadius: 5}}
         useForeground
         onPress={() => {}}>
         <LinearGradient
@@ -35,16 +36,27 @@ export function SearchBox({expertise}) {
           style={{
             height: '100%',
             width: '100%',
-            borderRadius: 25,
-            padding: 15,
-            justifyContent: 'center',
+            borderRadius: 5,
+            paddingTop: 15,
+            paddingBottom: 15,
+            paddingRight: 10,
+            paddingLeft: 10,
             alignItems: 'center',
           }}>
-          <Icon name={icon} color="white" size={60} />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Title style={{color: 'white', marginLeft: 6}}>
+          <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
+            <Text
+              style={{
+                color: 'white',
+                textAlign: 'left',
+                fontSize: 18,
+                flex: 1,
+                flexWrap: 'wrap',
+                marginRight: 15,
+                ...theme.fonts.medium,
+              }}>
               {expertise.name}
-            </Title>
+            </Text>
+            <Icon name={icon} color="white" size={40} />
           </View>
         </LinearGradient>
       </TouchableNativeFeedback>

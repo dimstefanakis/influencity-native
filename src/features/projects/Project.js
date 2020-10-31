@@ -47,13 +47,13 @@ function Project({project, viewAs = 'sub'}) {
         </View>
         {viewAs == 'coach' ? (
           <>
-            <TasksCompleted />
+            <TasksCompleted project={project} />
             <ReviewedTasksProgressBar />
             <TaskButtonsWrapper project={project} />
           </>
         ) : (
           <>
-            <Tasks />
+            <Tasks project={project} />
             <Team />
           </>
         )}
@@ -73,16 +73,18 @@ function TasksCompleted() {
   );
 }
 
-function Tasks() {
+function Tasks({project}) {
   const theme = useTheme();
 
   return (
     <View style={{marginTop: 20}}>
       <Headline>Tasks</Headline>
       <View>
-        <Task done>Setup pycharm</Task>
-        <Task>Setup anaconda</Task>
-        <Task>Setup pycharm</Task>
+        {project.milestones.map((milestone) => {
+          return (
+            <Task done={milestone.completed}>{milestone.description}</Task>
+          );
+        })}
       </View>
     </View>
   );

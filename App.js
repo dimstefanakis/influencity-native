@@ -7,6 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
@@ -17,7 +18,7 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
   configureFonts,
@@ -45,6 +46,8 @@ import SelectTierScreen from './src/screens/SelectTierScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
+import {getMyTeams} from './src/features/teams/teamsSlice';
+import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 
 const fontConfig = {
   default: {
@@ -69,7 +72,6 @@ const fontConfig = {
 
 //const Stack = createStackNavigator();
 const Stack = createSharedElementStackNavigator();
-//const Stack = createMaterialTopTabNavigator();
 const BottomStack = createMaterialTopTabNavigator();
 
 const theme = {
@@ -87,18 +89,23 @@ const theme = {
 function ReduxWrapper() {
   return (
     <Provider store={store}>
-      <App />
+      <SafeAreaProvider>
+        <App />
+      </SafeAreaProvider>
     </Provider>
   );
 }
-const App: () => React$Node = () => {
-  const {user, loading, token} = useSelector((state) => state.authentication);
 
+const App: () => React$Node = () => {
+  const isKeyboardOpen = useKeyboardOpen();
+  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {myTeams} = useSelector((state) => state.teams);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getUserData());
     dispatch(getMyTiers());
+    dispatch(getMyTeams());
   }, [dispatch, token]);
 
   console.log(user);
@@ -108,138 +115,152 @@ const App: () => React$Node = () => {
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{height: '100%'}}>
-        <NavigationContainer>
-          <BottomStack.Navigator
-            swipeEnabled={false}
-            tabBarPosition="bottom"
-            tabBarOptions={{
-              tabStyle: {backgroundColor: 'white'},
-              style: {backgroundColor: 'white'},
-              renderIndicator: () => null,
-              showIcon: true,
-              showLabel: false,
-            }}
-            screenOptions={({route}) => ({
-              tabBarIcon: ({focused, color, size}) => {
-                let iconName;
+      <NavigationContainer>
+        <BottomStack.Navigator
+          swipeEnabled={false}
+          tabBarPosition="bottom"
+          tabBarOptions={{
+            tabStyle: {backgroundColor: 'white'},
+            style: {
+              backgroundColor: 'white',
+              //height: isKeyboardOpen ? 0 : null,
+            },
+            renderIndicator: () => null,
+            showIcon: true,
+            showLabel: false,
+          }}
+          screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
 
-                if (route.name === 'Projects') {
-                  return <AntDesign name="rocket1" size={24} color={color} />;
-                }
+              if (route.name === 'Projects') {
+                return <AntDesign name="rocket1" size={24} color={color} />;
+              }
 
-                if (route.name === 'ProfileScreen') {
-                  return <AntDesign name={'user'} size={24} color={color} />;
-                }
-                if (route.name === 'Home') {
-                  iconName = 'home';
-                } else {
-                  return <AntDesign name={'search1'} size={24} color={color} />;
-                }
+              if (route.name === 'ProfileScreen') {
+                return <AntDesign name={'user'} size={24} color={color} />;
+              }
+              if (route.name === 'Home') {
+                iconName = 'home';
+              } else {
+                return <AntDesign name={'search1'} size={24} color={color} />;
+              }
 
-                if (route.name === 'Search') {
-                  iconName = 'search1';
-                }
+              if (route.name === 'Search') {
+                iconName = 'search1';
+              }
 
-                return <AntDesign name={iconName} size={24} color={color} />;
-              },
-            })}>
-            {token ? (
-              <>
-                <BottomStack.Screen name="Home" component={HomeStack} />
-                <BottomStack.Screen name="Search" component={SearchScreen} />
-                <BottomStack.Screen
-                  name="Projects"
-                  component={MyProjectsScreen}
-                />
-                <BottomStack.Screen
-                  name="ProfileScreen"
-                  component={ProfileScreen}
-                />
-              </>
-            ) : (
-              <BottomStack.Screen name="Login" component={Login} />
-            )}
-          </BottomStack.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
+              return <AntDesign name={iconName} size={24} color={color} />;
+            },
+          })}>
+          {token ? (
+            <>
+              <BottomStack.Screen name="Home" component={HomeStack} />
+              <BottomStack.Screen name="Search" component={SearchScreen} />
+              <BottomStack.Screen
+                name="Projects"
+                component={MyProjectsScreen}
+              />
+              <BottomStack.Screen
+                name="ProfileScreen"
+                component={ProfileScreen}
+              />
+            </>
+          ) : (
+            <BottomStack.Screen name="Login" component={Login} />
+          )}
+        </BottomStack.Navigator>
+      </NavigationContainer>
     </PaperProvider>
   );
 };
 
 function HomeStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        cardStyle: {backgroundColor: 'white'},
-        headerStyle: {
-          backgroundColor: 'white',
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0, // remove shadow on iOS
-        },
-      }}>
-      <>
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="CoachMainScreen"
-          component={CoachScreen}
-          options={({route}) => {
-            //return {title: route.params.coach.name};
-            return {title: ''};
-          }}
-          //options={({route}) => ({title: route.params.coach.name})}
-          sharedElements={(route, otherRoute, showing) => {
-            if (otherRoute.name !== 'ProjectListScreen') {
-              const coach = route.params.coach;
-              console.log(coach, otherRoute.name);
-              return [`coach.${coach.name}.avatar`];
-            }
-          }}
-        />
-        <Stack.Screen
-          name="PostEditor"
-          component={PostEditor}
-          options={{title: 'Create post'}}
-        />
-        <Stack.Screen
-          name="NewPostsScreen"
-          component={NewPostsScreen}
-          options={{title: ''}}
-        />
-        {/*<Stack.Screen
-            name="MyProjectsScreen"
-            component={MyProjectsScreen}
-            options={{title: 'My projects'}}
-          />*/}
-        <Stack.Screen
-          name="MyCreatedProjectsScreen"
-          component={MyCreatedProjectsScreen}
-          options={{title: 'My projects'}}
-        />
-        <Stack.Screen
-          name="ProjectListScreen"
-          component={ProjectListScreen}
-          options={{title: ''}}
-        />
-        <Stack.Screen
-          name="SelectTierScreen"
-          component={SelectTierScreen}
-          options={{title: 'Select tier'}}
-        />
-        {/*<Stack.Screen
-            name="ProjectDashboardScreen"
-            component={ProjectDashboardScreen}
-            options={({route}) => {
-              return {title: route.params.project.name};
+    <SafeAreaView style={{height: '100%'}}>
+      <Stack.Navigator
+        initialRouteName="Home"
+        mode="modal"
+        headerMode="screen"
+        screenOptions={{
+          gestureEnabled: true,
+          cardOverlayEnabled: true,
+          cardStyle: {backgroundColor: 'white'},
+          ...TransitionPresets.ModalPresentationIOS,
+          headerStyle: {
+            backgroundColor: 'white',
+            elevation: 0, // remove shadow on Android
+            shadowOpacity: 0, // remove shadow on iOS
+          },
+        }}>
+        <>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerShown: false,
             }}
-          />*/}
-      </>
-    </Stack.Navigator>
+          />
+          <Stack.Screen
+            name="CoachMainScreen"
+            component={CoachScreen}
+            options={({route}) => {
+              //return {title: route.params.coach.name};
+              return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+            }}
+            //options={({route}) => ({title: route.params.coach.name})}
+            sharedElements={(route, otherRoute, showing) => {
+              /*if (otherRoute.name !== 'ProjectListScreen') {
+                const coach = route.params.coach;
+                console.log(coach, otherRoute.name);
+                return [`coach.${coach.name}.avatar`];
+              }*/
+            }}
+          />
+          <Stack.Screen
+            name="PostEditor"
+            component={PostEditor}
+            options={{
+              title: 'Create post',
+            }}
+          />
+          <Stack.Screen
+            name="NewPostsScreen"
+            component={NewPostsScreen}
+            options={{title: ''}}
+          />
+          {/*<Stack.Screen
+              name="MyProjectsScreen"
+              component={MyProjectsScreen}
+              options={{title: 'My projects'}}
+            />*/}
+          <Stack.Screen
+            name="MyCreatedProjectsScreen"
+            component={MyCreatedProjectsScreen}
+            options={{title: 'My projects'}}
+          />
+          <Stack.Screen
+            name="ProjectListScreen"
+            component={ProjectListScreen}
+            options={{title: ''}}
+          />
+          <Stack.Screen
+            name="SelectTierScreen"
+            component={SelectTierScreen}
+            options={{
+              title: 'Select tier',
+            }}
+          />
+          {/*<Stack.Screen
+              name="ProjectDashboardScreen"
+              component={ProjectDashboardScreen}
+              options={({route}) => {
+                return {title: route.params.project.name};
+              }}
+            />*/}
+        </>
+      </Stack.Navigator>
+    </SafeAreaView>
   );
 }
 

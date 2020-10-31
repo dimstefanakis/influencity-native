@@ -4,6 +4,7 @@ import {postsSlice} from './features/posts/postsSlice';
 import {projectsSlice} from './features/projects/projectsSlice';
 import {expertiseSlice} from './features/expertise/expertiseSlice';
 import {tiersSlice} from './features/tiers/tiersSlice';
+import {teamsSlice} from './features/teams/teamsSlice';
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     projects: projectsSlice.reducer,
     expertiseFields: expertiseSlice.reducer,
     tiers: tiersSlice.reducer,
+    teams: teamsSlice.reducer,
   },
 });

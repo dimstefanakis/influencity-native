@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
@@ -16,34 +17,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import axios from 'axios';
-
+import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
-function useKeyboardOpen() {
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      },
-    );
-    const keyboardWillHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      },
-    );
-
-    return () => {
-      keyboardWillHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
-  return isKeyboardVisible;
-}
 function ChainedPostsCarousel() {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([
@@ -54,7 +30,7 @@ function ChainedPostsCarousel() {
     },
   ]);
 
-  async function handleCreatePosts() {
+  async function handleCreatePosts(selectedTiers) {
     let newPostIds = [];
 
     // first create each post separetaly
@@ -63,6 +39,9 @@ function ChainedPostsCarousel() {
         let url = Config.API_URL + '/v1/posts/';
         let formData = new FormData();
         formData.append('text', post.text);
+        selectedTiers.map(t=>{
+          formData.append('tiers', t)
+        })
         let response = await axios.post(url, formData);
         let {id} = response.data;
         newPostIds.push(id);
@@ -88,7 +67,7 @@ function ChainedPostsCarousel() {
   }
 
   function handleSelectTier() {
-    navigation.navigate('SelectTierScreen');
+    navigation.navigate('SelectTierScreen', {handleCreateItems: handleCreatePosts});
   }
 
   useLayoutEffect(() => {
@@ -249,7 +228,7 @@ function PostEditor({post, posts, setPosts, index}) {
         </>
       ) : null}
 
-      <Button
+      {/*<Button
         icon="plus-circle"
         mode="contained"
         contentStyle={{padding: 10}}
@@ -257,7 +236,7 @@ function PostEditor({post, posts, setPosts, index}) {
         dark={true}
         onPress={handleCreatePost}>
         Finish post
-      </Button>
+      </Button>*/}
     </View>
   );
 }

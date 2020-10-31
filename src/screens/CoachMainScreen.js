@@ -6,8 +6,9 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
-import {Button, Chip, FAB, Portal, Text} from 'react-native-paper';
+import {Button, Chip, FAB, Portal, Text, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -43,9 +44,10 @@ function CoachMainScreen({route}) {
           margin: 10,
         }}>
         <SharedElement id={`coach.${coach.name}.avatar`}>
-          <Image
+          <Avatar.Image
+            size={100}
             source={{uri: Config.DOMAIN + coach.avatar}}
-            style={{height: 100, width: 100, borderRadius: 100, marginLeft: 20}}
+            style={{borderRadius: 100, marginLeft: 20, backgroundColor:'white'}}
           />
         </SharedElement>
         <View style={{marginLeft: 20}}>
@@ -186,16 +188,17 @@ function CoachTopHeader({coach}) {
               width: 0,
               height: 8,
             },
-            shadowOpacity: 0.44,
-            shadowRadius: 4,
+            //shadowOpacity: 0.44,
+            //shadowRadius: 4,
 
-            elevation: 16,
+            //elevation: 16,
             //margin: 10,
           }}>
           <SharedElement id={`coach.${coach.name}.avatar`}>
             <Image
               source={{uri: Config.DOMAIN + coach.avatar}}
               style={{
+                backgroundColor:'white',
                 height: 90,
                 width: 90,
                 borderRadius: 100,
@@ -293,7 +296,7 @@ function Projects({coach}) {
 function CoachMainScreenWithPosts({route}) {
   const MainScreen = <CoachMainScreen2 route={route} />;
   return (
-    <React.Fragment>
+    <SafeAreaView style={{flex: 1}}>
       <View
         style={{
           position: 'absolute',
@@ -312,7 +315,7 @@ function CoachMainScreenWithPosts({route}) {
         />
       </View>
       <PostList ListHeaderComponent={MainScreen} />
-    </React.Fragment>
+    </SafeAreaView>
   );
 }
 export default CoachMainScreenWithPosts;

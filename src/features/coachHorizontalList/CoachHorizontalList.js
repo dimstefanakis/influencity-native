@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Image, Text, TouchableOpacity} from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
-import {useTheme} from 'react-native-paper';
+import {useTheme, Avatar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -37,14 +37,13 @@ function CoachHorizontalList() {
           return (
             <TouchableOpacity onPress={() => navigateToCoach(c)}>
               <SharedElement id={`coach.${c.name}.avatar`}>
-                <Image
+                <Avatar.Image
                   source={{uri: Config.DOMAIN + c.avatar}}
+                  size={60}
                   style={{
-                    height: 60,
-                    width: 60,
                     borderRadius: 200,
                     //borderColor: theme.colors.primary,
-                    //backgroundColor: 'white',
+                    backgroundColor: 'white',
                     //borderWidth: 2,
                     overflow: 'hidden',
                     margin: 10,
