@@ -6,7 +6,7 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import {Button, Chip, FAB, Portal, Text, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
@@ -47,7 +47,11 @@ function CoachMainScreen({route}) {
           <Avatar.Image
             size={100}
             source={{uri: Config.DOMAIN + coach.avatar}}
-            style={{borderRadius: 100, marginLeft: 20, backgroundColor:'white'}}
+            style={{
+              borderRadius: 100,
+              marginLeft: 20,
+              backgroundColor: 'white',
+            }}
           />
         </SharedElement>
         <View style={{marginLeft: 20}}>
@@ -198,7 +202,7 @@ function CoachTopHeader({coach}) {
             <Image
               source={{uri: Config.DOMAIN + coach.avatar}}
               style={{
-                backgroundColor:'white',
+                backgroundColor: 'white',
                 height: 90,
                 width: 90,
                 borderRadius: 100,

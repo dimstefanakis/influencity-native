@@ -9,13 +9,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Avatar, Text, Subheading} from 'react-native-paper';
+import {SharedElement} from 'react-navigation-shared-element';
+import {Avatar, Text, Subheading, Chip} from 'react-native-paper';
 import Carousel, {ParallaxImage, Pagination} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
 const {width: screenWidth} = Dimensions.get('window');
 
-function PostItem({post, showProfile = true}) {
+function PostItem({post, showProfile = true, fullscreen=false}) {
   const navigation = useNavigation();
   const [activeSlide, setActiveSlide] = useState(0);
   const [chainedPosts] = useState([post, ...post.chained_posts]);
@@ -29,7 +31,7 @@ function PostItem({post, showProfile = true}) {
       <Pagination
         dotsLength={post.images.length}
         activeDotIndex={activeSlide}
-        containerStyle={{margin: 0, paddingVertical: 5}}
+        containerStyle={{margin: 10, paddingVertical: 5}}
         dotStyle={{
           width: 10,
           height: 10,
@@ -72,7 +74,13 @@ function PostItem({post, showProfile = true}) {
   }
   return (
     <View>
-      <View style={{margin: 20,marginBottom:10, flexDirection: 'row', alignItems: 'center'}}>
+      <View
+        style={{
+          margin: 20,
+          marginBottom: 10,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}>
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={handleCoachPress}>
@@ -86,10 +94,25 @@ function PostItem({post, showProfile = true}) {
         </TouchableOpacity>
         <View style={{flex: 1}} />
       </View>
+      {chainedPosts.length && !fullscreen > 1 ? (
+        <View
+          style={{
+            alignSelf: 'flex-start',
+            marginBottom: 5,
+            marginLeft: 20,
+            marginRight: 20,
+          }}>
+          <Chip>{`${chainedPosts.length} steps`}</Chip>
+        </View>
+      ) : null}
 
-      <View style={{marginLeft: 20, marginRight: 10, marginBottom: 10}}>
-        <Text style={{fontSize: 16}}>{post.text}</Text>
-      </View>
+      <TouchableNativeFeedback onPress={()=>navigation.navigate('PostScreen', {post:post})}>
+        <View style={{marginLeft: 20, marginRight: 10, marginBottom: 10}}>
+          <SharedElement id={`post.${post.id}.text`}>
+            <Text style={{fontSize: 16}}>{post.text}</Text>
+          </SharedElement>
+        </View>
+      </TouchableNativeFeedback>
       <Carousel
         onSnapToItem={handleSnapToItem}
         sliderWidth={screenWidth}
@@ -174,7 +197,7 @@ const styles = StyleSheet.create({
   image: {
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
-    borderRadius:0,
+    borderRadius: 0,
   },
 });
 

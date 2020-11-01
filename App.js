@@ -43,6 +43,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import ProjectDashboardScreen from './src/screens/ProjectDashboardScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import SelectTierScreen from './src/screens/SelectTierScreen';
+import PostScreen from './src/screens/PostScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -215,6 +216,19 @@ function HomeStack() {
                 console.log(coach, otherRoute.name);
                 return [`coach.${coach.name}.avatar`];
               }*/
+            }}
+          />
+          <Stack.Screen
+            name="PostScreen"
+            component={PostScreen}
+            options={({route}) => {
+              //return {title: route.params.coach.name};
+              return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+            }}
+            //options={({route}) => ({title: route.params.coach.name})}
+            sharedElements={(route, otherRoute, showing) => {
+              const post = route.params.post;
+              return [`post.${post.id}.text`];
             }}
           />
           <Stack.Screen

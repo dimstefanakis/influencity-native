@@ -31,8 +31,16 @@ function MyProjects({viewAs = 'sub'}) {
 
   return (
     <View>
-      <Text style={{marginTop:40,marginLeft:20,fontSize: 24, ...theme.fonts.medium}}>My projects</Text>
-    
+      <Text
+        style={{
+          marginTop: 40,
+          marginLeft: 20,
+          fontSize: 24,
+          ...theme.fonts.medium,
+        }}>
+        My projects
+      </Text>
+
       <ScrollView
         contentContainerStyle={{
           padding: 20,
