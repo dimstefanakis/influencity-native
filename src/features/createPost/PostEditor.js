@@ -34,14 +34,16 @@ function ChainedPostsCarousel() {
     let newPostIds = [];
 
     // first create each post separetaly
+    console.log('posts', posts);
     for await (let post of posts) {
+      console.log('pp', posts, post);
       try {
         let url = Config.API_URL + '/v1/posts/';
         let formData = new FormData();
         formData.append('text', post.text);
-        selectedTiers.map(t=>{
-          formData.append('tiers', t)
-        })
+        selectedTiers.map((t) => {
+          formData.append('tiers', t);
+        });
         let response = await axios.post(url, formData);
         let {id} = response.data;
         newPostIds.push(id);
@@ -67,7 +69,9 @@ function ChainedPostsCarousel() {
   }
 
   function handleSelectTier() {
-    navigation.navigate('SelectTierScreen', {handleCreateItems: handleCreatePosts});
+    navigation.navigate('SelectTierScreen', {
+      handleCreateItems: handleCreatePosts,
+    });
   }
 
   useLayoutEffect(() => {
@@ -82,15 +86,16 @@ function ChainedPostsCarousel() {
         </Button>
       ),
     });
-  }, [navigation]);
+  }, [navigation, handleCreatePosts]);
 
+  useEffect(() => {
+    console.log('posts', posts);
+  }, [posts]);
   function renderItem({item, index}) {
     return (
       <PostEditor post={item} index={index} posts={posts} setPosts={setPosts} />
     );
   }
-
-  console.log('posts', posts);
 
   return (
     <Carousel
@@ -110,6 +115,7 @@ function PostEditor({post, posts, setPosts, index}) {
   function handleChangeText(value) {
     let _post = post;
     _post.text = value;
+    console.log('in');
     setPosts((oldPosts) => {
       let foundIndex = oldPosts.findIndex((element) => element.index === index);
       oldPosts[foundIndex] = _post;
@@ -173,60 +179,57 @@ function PostEditor({post, posts, setPosts, index}) {
         underlineColor="transparent"
         onChangeText={handleChangeText}
       />
-      {!isKeyboardVisible ? (
-        <>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '100%',
+        }}>
+        {post.images.map((im) => {
+          return (
+            <Image
+              source={{uri: im.path}}
+              style={{
+                height: 100,
+                width: 100,
+                borderColor: '#f9f9f9',
+                borderWidth: 1,
+                borderRadius: 15,
+              }}
+            />
+          );
+        })}
+      </View>
+
+      <View style={{flexDirection: 'row', height: 80}}>
+        <TouchableNativeFeedback onPress={handleSelectImages}>
           <View
             style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'space-around',
+              width: '50%',
+              height: '100%',
+              justifyContent: 'center',
               alignItems: 'center',
-              width: '100%',
             }}>
-            {post.images.map((im) => {
-              return (
-                <Image
-                  source={{uri: im.path}}
-                  style={{
-                    height: 100,
-                    width: 100,
-                    borderColor: '#f9f9f9',
-                    borderWidth: 1,
-                    borderRadius: 15,
-                  }}
-                />
-              );
-            })}
+            <Icon size={30} name="camera-outline" />
+            <Subheading>Add media</Subheading>
           </View>
-
-          <View style={{flexDirection: 'row', height: 80}}>
-            <TouchableNativeFeedback onPress={handleSelectImages}>
-              <View
-                style={{
-                  width: '50%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Icon size={30} name="camera-outline" />
-                <Subheading>Add media</Subheading>
-              </View>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={chainNewPost}>
-              <View
-                style={{
-                  width: '50%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Icon size={30} name="link-variant" />
-                <Subheading>Chain more posts</Subheading>
-              </View>
-            </TouchableNativeFeedback>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={chainNewPost}>
+          <View
+            style={{
+              width: '50%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Icon size={30} name="link-variant" />
+            <Subheading>Chain more posts</Subheading>
           </View>
-        </>
-      ) : null}
+        </TouchableNativeFeedback>
+      </View>
 
       {/*<Button
         icon="plus-circle"

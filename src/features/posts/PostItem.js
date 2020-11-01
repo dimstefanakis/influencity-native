@@ -18,6 +18,7 @@ const {width: screenWidth} = Dimensions.get('window');
 function PostItem({post, showProfile = true}) {
   const navigation = useNavigation();
   const [activeSlide, setActiveSlide] = useState(0);
+  const [chainedPosts] = useState([post, ...post.chained_posts]);
 
   function handleCoachPress() {
     navigation.navigate('CoachMainScreen', {coach: post.coach});
@@ -71,7 +72,7 @@ function PostItem({post, showProfile = true}) {
   }
   return (
     <View>
-      <View style={{margin: 10, flexDirection: 'row', alignItems: 'center'}}>
+      <View style={{margin: 20,marginBottom:10, flexDirection: 'row', alignItems: 'center'}}>
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={handleCoachPress}>
@@ -86,35 +87,27 @@ function PostItem({post, showProfile = true}) {
         <View style={{flex: 1}} />
       </View>
 
-      <View style={{marginLeft: 10, marginRight: 10, marginBottom: 10}}>
+      <View style={{marginLeft: 20, marginRight: 10, marginBottom: 10}}>
         <Text style={{fontSize: 16}}>{post.text}</Text>
       </View>
-      {/*<Carousel
+      <Carousel
         onSnapToItem={handleSnapToItem}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 20}
+        itemWidth={screenWidth}
         data={post.images}
         renderItem={renderItem}
         hasParallaxImages={true}
       />
-      {pagination()}*/}
-      {post.images.length > 0 ? <Image source={{uri: Config.DOMAIN + post.images[0]?.image}}
-          style={{
-            height: '100%',
-            width: '100%',
-            resizeMode: 'cover',
-            height: 300,
-          }}
-        />
-      :null}
+      {pagination()}
     </View>
   );
 }
 
 function ChainedPostCarousel({post}) {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [chainedPosts ] = useState([post, ...post.chained_posts]);
+  const [chainedPosts] = useState([post, ...post.chained_posts]);
+  console.log(chainedPosts);
   function pagination() {
     return (
       <Pagination
@@ -148,7 +141,7 @@ function ChainedPostCarousel({post}) {
   function renderItem({item, index}, parallaxProps) {
     return (
       <View style={styles.item}>
-        <PostItem post={post} />
+        <PostItem post={item} />
       </View>
     );
   }
@@ -158,7 +151,7 @@ function ChainedPostCarousel({post}) {
       <Carousel
         onSnapToItem={handleSnapToItem}
         sliderWidth={screenWidth}
-        itemWidth={screenWidth - 20}
+        itemWidth={screenWidth}
         data={chainedPosts}
         renderItem={renderItem}
       />
@@ -169,18 +162,20 @@ function ChainedPostCarousel({post}) {
 
 const styles = StyleSheet.create({
   item: {
-    width: screenWidth - 20,
+    width: screenWidth,
+    height: 300,
   },
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 0,
   },
   image: {
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
+    borderRadius:0,
   },
 });
 
-export default ChainedPostCarousel;
+export default PostItem;

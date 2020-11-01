@@ -12,6 +12,8 @@ export default function MyProjectsStack() {
     <SafeAreaView style={{flex: 1}}>
       <Stack.Navigator
         initialRouteName="MyProjectsScreen"
+        mode="modal"
+        headerMode="screen"
         screenOptions={{
           cardStyle: {backgroundColor: 'white'},
           headerStyle: {
@@ -23,7 +25,9 @@ export default function MyProjectsStack() {
         <Stack.Screen
           name="MyProjectsScreen"
           component={MyProjects}
-          options={{title: 'My projects'}}
+          options={{
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="ProjectDashboardScreen"

@@ -31,7 +31,7 @@ function CoachHorizontalList() {
   }, []);
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingLeft:20, paddingRight:20}}>
       <View style={{flexDirection: 'row'}}>
         {coaches.map((c, i) => {
           return (
@@ -47,6 +47,7 @@ function CoachHorizontalList() {
                     //borderWidth: 2,
                     overflow: 'hidden',
                     margin: 10,
+                    marginLeft: 0,
                   }}
                 />
               </SharedElement>

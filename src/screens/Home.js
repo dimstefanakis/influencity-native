@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, ScrollView, Image} from 'react-native';
+import {View, ScrollView, Image, StyleSheet} from 'react-native';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
 import CoachActionsList from '../features/coachActionsList/CoachActionsList';
 import PostList from '../features/posts/PostList';
-import {useTheme, Text} from 'react-native-paper';
+import {useTheme, Text, Subheading, Title} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 
 let url =
@@ -70,26 +70,54 @@ function Home() {
         </View>
       </View>
     </ScrollView>*/
-    <PostList ListHeaderComponent={FeedHeaderComponent}/>
+    <PostList ListHeaderComponent={FeedHeaderComponent} />
   );
 }
 
 function FeedHeaderComponent() {
+  const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
 
   return (
-    <>
-      {user.is_coach ? <CoachActionsList /> : null}
-
-      <Text style={{margin: 10, fontSize: 35, fontFamily: 'Nunito-ExtraBold'}}>
+    <View>
+      <View>
+        <Subheading style={{marginTop: 30,...styles.spacing}}>Good afternoon!</Subheading>
+        <Text style={{fontSize: 24, ...theme.fonts.medium,...styles.spacing}}>{user.username}</Text>
+        {user.is_coach ? <CoachActionsList /> : null}
+      </View>
+      <Text
+        style={{
+          fontSize: 20,
+          ...styles.spacing,
+          marginTop: 10,
+          marginBottom: 10,
+          color: '#1d1d1d',
+          ...theme.fonts.medium,
+        }}>
         Your coaches
       </Text>
       <CoachHorizontalList />
-      <Text style={{margin: 10, fontSize: 35, fontFamily: 'Nunito-ExtraBold'}}>
+      <Text
+        style={{
+          fontSize: 20,
+          marginTop: 10,
+          marginBottom: 10,
+          color: '#1d1d1d',
+          ...theme.fonts.medium,
+          ...styles.spacing
+        }}>
         Your feed
       </Text>
-    </>
+    </View>
   );
 }
+
+
+const styles = StyleSheet.create ({
+  spacing:{
+    marginLeft:20,
+    marginRight:20
+  }
+})
 
 export default Home;

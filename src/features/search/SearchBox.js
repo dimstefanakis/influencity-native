@@ -23,7 +23,7 @@ export function SearchBox({expertise}) {
       style={{
         height: 130,
         width: '45%',
-        margin: 4,
+        marginTop: 5,
         borderRadius: 5,
         overflow: 'hidden',
       }}>

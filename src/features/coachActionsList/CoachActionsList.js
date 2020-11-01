@@ -28,12 +28,9 @@ function CoachActionsList() {
   }
 
   return (
-    <View>
-      <Text style={{margin: 10, fontSize: 40, fontFamily: 'Nunito-ExtraBold'}}>
-        {user.coach.name}
-      </Text>
+    <View style={{marginTop: 10}}>
       <ScrollView
-        contentContainerStyle={{flexDirection: 'row', alignItems: 'center'}}
+        contentContainerStyle={{flexDirection: 'row', alignItems: 'center',paddingLeft:20,paddingRight:20}}
         horizontal
         showsHorizontalScrollIndicator={false}>
         <Avatar.Image
@@ -44,7 +41,9 @@ function CoachActionsList() {
             //backgroundColor: 'white',
             //borderWidth: 2,
             overflow: 'hidden',
-            margin: 10,
+            marginTop: 10,
+            marginBottom: 10,
+            marginRight: 10,
           }}
         />
         <Button

@@ -21,6 +21,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getMyProjects} from '../projects/projectsSlice';
 
 function MyProjects({viewAs = 'sub'}) {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const {myProjects} = useSelector((state) => state.projects);
 
@@ -29,16 +30,20 @@ function MyProjects({viewAs = 'sub'}) {
   }, [dispatch]);
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        padding: 10,
-        backgroundColor: 'white',
-        height: '100%',
-      }}>
-      {myProjects.map((project) => {
-        return <Project project={project} viewAs={viewAs} />;
-      })}
-    </ScrollView>
+    <View>
+      <Text style={{marginTop:40,marginLeft:20,fontSize: 24, ...theme.fonts.medium}}>My projects</Text>
+    
+      <ScrollView
+        contentContainerStyle={{
+          padding: 20,
+          backgroundColor: 'white',
+          height: '100%',
+        }}>
+        {myProjects.map((project) => {
+          return <Project project={project} viewAs={viewAs} />;
+        })}
+      </ScrollView>
+    </View>
   );
 }
 

@@ -117,7 +117,7 @@ const App: () => React$Node = () => {
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
         <BottomStack.Navigator
-          swipeEnabled={false}
+          //swipeEnabled={false}
           tabBarPosition="bottom"
           tabBarOptions={{
             tabStyle: {backgroundColor: 'white'},
