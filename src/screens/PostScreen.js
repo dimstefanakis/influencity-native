@@ -57,7 +57,7 @@ function VerticalLine() {
         height: 20,
         width: 5,
         borderRadius: 5,
-        backgroundColor: '#2196f329',//'#c5c5c5',
+        backgroundColor: '#2196f329', //'#c5c5c5',
         marginTop: 3,
         marginBottom: 3,
       }}

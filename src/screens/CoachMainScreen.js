@@ -155,9 +155,12 @@ function CoachMainScreen2({route}) {
         <View style={{margin: 20}}>
           <Expertise coach={coach} />
         </View>
-        <View style={{marginLeft: 20, marginRight: 20, marginBottom: 20}}>
-          <Projects coach={coach} />
-        </View>
+        {coach.projects.length > 0 ? (
+          <View style={{marginLeft: 20, marginRight: 20, marginBottom: 20}}>
+            <Projects coach={coach} />
+          </View>
+        ) : null}
+
         <Text
           style={{
             fontFamily: 'Nunito-ExtraBold',
@@ -253,7 +256,6 @@ function Projects({coach}) {
   // doing this for testing purposes
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {projects} = useSelector((state) => state.projects);
 
   useEffect(() => {
     dispatch(getProjects());
@@ -267,31 +269,23 @@ function Projects({coach}) {
           fontSize: 16,
           marginBottom: 20,
         }}>
-        2 projects
+        {coach.projects.length} projects
       </Text>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        <Chip
-          mode="outlined"
-          onPress={() =>
-            navigation.navigate('ProjectListScreen', {
-              projects: [projects[0]],
-            })
-          }
-          style={{alignSelf: 'flex-start', margin: 2}}>
-          Create a todo list
-        </Chip>
-        <Chip
-          mode="outlined"
-          onPress={() => console.log('Pressed')}
-          style={{alignSelf: 'flex-start', margin: 2}}>
-          Create a simple landing page
-        </Chip>
-        <Chip
-          mode="outlined"
-          onPress={() => console.log('Pressed')}
-          style={{alignSelf: 'flex-start', margin: 2}}>
-          Use redux
-        </Chip>
+        {coach.projects.map((project) => {
+          return (
+            <Chip
+              mode="outlined"
+              onPress={() =>
+                navigation.navigate('ProjectListScreen', {
+                  projects: [project],
+                })
+              }
+              style={{alignSelf: 'flex-start', margin: 2}}>
+              {project.name}
+            </Chip>
+          );
+        })}
       </View>
     </View>
   );

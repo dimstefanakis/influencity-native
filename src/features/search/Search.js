@@ -1,18 +1,49 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {View, ScrollView} from 'react-native';
+import React, {useEffect, useState, useRef} from 'react';
+import {
+  View,
+  ScrollView,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {SharedElement} from 'react-navigation-shared-element';
+import Config from 'react-native-config';
+import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import {getExpertiseFields} from '../expertise/expertiseSlice';
-import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {SearchBox} from './SearchBox';
+import axios from 'axios';
 
 function Search() {
+  const navigation = useNavigation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const {expertiseFields} = useSelector((state) => state.expertiseFields);
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedExpertise, setSelectedExpertise] = useState(null);
+  const [results, setResults] = useState(null);
   const onChangeSearch = (query) => setSearchQuery(query);
   console.log(expertiseFields);
+
+  async function getResults() {
+    try {
+      let url = `${Config.API_URL}/v1/coaches?expertise=${selectedExpertise.name}`;
+      let response = await axios.get(url);
+      setResults(response.data);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    console.log(selectedExpertise);
+    if (selectedExpertise) {
+      getResults();
+    }
+  }, [selectedExpertise]);
 
   useEffect(() => {
     dispatch(getExpertiseFields());
@@ -30,13 +61,29 @@ function Search() {
         }}>
         Search coaches
       </Text>
-
-      <Searchbar
-        placeholder="Search"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-        style={{borderRadius: 50, margin: 20, marginBottom: 20, marginTop: 20}}
-      />
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('SearchFocus', {
+            setSelectedExpertise: setSelectedExpertise,
+            selectedExpertise: selectedExpertise,
+          })
+        }>
+        <SharedElement id={'searchbar'}>
+          <Searchbar
+            editable={false}
+            pointerEvents="none"
+            placeholder="Search"
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+            style={{
+              borderRadius: 50,
+              margin: 20,
+              marginBottom: 20,
+              marginTop: 20,
+            }}
+          />
+        </SharedElement>
+      </TouchableOpacity>
       <Text
         style={{
           fontSize: 20,
@@ -54,7 +101,12 @@ function Search() {
           justifyContent: 'space-around',
         }}>
         {expertiseFields.map((expertise) => {
-          return <SearchBox expertise={expertise} />;
+          return (
+            <SearchBox
+              expertise={expertise}
+              setSelectedExpertise={setSelectedExpertise}
+            />
+          );
         })}
       </View>
     </ScrollView>

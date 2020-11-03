@@ -14,7 +14,7 @@ function CoachHorizontalList() {
 
   async function getCoaches() {
     try {
-      let response = await axios.get(`${Config.API_URL}/v1/coaches/`);
+      let response = await axios.get(`${Config.API_URL}/v1/my_coaches/`);
       let data = response.data;
       setCoaches(data);
     } catch (e) {}
@@ -31,7 +31,10 @@ function CoachHorizontalList() {
   }, []);
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingLeft:20, paddingRight:20}}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}>
       <View style={{flexDirection: 'row'}}>
         {coaches.map((c, i) => {
           return (

@@ -1,3 +1,3 @@
-import Search from '../features/search/Search';
+import SearchStack from '../features/search/SearchStack';
 
-export default Search;
+export default SearchStack;

@@ -81,8 +81,12 @@ function FeedHeaderComponent() {
   return (
     <View>
       <View>
-        <Subheading style={{marginTop: 30,...styles.spacing}}>Good afternoon!</Subheading>
-        <Text style={{fontSize: 24, ...theme.fonts.medium,...styles.spacing}}>{user.username}</Text>
+        <Subheading style={{marginTop: 30, ...styles.spacing}}>
+          Good afternoon!
+        </Subheading>
+        <Text style={{fontSize: 24, ...theme.fonts.medium, ...styles.spacing}}>
+          {user.username}
+        </Text>
         {user.is_coach ? <CoachActionsList /> : null}
       </View>
       <Text
@@ -104,7 +108,7 @@ function FeedHeaderComponent() {
           marginBottom: 10,
           color: '#1d1d1d',
           ...theme.fonts.medium,
-          ...styles.spacing
+          ...styles.spacing,
         }}>
         Your feed
       </Text>
@@ -112,12 +116,11 @@ function FeedHeaderComponent() {
   );
 }
 
-
-const styles = StyleSheet.create ({
-  spacing:{
-    marginLeft:20,
-    marginRight:20
-  }
-})
+const styles = StyleSheet.create({
+  spacing: {
+    marginLeft: 20,
+    marginRight: 20,
+  },
+});
 
 export default Home;

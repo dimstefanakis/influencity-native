@@ -13,11 +13,11 @@ import {SharedElement} from 'react-navigation-shared-element';
 import {Avatar, Text, Subheading, Chip} from 'react-native-paper';
 import Carousel, {ParallaxImage, Pagination} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
 const {width: screenWidth} = Dimensions.get('window');
 
-function PostItem({post, showProfile = true, fullscreen=false}) {
+function PostItem({post, showProfile = true, fullscreen = false}) {
   const navigation = useNavigation();
   const [activeSlide, setActiveSlide] = useState(0);
   const [chainedPosts] = useState([post, ...post.chained_posts]);
@@ -106,7 +106,8 @@ function PostItem({post, showProfile = true, fullscreen=false}) {
         </View>
       ) : null}
 
-      <TouchableNativeFeedback onPress={()=>navigation.navigate('PostScreen', {post:post})}>
+      <TouchableNativeFeedback
+        onPress={() => navigation.navigate('PostScreen', {post: post})}>
         <View style={{marginLeft: 20, marginRight: 10, marginBottom: 10}}>
           <SharedElement id={`post.${post.id}.text`}>
             <Text style={{fontSize: 16}}>{post.text}</Text>

@@ -1,9 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, TouchableNativeFeedback} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {SharedElement} from 'react-navigation-shared-element';
 import {Text, Title, useTheme} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import ExpertiseFieldButton from './ExpertiseFieldButton';
 
 function getExpertisePreferences(value) {
   if (value.toLowerCase() === 'gaming') {
@@ -15,9 +18,19 @@ function getExpertisePreferences(value) {
   return {colors: ['#f25500', '#ff3232'], icon: 'code-braces'};
 }
 
-export function SearchBox({expertise}) {
+export function SearchBox({expertise, setSelectedExpertise}) {
+  const navigation = useNavigation();
   const theme = useTheme();
   let {colors, icon} = getExpertisePreferences(expertise.name);
+
+  function handleBoxClick() {
+    setSelectedExpertise(expertise);
+    navigation.navigate('SearchFocus', {
+      selectedExpertise: expertise,
+      setSelectedExpertise: setSelectedExpertise,
+    });
+  }
+
   return (
     <View
       style={{
@@ -30,35 +43,10 @@ export function SearchBox({expertise}) {
       <TouchableNativeFeedback
         style={{borderRadius: 5}}
         useForeground
-        onPress={() => {}}>
-        <LinearGradient
-          colors={colors}
-          style={{
-            height: '100%',
-            width: '100%',
-            borderRadius: 5,
-            paddingTop: 15,
-            paddingBottom: 15,
-            paddingRight: 10,
-            paddingLeft: 10,
-            alignItems: 'center',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'flex-start'}}>
-            <Text
-              style={{
-                color: 'white',
-                textAlign: 'left',
-                fontSize: 18,
-                flex: 1,
-                flexWrap: 'wrap',
-                marginRight: 15,
-                ...theme.fonts.medium,
-              }}>
-              {expertise.name}
-            </Text>
-            <Icon name={icon} color="white" size={40} />
-          </View>
-        </LinearGradient>
+        onPress={handleBoxClick}>
+        <SharedElement id={`searchbox.${expertise.name}`}>
+          <ExpertiseFieldButton expertise={expertise} />
+        </SharedElement>
       </TouchableNativeFeedback>
     </View>
   );
