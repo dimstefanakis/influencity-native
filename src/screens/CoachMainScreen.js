@@ -225,8 +225,7 @@ function CoachTopHeader({coach}) {
             color: '#6f6f6f',
             fontFamily: 'Nunito-Regular',
           }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam et
-          fringilla mauris, ut vestibulum.
+          {coach.bio}
         </Text>
       </View>
     </View>

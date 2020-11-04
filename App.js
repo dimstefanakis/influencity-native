@@ -60,6 +60,10 @@ const fontConfig = {
       fontFamily: 'Nunito-Bold',
       fontWeight: 'normal',
     },
+    extraBold: {
+      fontFamily: 'Nunito-ExtraBold',
+      fontWeight: 'normal',
+    },
     light: {
       fontFamily: 'Nunito-Light',
       fontWeight: 'normal',

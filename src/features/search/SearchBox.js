@@ -28,6 +28,7 @@ export function SearchBox({expertise, setSelectedExpertise}) {
     navigation.navigate('SearchFocus', {
       selectedExpertise: expertise,
       setSelectedExpertise: setSelectedExpertise,
+      focus: false,
     });
   }
 

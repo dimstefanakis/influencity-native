@@ -28,23 +28,6 @@ function Search() {
   const onChangeSearch = (query) => setSearchQuery(query);
   console.log(expertiseFields);
 
-  async function getResults() {
-    try {
-      let url = `${Config.API_URL}/v1/coaches?expertise=${selectedExpertise.name}`;
-      let response = await axios.get(url);
-      setResults(response.data);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  useEffect(() => {
-    console.log(selectedExpertise);
-    if (selectedExpertise) {
-      getResults();
-    }
-  }, [selectedExpertise]);
-
   useEffect(() => {
     dispatch(getExpertiseFields());
   }, [dispatch]);
@@ -66,6 +49,7 @@ function Search() {
           navigation.navigate('SearchFocus', {
             setSelectedExpertise: setSelectedExpertise,
             selectedExpertise: selectedExpertise,
+            focus: true,
           })
         }>
         <SharedElement id={'searchbar'}>

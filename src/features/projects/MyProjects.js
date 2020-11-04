@@ -47,9 +47,16 @@ function MyProjects({viewAs = 'sub'}) {
           backgroundColor: 'white',
           height: '100%',
         }}>
-        {myProjects.map((project) => {
-          return <Project project={project} viewAs={viewAs} />;
-        })}
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+          }}>
+          {myProjects.map((project) => {
+            return <Project project={project} viewAs={viewAs} />;
+          })}
+        </View>
       </ScrollView>
     </View>
   );

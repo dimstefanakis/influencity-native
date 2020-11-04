@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, TouchableNativeFeedback, Image} from 'react-native';
 import {
   Text,
@@ -25,6 +25,9 @@ function Project({project, viewAs = 'sub'}) {
     }
   }
 
+  if (viewAs == 'sub') {
+    return <ProjectAsSub project={project} />;
+  }
   return (
     <TouchableNativeFeedback onPress={handleProjectClick}>
       <Surface style={styles.surface}>
@@ -59,6 +62,61 @@ function Project({project, viewAs = 'sub'}) {
         )}
       </Surface>
     </TouchableNativeFeedback>
+  );
+}
+
+function ProjectAsSub({project}) {
+  const theme = useTheme();
+  const navigation = useNavigation();
+
+  function handleProjectClick() {
+    navigation.navigate('ProjectDashboardScreen', {project: project});
+  }
+
+  return (
+    <TouchableNativeFeedback onPress={handleProjectClick}>
+      <Surface style={{height: 180, width: '47%', ...styles.surface}}>
+        <View style={{flex: 1}}>
+          <Avatar.Icon size={40} icon="code-tags" color="white" />
+          <Text
+            style={{
+              fontSize: 20,
+              color: '#272727',
+              marginTop: 20,
+              ...theme.fonts.extraBold,
+            }}>
+            {project.name}
+          </Text>
+        </View>
+        <ProgressBar project={project} />
+      </Surface>
+    </TouchableNativeFeedback>
+  );
+}
+
+function ProgressBar({project}) {
+  const [completedTasks] = useState(
+    project.milestones.reduce(
+      (total, x) => (x.completed ? total + 1 : total),
+      0,
+    ),
+  );
+  return (
+    <View
+      style={{width: '90%', height: 5, position: 'relative', marginTop: 10}}>
+      <View
+        style={{width: '100%', height: '100%', backgroundColor: '#f6f8fa'}}
+      />
+      <View
+        style={{
+          width: `${(completedTasks / project.milestones.length) * 100}%`,
+          height: '100%',
+          backgroundColor: '#03a9f4',
+          position: 'absolute',
+          left: 0,
+        }}
+      />
+    </View>
   );
 }
 

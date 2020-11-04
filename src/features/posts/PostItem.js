@@ -94,7 +94,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         </TouchableOpacity>
         <View style={{flex: 1}} />
       </View>
-      {chainedPosts.length && !fullscreen > 1 ? (
+      {chainedPosts.length > 1 && !fullscreen ? (
         <View
           style={{
             alignSelf: 'flex-start',
