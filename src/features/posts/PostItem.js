@@ -57,11 +57,15 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
   }
 
   function renderItem({item, index}, parallaxProps) {
+    let ratio = item.height / item.width;
     return (
       <View style={styles.item}>
         <ParallaxImage
           source={{uri: Config.DOMAIN + item.image}}
-          containerStyle={styles.imageContainer}
+          containerStyle={{
+            ...styles.imageContainer,
+            minHeight: ratio * screenWidth,
+          }}
           style={styles.image}
           parallaxFactor={0.4}
           {...parallaxProps}
@@ -187,19 +191,21 @@ function ChainedPostCarousel({post}) {
 const styles = StyleSheet.create({
   item: {
     width: screenWidth,
-    height: 300,
+    //height: screenWidth,
   },
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
-    backgroundColor: 'white',
-    borderRadius: 0,
+    borderRadius: 8,
+    //maxHeight:500,
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
-    borderRadius: 0,
+    //...StyleSheet.absoluteFillObject,
+    flex: 1,
+    height: null,
+    resizeMode: 'contain',
+    width: '100%',
+    maxWidth: screenWidth,
   },
 });
-
 export default PostItem;

@@ -34,7 +34,7 @@ export default function MyProjectsStack() {
           name="ProjectDashboardScreen"
           component={ProjectDashboardScreen}
           options={({route}) => {
-            return {title: route.params.project.name};
+            return {title: ''};
           }}
         />
       </Stack.Navigator>

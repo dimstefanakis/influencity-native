@@ -10,13 +10,14 @@ import {
   Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
 import {TextInput, Button, Subheading} from 'react-native-paper';
+import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import axios from 'axios';
+import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -112,6 +113,7 @@ function PostEditor({post, posts, setPosts, index}) {
   const isKeyboardVisible = useKeyboardOpen();
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
+  const [fileData, setData] = useState('');
   function handleChangeText(value) {
     let _post = post;
     _post.text = value;
@@ -135,10 +137,100 @@ function PostEditor({post, posts, setPosts, index}) {
     }
   }
 
+  async function handleCreateVideo() {
+    try {
+      let url = Config.API_URL + '/v1/upload_video';
+      let response = await axios.get(url);
+      let uploadUrl = response.data.url;
+      console.log(images[0].path);
+      let photo = {
+        uri: images[0].path,
+        type: images[0].mime,
+        name: 'video.mp4',
+      };
+      let data = new FormData();
+      data.append('fileName', 'video.mp4');
+      data.append('mimeType', images[0].mime);
+      //let f = new File([fileData], 'video.mp4');
+      //console.log(f, fileData);
+      //data.append('name', 'video.mp4')
+      //data.append('type', images[0].mime)
+      data.append('uri', images[0].path);
+      data.append('size', images[0].size);
+      //let imageFile = new File([blob], "filename")
+
+      //let uploadReponse = await axios.put(uploadUrl, photo)
+
+      RNFetchBlob.fetch(
+        'PUT',
+        uploadUrl,
+        {'Content-Type': 'application/octet-stream'},
+
+        RNFetchBlob.wrap(images[0].path),
+      )
+        .then((r) => {
+          console.log(r, 'dsaadssadsad');
+        })
+        .catch((e) => {
+          console.error(e, 'asdsadsadsaddasads');
+        });
+      //fetch(uploadUrl, {method: 'PUT', body: f});
+
+      /*const upload = UpChunk.createUpload({
+        endpoint: uploadUrl,
+        file: data,
+        chunkSize: 5120, // Uploads the file in ~5mb chunks
+      });
+      upload.on('error', err => {
+        console.error('💥 🙀', err.detail);
+      });
+
+      upload.on('progress', progress => {
+        console.log(`So far we've uploaded ${progress.detail}% of this file.`);
+      });
+
+      upload.on('success', () => {
+        console.log("Wrap it up, we're done here. 👋");
+      });*/
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   function handleSelectImages() {
     ImagePicker.openPicker({
       multiple: true,
+      includeBase64: true,
     }).then((results) => {
+      setImages(results); // delete later
+      console.log('rerere', results);
+      let data = '';
+      RNFetchBlob.fs
+        .readStream(
+          // file path
+          results[0].path,
+          // encoding, should be one of `base64`, `utf8`, `ascii`
+          'base64',
+          // (optional) buffer size, default to 4096 (4095 for BASE64 encoded data)
+          // when reading file in BASE64 encoding, buffer size must be multiples of 3.
+          4095,
+        )
+        .then((ifstream) => {
+          ifstream.open();
+          ifstream.onData((chunk) => {
+            // when encoding is `ascii`, chunk will be an array contains numbers
+            // otherwise it will be a string
+            console.log('chink', chunk);
+            data += chunk;
+          });
+          ifstream.onError((err) => {
+            console.log('oops', err);
+          });
+          ifstream.onEnd(() => {
+            setData(data);
+          });
+        });
+
       let _post = post;
       _post.images = results;
 
@@ -231,15 +323,15 @@ function PostEditor({post, posts, setPosts, index}) {
         </TouchableNativeFeedback>
       </View>
 
-      {/*<Button
+      <Button
         icon="plus-circle"
         mode="contained"
         contentStyle={{padding: 10}}
         style={{borderRadius: 50, width: 200, margin: 20}}
         dark={true}
-        onPress={handleCreatePost}>
-        Finish post
-      </Button>*/}
+        onPress={handleCreateVideo}>
+        Test
+      </Button>
     </View>
   );
 }
