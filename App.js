@@ -44,6 +44,7 @@ import ProjectDashboardScreen from './src/screens/ProjectDashboardScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import SelectTierScreen from './src/screens/SelectTierScreen';
 import PostScreen from './src/screens/PostScreen';
+import TeamChatScreen from './src/screens/TeamChatScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -75,7 +76,7 @@ const fontConfig = {
   },
 };
 
-//const Stack = createStackNavigator();
+const VanillaStack = createStackNavigator();
 const Stack = createSharedElementStackNavigator();
 const BottomStack = createMaterialTopTabNavigator();
 
@@ -121,64 +122,86 @@ const App: () => React$Node = () => {
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
-        <BottomStack.Navigator
-          //swipeEnabled={false}
-          tabBarPosition="bottom"
-          tabBarOptions={{
-            tabStyle: {backgroundColor: 'white'},
-            style: {
-              backgroundColor: 'white',
-              //height: isKeyboardOpen ? 0 : null,
-            },
-            renderIndicator: () => null,
-            showIcon: true,
-            showLabel: false,
-          }}
-          screenOptions={({route}) => ({
-            tabBarIcon: ({focused, color, size}) => {
-              let iconName;
-
-              if (route.name === 'Projects') {
-                return <AntDesign name="rocket1" size={24} color={color} />;
-              }
-
-              if (route.name === 'ProfileScreen') {
-                return <AntDesign name={'user'} size={24} color={color} />;
-              }
-              if (route.name === 'Home') {
-                iconName = 'home';
-              } else {
-                return <AntDesign name={'search1'} size={24} color={color} />;
-              }
-
-              if (route.name === 'Search') {
-                iconName = 'search1';
-              }
-
-              return <AntDesign name={iconName} size={24} color={color} />;
-            },
-          })}>
-          {token ? (
-            <>
-              <BottomStack.Screen name="Home" component={HomeStack} />
-              <BottomStack.Screen name="Search" component={SearchScreen} />
-              <BottomStack.Screen
-                name="Projects"
-                component={MyProjectsScreen}
-              />
-              <BottomStack.Screen
-                name="ProfileScreen"
-                component={ProfileScreen}
-              />
-            </>
-          ) : (
-            <BottomStack.Screen name="Login" component={Login} />
-          )}
-        </BottomStack.Navigator>
+        <VanillaStack.Navigator
+          screenOptions={{
+            gestureEnabled: true,
+            cardOverlayEnabled: true,
+            ...TransitionPresets.ScaleFromCenterAndroid,
+          }}>
+          <VanillaStack.Screen
+            name="BottomStackNavigation"
+            component={BottomStackNavigation}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="TeamChatScreen"
+            component={TeamChatScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.SlideFromRightIOS};
+            }}
+          />
+        </VanillaStack.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );
 };
+
+function BottomStackNavigation() {
+  const {user, loading, token} = useSelector((state) => state.authentication);
+  return (
+    <BottomStack.Navigator
+      //swipeEnabled={false}
+      tabBarPosition="bottom"
+      tabBarOptions={{
+        tabStyle: {backgroundColor: 'white'},
+        style: {
+          backgroundColor: 'white',
+          //height: isKeyboardOpen ? 0 : null,
+        },
+        renderIndicator: () => null,
+        showIcon: true,
+        showLabel: false,
+      }}
+      screenOptions={({route}) => ({
+        tabBarIcon: ({focused, color, size}) => {
+          let iconName;
+
+          if (route.name === 'Projects') {
+            return <AntDesign name="rocket1" size={24} color={color} />;
+          }
+
+          if (route.name === 'ProfileScreen') {
+            return <AntDesign name={'user'} size={24} color={color} />;
+          }
+          if (route.name === 'Home') {
+            iconName = 'home';
+          } else {
+            return <AntDesign name={'search1'} size={24} color={color} />;
+          }
+
+          if (route.name === 'Search') {
+            iconName = 'search1';
+          }
+
+          return <AntDesign name={iconName} size={24} color={color} />;
+        },
+      })}>
+      {token ? (
+        <>
+          <BottomStack.Screen name="Home" component={HomeStack} />
+          <BottomStack.Screen name="Search" component={SearchScreen} />
+          <BottomStack.Screen name="Projects" component={MyProjectsScreen} />
+          <BottomStack.Screen name="ProfileScreen" component={ProfileScreen} />
+        </>
+      ) : (
+        <BottomStack.Screen name="Login" component={Login} />
+      )}
+    </BottomStack.Navigator>
+  );
+}
 
 function HomeStack() {
   return (

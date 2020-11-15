@@ -47,6 +47,7 @@ function ChainedPostsCarousel() {
         });
         let response = await axios.post(url, formData);
         let {id} = response.data;
+        handleCreateVideo(response.data);
         newPostIds.push(id);
         console.log(response);
       } catch (e) {
@@ -66,6 +67,51 @@ function ChainedPostsCarousel() {
       } catch (e) {
         console.error(e);
       }
+    }
+  }
+
+  async function handleCreateVideo(post) {
+    try {
+      const image = posts[0].images[0];
+      let url = Config.API_URL + '/v1/upload_video/';
+      let formData = new FormData();
+      formData.append('post', post.id);
+      console.log("sadsaddasasddsaads",post,posts, image);
+      let response = await axios.post(url, formData);
+      let uploadUrl = response.data.url;
+      RNFetchBlob.fetch(
+        'PUT',
+        uploadUrl,
+        {'Content-Type': 'application/octet-stream'},
+
+        RNFetchBlob.wrap(image.path),
+      )
+        .then((r) => {
+          console.log(r, 'dsaadssadsad');
+        })
+        .catch((e) => {
+          console.error(e, 'asdsadsadsaddasads');
+        });
+      //fetch(uploadUrl, {method: 'PUT', body: f});
+
+      /*const upload = UpChunk.createUpload({
+        endpoint: uploadUrl,
+        file: data,
+        chunkSize: 5120, // Uploads the file in ~5mb chunks
+      });
+      upload.on('error', err => {
+        console.error('💥 🙀', err.detail);
+      });
+
+      upload.on('progress', progress => {
+        console.log(`So far we've uploaded ${progress.detail}% of this file.`);
+      });
+
+      upload.on('success', () => {
+        console.log("Wrap it up, we're done here. 👋");
+      });*/
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -132,66 +178,6 @@ function PostEditor({post, posts, setPosts, index}) {
       let formData = new FormData();
       formData.append('text', text);
       let response = await axios.post(url, formData);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  async function handleCreateVideo() {
-    try {
-      let url = Config.API_URL + '/v1/upload_video';
-      let response = await axios.get(url);
-      let uploadUrl = response.data.url;
-      console.log(images[0].path);
-      let photo = {
-        uri: images[0].path,
-        type: images[0].mime,
-        name: 'video.mp4',
-      };
-      let data = new FormData();
-      data.append('fileName', 'video.mp4');
-      data.append('mimeType', images[0].mime);
-      //let f = new File([fileData], 'video.mp4');
-      //console.log(f, fileData);
-      //data.append('name', 'video.mp4')
-      //data.append('type', images[0].mime)
-      data.append('uri', images[0].path);
-      data.append('size', images[0].size);
-      //let imageFile = new File([blob], "filename")
-
-      //let uploadReponse = await axios.put(uploadUrl, photo)
-
-      RNFetchBlob.fetch(
-        'PUT',
-        uploadUrl,
-        {'Content-Type': 'application/octet-stream'},
-
-        RNFetchBlob.wrap(images[0].path),
-      )
-        .then((r) => {
-          console.log(r, 'dsaadssadsad');
-        })
-        .catch((e) => {
-          console.error(e, 'asdsadsadsaddasads');
-        });
-      //fetch(uploadUrl, {method: 'PUT', body: f});
-
-      /*const upload = UpChunk.createUpload({
-        endpoint: uploadUrl,
-        file: data,
-        chunkSize: 5120, // Uploads the file in ~5mb chunks
-      });
-      upload.on('error', err => {
-        console.error('💥 🙀', err.detail);
-      });
-
-      upload.on('progress', progress => {
-        console.log(`So far we've uploaded ${progress.detail}% of this file.`);
-      });
-
-      upload.on('success', () => {
-        console.log("Wrap it up, we're done here. 👋");
-      });*/
     } catch (e) {
       console.error(e);
     }
@@ -322,16 +308,6 @@ function PostEditor({post, posts, setPosts, index}) {
           </View>
         </TouchableNativeFeedback>
       </View>
-
-      <Button
-        icon="plus-circle"
-        mode="contained"
-        contentStyle={{padding: 10}}
-        style={{borderRadius: 50, width: 200, margin: 20}}
-        dark={true}
-        onPress={handleCreateVideo}>
-        Test
-      </Button>
     </View>
   );
 }

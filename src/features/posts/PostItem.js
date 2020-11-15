@@ -11,10 +11,11 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {SharedElement} from 'react-navigation-shared-element';
 import {Avatar, Text, Subheading, Chip} from 'react-native-paper';
+import Video from 'react-native-video';
 import Carousel, {ParallaxImage, Pagination} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-
+import axios from 'axios';
 const {width: screenWidth} = Dimensions.get('window');
 
 function PostItem({post, showProfile = true, fullscreen = false}) {
@@ -76,6 +77,37 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
       </View>
     );
   }
+
+  async function getInputInfo(item) {
+    const inputInfoUrl = `${Config.MUX_API_URL}/video/v1/assets/${item.asset_id}/input-info`;
+    try {
+      let response = await axios.get(inputInfoUrl);
+      return response.data;
+    } catch (e) {}
+  }
+
+  function renderVideos({item, index}, parallaxProps) {
+    console.log(`${Config.MUX_API_URL}/video/v1/assets/${item.asset_id}`);
+    const playback_id = item.playback_ids[0].playback_id;
+    const inputInfo = getInputInfo(item);
+
+    return (
+      <View style={styles.item}>
+        <Video
+          source={{
+            uri: `https://stream.mux.com/${playback_id}.m3u8`,
+            type: 'm3u8',
+          }}
+          resizeMode="cover"
+          style={{
+            width: screenWidth,
+            minHeight: 200,
+          }}
+        />
+      </View>
+    );
+  }
+
   return (
     <View>
       <View
@@ -123,8 +155,8 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
         itemWidth={screenWidth}
-        data={post.images}
-        renderItem={renderItem}
+        data={post.videos}
+        renderItem={renderVideos}
         hasParallaxImages={true}
       />
       {pagination()}
