@@ -45,6 +45,7 @@ import SearchScreen from './src/screens/SearchScreen';
 import SelectTierScreen from './src/screens/SelectTierScreen';
 import PostScreen from './src/screens/PostScreen';
 import TeamChatScreen from './src/screens/TeamChatScreen';
+import CommentsScreen from './src/screens/CommentsScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -123,10 +124,18 @@ const App: () => React$Node = () => {
       <StatusBar barStyle="dark-content" />
       <NavigationContainer>
         <VanillaStack.Navigator
+          mode="modal"
+          headerMode="screen"
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
+
             ...TransitionPresets.ScaleFromCenterAndroid,
+            headerStyle: {
+              backgroundColor: 'white',
+              elevation: 0, // remove shadow on Android
+              shadowOpacity: 0, // remove shadow on iOS
+            },
           }}>
           <VanillaStack.Screen
             name="BottomStackNavigation"
@@ -141,6 +150,24 @@ const App: () => React$Node = () => {
             component={TeamChatScreen}
             options={({route}) => {
               return {title: '', ...TransitionPresets.SlideFromRightIOS};
+            }}
+          />
+          <VanillaStack.Screen
+            name="CommentsScreen"
+            component={CommentsScreen}
+            options={({route}) => {
+              return {
+                title: 'Comments',
+                ...TransitionPresets.SlideFromRightIOS,
+              };
+            }}
+          />
+          <VanillaStack.Screen
+            name="PostEditor"
+            component={PostEditor}
+            options={{
+              title: 'Create post',
+              ...TransitionPresets.ModalPresentationIOS,
             }}
           />
         </VanillaStack.Navigator>
@@ -256,13 +283,6 @@ function HomeStack() {
             sharedElements={(route, otherRoute, showing) => {
               const post = route.params.post;
               return [`post.${post.id}.text`];
-            }}
-          />
-          <Stack.Screen
-            name="PostEditor"
-            component={PostEditor}
-            options={{
-              title: 'Create post',
             }}
           />
           <Stack.Screen

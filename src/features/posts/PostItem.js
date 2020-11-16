@@ -15,6 +15,7 @@ import Video from 'react-native-video';
 import Carousel, {ParallaxImage, Pagination} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import PostToolbar from '../postToolbar/PostToolbar';
 import axios from 'axios';
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -159,6 +160,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         renderItem={renderVideos}
         hasParallaxImages={true}
       />
+      <PostToolbar post={post} />
       {pagination()}
     </View>
   );

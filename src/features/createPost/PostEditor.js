@@ -21,7 +21,10 @@ import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
-function ChainedPostsCarousel() {
+function ChainedPostsCarousel({route}) {
+  const currentPost = route.params?.currentPost;
+  const isComment = route.params?.isComment;
+
   const navigation = useNavigation();
   const [posts, setPosts] = useState([
     {
@@ -35,9 +38,7 @@ function ChainedPostsCarousel() {
     let newPostIds = [];
 
     // first create each post separetaly
-    console.log('posts', posts);
     for await (let post of posts) {
-      console.log('pp', posts, post);
       try {
         let url = Config.API_URL + '/v1/posts/';
         let formData = new FormData();
@@ -49,7 +50,6 @@ function ChainedPostsCarousel() {
         let {id} = response.data;
         handleCreateVideo(response.data);
         newPostIds.push(id);
-        console.log(response);
       } catch (e) {
         console.error(e);
       }
@@ -57,7 +57,6 @@ function ChainedPostsCarousel() {
 
     // then chain them all together
     // doing this until a new endpoint is added which handle everything at once
-    console.log(posts.length);
     if (posts.length > 1) {
       try {
         let url = Config.API_URL + '/v1/chain_posts/';
@@ -76,7 +75,6 @@ function ChainedPostsCarousel() {
       let url = Config.API_URL + '/v1/upload_video/';
       let formData = new FormData();
       formData.append('post', post.id);
-      console.log("sadsaddasasddsaads",post,posts, image);
       let response = await axios.post(url, formData);
       let uploadUrl = response.data.url;
       RNFetchBlob.fetch(
@@ -87,29 +85,11 @@ function ChainedPostsCarousel() {
         RNFetchBlob.wrap(image.path),
       )
         .then((r) => {
-          console.log(r, 'dsaadssadsad');
+          console.log(r, 'response');
         })
         .catch((e) => {
-          console.error(e, 'asdsadsadsaddasads');
+          console.error(e, 'error');
         });
-      //fetch(uploadUrl, {method: 'PUT', body: f});
-
-      /*const upload = UpChunk.createUpload({
-        endpoint: uploadUrl,
-        file: data,
-        chunkSize: 5120, // Uploads the file in ~5mb chunks
-      });
-      upload.on('error', err => {
-        console.error('💥 🙀', err.detail);
-      });
-
-      upload.on('progress', progress => {
-        console.log(`So far we've uploaded ${progress.detail}% of this file.`);
-      });
-
-      upload.on('success', () => {
-        console.log("Wrap it up, we're done here. 👋");
-      });*/
     } catch (e) {
       console.error(e);
     }
@@ -140,7 +120,13 @@ function ChainedPostsCarousel() {
   }, [posts]);
   function renderItem({item, index}) {
     return (
-      <PostEditor post={item} index={index} posts={posts} setPosts={setPosts} />
+      <PostEditor
+        post={item}
+        index={index}
+        posts={posts}
+        setPosts={setPosts}
+        isComment={isComment}
+      />
     );
   }
 
@@ -155,7 +141,7 @@ function ChainedPostsCarousel() {
   );
 }
 
-function PostEditor({post, posts, setPosts, index}) {
+function PostEditor({post, posts, setPosts, index, isComment}) {
   const isKeyboardVisible = useKeyboardOpen();
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
@@ -170,17 +156,6 @@ function PostEditor({post, posts, setPosts, index}) {
       return oldPosts;
     });
     //setText(value);
-  }
-
-  async function handleCreatePost() {
-    try {
-      let url = Config.API_URL + '/v1/posts/';
-      let formData = new FormData();
-      formData.append('text', text);
-      let response = await axios.post(url, formData);
-    } catch (e) {
-      console.error(e);
-    }
   }
 
   function handleSelectImages() {
@@ -239,8 +214,6 @@ function PostEditor({post, posts, setPosts, index}) {
     });
   }
 
-  console.log('post', post);
-
   return (
     <View
       style={{
@@ -295,18 +268,20 @@ function PostEditor({post, posts, setPosts, index}) {
             <Subheading>Add media</Subheading>
           </View>
         </TouchableNativeFeedback>
-        <TouchableNativeFeedback onPress={chainNewPost}>
-          <View
-            style={{
-              width: '50%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icon size={30} name="link-variant" />
-            <Subheading>Chain more posts</Subheading>
-          </View>
-        </TouchableNativeFeedback>
+        {isComment ? null : (
+          <TouchableNativeFeedback onPress={chainNewPost}>
+            <View
+              style={{
+                width: '50%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon size={30} name="link-variant" />
+              <Subheading>Chain more posts</Subheading>
+            </View>
+          </TouchableNativeFeedback>
+        )}
       </View>
     </View>
   );
