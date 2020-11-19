@@ -9,7 +9,8 @@ import {
   StyleSheet,
   StatusBar,
 } from 'react-native';
-import {Text, Avatar, useTheme} from 'react-native-paper';
+import {Text, Avatar, FAB, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import {Config} from 'react-native-config';
 import axios from 'axios';
 
@@ -39,6 +40,7 @@ const Item = ({comment}) => {
 };
 
 function Comments({route}) {
+  const navigation = useNavigation();
   const {post} = route.params;
   const [comments, setComments] = useState([]);
   const [next, setNext] = useState(null);
@@ -67,6 +69,17 @@ function Comments({route}) {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
+      <FAB
+        style={styles.fab}
+        icon="reply"
+        color="white"
+        onPress={() =>
+          navigation.navigate('CommentsEditor', {
+            post: post,
+            setComments: setComments,
+          })
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -81,6 +94,12 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 32,
+    right: 0,
+    bottom: 0,
   },
 });
 

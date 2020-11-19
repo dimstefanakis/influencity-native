@@ -33,6 +33,7 @@ import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
+import CommentsEditor from './src/screens/CommentEditor';
 import NewPostsScreen from './src/screens/NewPostsScreen';
 import {
   MyProjectsScreen,
@@ -167,6 +168,14 @@ const App: () => React$Node = () => {
             component={PostEditor}
             options={{
               title: 'Create post',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="CommentsEditor"
+            component={CommentsEditor}
+            options={{
+              title: 'Reply',
               ...TransitionPresets.ModalPresentationIOS,
             }}
           />
