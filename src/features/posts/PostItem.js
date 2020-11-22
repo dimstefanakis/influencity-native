@@ -22,7 +22,8 @@ const {width: screenWidth} = Dimensions.get('window');
 function PostItem({post, showProfile = true, fullscreen = false}) {
   const navigation = useNavigation();
   const [activeSlide, setActiveSlide] = useState(0);
-  const [chainedPosts] = useState([post, ...post.chained_posts]);
+  const rest = post.chained_posts || [];
+  const [chainedPosts] = useState([post, ...rest]);
 
   function handleCoachPress() {
     navigation.navigate('CoachMainScreen', {coach: post.coach});

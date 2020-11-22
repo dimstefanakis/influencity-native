@@ -31,22 +31,19 @@ function MyProjects({viewAs = 'sub'}) {
 
   return (
     <View>
-      <Text
-        style={{
-          marginTop: 40,
-          marginLeft: 20,
-          fontSize: 24,
-          ...theme.fonts.medium,
-        }}>
-        My projects
-      </Text>
+      {viewAs == 'my_profile' ? null : (
+        <Text
+          style={{
+            marginTop: 40,
+            marginLeft: 20,
+            fontSize: 24,
+            ...theme.fonts.medium,
+          }}>
+          My projects
+        </Text>
+      )}
 
-      <ScrollView
-        contentContainerStyle={{
-          padding: 20,
-          backgroundColor: 'white',
-          height: '100%',
-        }}>
+      <ListWrapper>
         <View
           style={{
             flexDirection: 'row',
@@ -57,9 +54,28 @@ function MyProjects({viewAs = 'sub'}) {
             return <Project project={project} viewAs={viewAs} />;
           })}
         </View>
-      </ScrollView>
+      </ListWrapper>
     </View>
   );
+}
+
+function ListWrapper({children, viewAs}) {
+  if (viewAs == 'my_profile') {
+    return (
+      <ScrollView
+        contentContainerStyle={{
+          padding: 20,
+          backgroundColor: 'white',
+          height: '100%',
+        }}>
+        {children}
+      </ScrollView>
+    );
+  } else {
+    return (
+      <View style={{padding: 20, backgroundColor: 'white'}}>{children}</View>
+    );
+  }
 }
 
 export default MyProjects;

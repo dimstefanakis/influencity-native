@@ -19,6 +19,7 @@ import Config from 'react-native-config';
 import axios from 'axios';
 import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
+import { create } from 'react-test-renderer';
 const {width: screenWidth} = Dimensions.get('window');
 
 function ChainedPostsCarousel({route}) {
@@ -31,12 +32,13 @@ function ChainedPostsCarousel({route}) {
       index: 0,
       text: '',
       images: [],
+      videos: [],
     },
   ]);
 
   async function handleCreatePosts(selectedTiers) {
     let newPostIds = [];
-
+    let createdPosts = [];
     // first create each post separetaly
     for await (let post of posts) {
       try {
@@ -48,7 +50,11 @@ function ChainedPostsCarousel({route}) {
         });
         let response = await axios.post(url, formData);
         let {id} = response.data;
-        handleCreateVideo(response.data);
+        createdPosts.push(response.data);
+        if (post.videos.length > 0) {
+          handleCreateVideo(response.data);
+        }
+
         newPostIds.push(id);
       } catch (e) {
         console.error(e);
@@ -67,6 +73,10 @@ function ChainedPostsCarousel({route}) {
         console.error(e);
       }
     }
+
+    let previewPost = createdPosts[0];
+    previewPost.chained_posts = createdPosts.slice(1, createdPosts.length)
+    navigation.navigate('PostScreen', {post: previewPost});
   }
 
   async function handleCreateVideo(post) {
@@ -115,9 +125,6 @@ function ChainedPostsCarousel({route}) {
     });
   }, [navigation, handleCreatePosts]);
 
-  useEffect(() => {
-    console.log('posts', posts);
-  }, [posts]);
   function renderItem({item, index}) {
     return (
       <PostEditor
@@ -149,7 +156,6 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
   function handleChangeText(value) {
     let _post = post;
     _post.text = value;
-    console.log('in');
     setPosts((oldPosts) => {
       let foundIndex = oldPosts.findIndex((element) => element.index === index);
       oldPosts[foundIndex] = _post;
@@ -164,7 +170,6 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
       includeBase64: true,
     }).then((results) => {
       setImages(results); // delete later
-      console.log('rerere', results);
       let data = '';
       RNFetchBlob.fs
         .readStream(
@@ -181,7 +186,6 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
           ifstream.onData((chunk) => {
             // when encoding is `ascii`, chunk will be an array contains numbers
             // otherwise it will be a string
-            console.log('chink', chunk);
             data += chunk;
           });
           ifstream.onError((err) => {
@@ -202,7 +206,6 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
         oldPosts[foundIndex] = _post;
         return oldPosts;
       });
-      console.log(images);
       //setImages([...images, ...results]);
     });
   }

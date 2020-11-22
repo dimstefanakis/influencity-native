@@ -8,8 +8,10 @@ import PostItem from '../features/posts/PostItem';
 function PostScreen({route}) {
   const theme = useTheme();
   const {post} = route.params;
-  const [chainedPosts] = useState([post, ...post.chained_posts]);
-
+  const rest = post.chained_posts || [];
+  console.log('rest',rest);
+  const [chainedPosts] = useState([post, ...rest]);
+  console.log('chainedPosts',chainedPosts);
   const renderItem = ({item, index, separators}) => {
     // index 0 corresponds to part 1
     const part = index + 1;
@@ -17,7 +19,6 @@ function PostScreen({route}) {
       <View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           {index != 0 ? <VerticalLine /> : null}
-
           <View
             style={{
               borderRadius: 50,

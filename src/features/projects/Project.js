@@ -20,12 +20,12 @@ function Project({project, viewAs = 'sub'}) {
   const theme = useTheme();
   const navigation = useNavigation();
   function handleProjectClick() {
-    if (viewAs == 'sub') {
+    if (viewAs == 'sub' || viewAs=="my_profile") {
       navigation.navigate('ProjectDashboardScreen', {project: project});
     }
   }
 
-  if (viewAs == 'sub') {
+  if (viewAs == 'sub'  || viewAs=="my_profile") {
     return <ProjectAsSub project={project} />;
   }
   return (

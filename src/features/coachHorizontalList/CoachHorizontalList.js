@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import Config from 'react-native-config';
 
-function CoachHorizontalList() {
+function CoachHorizontalList({withTiers = false}) {
   const [coaches, setCoaches] = useState([]);
   const theme = useTheme();
   const navigation = useNavigation();
@@ -38,7 +38,14 @@ function CoachHorizontalList() {
       <View style={{flexDirection: 'row'}}>
         {coaches.map((c, i) => {
           return (
-            <TouchableOpacity onPress={() => navigateToCoach(c)}>
+            <TouchableOpacity
+              onPress={() => navigateToCoach(c)}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: 10,
+                marginTop: 10,
+              }}>
               <SharedElement id={`coach.${c.name}.avatar`}>
                 <Avatar.Image
                   source={{uri: Config.DOMAIN + c.avatar}}
@@ -49,11 +56,13 @@ function CoachHorizontalList() {
                     backgroundColor: 'white',
                     //borderWidth: 2,
                     overflow: 'hidden',
-                    margin: 10,
                     marginLeft: 0,
                   }}
                 />
               </SharedElement>
+              {withTiers ? (
+                <Text style={{...theme.fonts.medium}}>{c.tier}</Text>
+              ) : null}
             </TouchableOpacity>
           );
         })}
