@@ -181,7 +181,7 @@ function Task({children, done = false}) {
   );
 }
 
-function TeamMember() {
+function TeamMember({member}) {
   let stockImage =
     'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
   return (
@@ -191,13 +191,13 @@ function TeamMember() {
   );
 }
 
-function Team() {
+function Team({project}) {
   return (
     <View style={{marginTop: 20}}>
       <Headline>Your team</Headline>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        {Array.from({length: 5}).map((i) => {
-          return <TeamMember />;
+        {project.my_team.members.map((member) => {
+          return <TeamMember member={member}/>;
         })}
       </View>
     </View>

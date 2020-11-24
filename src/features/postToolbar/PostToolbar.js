@@ -14,7 +14,14 @@ function PostToolbar({post}) {
     navigation.navigate('CommentsScreen', {post: post});
   }
   return (
-    <View style={{width: '100%', height: 40, flexDirection: 'row'}}>
+    <View
+      style={{
+        width: '100%',
+        height: 40,
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginRight: 10,
+      }}>
       <LikeButton post={post} />
       <IconWrapper onPress={handleCommentClick}>
         <Icon name="comment-text-outline" size={25} color="#212121" />

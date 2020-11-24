@@ -47,6 +47,7 @@ import SelectTierScreen from './src/screens/SelectTierScreen';
 import PostScreen from './src/screens/PostScreen';
 import TeamChatScreen from './src/screens/TeamChatScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
+import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -130,7 +131,6 @@ const App: () => React$Node = () => {
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
-
             ...TransitionPresets.ScaleFromCenterAndroid,
             headerStyle: {
               backgroundColor: 'white',
@@ -176,6 +176,14 @@ const App: () => React$Node = () => {
             component={CommentsEditor}
             options={{
               title: 'Reply',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="CompleteTaskScreen"
+            component={CompleteTaskScreen}
+            options={{
+              title: 'Complete task',
               ...TransitionPresets.ModalPresentationIOS,
             }}
           />

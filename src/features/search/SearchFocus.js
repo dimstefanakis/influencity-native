@@ -18,6 +18,7 @@ function SearchFocus({route, navigation}) {
 
   function handleDismissPress() {
     setSelectedExpertise(null);
+    navigation.goBack();
   }
 
   async function getResults() {

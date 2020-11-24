@@ -21,6 +21,8 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -28,7 +30,11 @@ let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
 function ProjectScreenDashboard({route}) {
   const theme = useTheme();
-  const {project} = route.params;
+  //const {project} = route.params;
+  const {myProjects} = useSelector((state) => state.projects);
+
+  // do this so state gets updated each time the redux tree is updated
+  const project = myProjects.find((p) => p.id == route.params.project.id);
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,7 +49,7 @@ function ProjectScreenDashboard({route}) {
   }, [navigation]);
   console.log(project);
   return (
-    <ScrollView contentContainerStyle={{width: '100%', height: '100%'}}>
+    <ScrollView style={{height: '100%'}}>
       <Text
         style={{
           marginTop: 10,
@@ -55,7 +61,7 @@ function ProjectScreenDashboard({route}) {
       </Text>
       <Progress project={project} />
       <Tasks project={project} />
-      <Team />
+      <Team project={project} />
       <Chat />
     </ScrollView>
   );
@@ -105,6 +111,14 @@ function Progress({project}) {
 
 function Tasks({project}) {
   const theme = useTheme();
+  const navigation = useNavigation();
+  function handleTaskCompletion(task, report) {
+    navigation.navigate('CompleteTaskScreen', {
+      project: project,
+      task: task,
+      report: report,
+    });
+  }
   return (
     <View style={{...styles.spacing}}>
       <Text
@@ -120,7 +134,13 @@ function Tasks({project}) {
       <View>
         {project.milestones.map((milestone) => {
           return (
-            <Task done={milestone.completed}>{milestone.description}</Task>
+            <Task
+              done={milestone.completed}
+              status={milestone.status}
+              milestone={milestone}
+              onPress={(report) => handleTaskCompletion(milestone, report)}>
+              {milestone.description}
+            </Task>
           );
         })}
       </View>
@@ -141,17 +161,20 @@ function BulletPoint() {
   );
 }
 
-function Task({children, done = false}) {
+function Task({children, done = false, status, milestone, onPress}) {
   const theme = useTheme();
   const [isDone, setDone] = useState(done);
-  let doneStyle = isDone
-    ? {
-        textDecorationLine: 'line-through',
-        textDecorationStyle: 'solid',
-      }
-    : {};
+  const report = milestone.reports.find((r) => r.milestone == milestone.id);
+  console.log(report, 'report');
+  let doneStyle =
+    isDone || status == 'pending'
+      ? {
+          textDecorationLine: 'line-through',
+          textDecorationStyle: 'solid',
+        }
+      : {};
   return (
-    <TouchableNativeFeedback onPress={() => setDone(!isDone)}>
+    <TouchableNativeFeedback onPress={() => onPress(report)}>
       <View>
         <View
           style={{
@@ -161,8 +184,12 @@ function Task({children, done = false}) {
           }}>
           <BulletPoint />
           <Text style={{...doneStyle, marginLeft: 5, flex: 1}}>{children}</Text>
-          {isDone ? (
-            <Icon name="check-circle" size={14} color={theme.colors.primary} />
+          {isDone || status == 'pending' ? (
+            <Icon
+              name="check-circle"
+              size={14}
+              color={status == 'pending' ? '#e6db0e' : theme.colors.primary}
+            />
           ) : (
             <Icon
               name="checkbox-blank-circle-outline"
@@ -178,8 +205,8 @@ function Task({children, done = false}) {
               width: '80%',
               marginTop: 10,
             }}>
-            <Text style={{marginBottom:2, color:'gray'}}>Feedback</Text>
-            <View style={{flexDirection: 'row', width:'100%'}}>
+            <Text style={{marginBottom: 2, color: 'gray'}}>Feedback</Text>
+            <View style={{flexDirection: 'row', width: '100%'}}>
               <Avatar.Image size={30} source={{uri: coachStockImage}} />
               <View style={{paddingLeft: 10}}>
                 <Text
@@ -204,15 +231,17 @@ function Task({children, done = false}) {
   );
 }
 
-function TeamMember() {
+function TeamMember({member}) {
   return (
     <View style={{margin: 2}}>
-      <Chip avatar={<Image source={{uri: stockImage}} />}>William</Chip>
+      <Chip avatar={<Image source={{uri: Config.DOMAIN + member.avatar}} />}>
+        {member.name}
+      </Chip>
     </View>
   );
 }
 
-function Team() {
+function Team({project}) {
   const theme = useTheme();
   return (
     <View style={{...styles.spacing}}>
@@ -227,8 +256,8 @@ function Team() {
         Your team
       </Text>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        {Array.from({length: 5}).map((i) => {
-          return <TeamMember />;
+        {project.my_team.members.map((member) => {
+          return <TeamMember member={member} />;
         })}
       </View>
     </View>

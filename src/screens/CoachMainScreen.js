@@ -19,6 +19,7 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 import {useDispatch, useSelector} from 'react-redux';
 import PostList from '../features/posts/PostList';
 import {getProjects} from '../features/projects/projectsSlice';
+import axios from 'axios';
 
 const Tab = createMaterialTopTabNavigator();
 const HeaderHeight = 300;
@@ -291,6 +292,7 @@ function Projects({coach}) {
 }
 
 function CoachMainScreenWithPosts({route}) {
+  const coach = route.params.coach;
   const MainScreen = <CoachMainScreen2 route={route} />;
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -311,7 +313,7 @@ function CoachMainScreenWithPosts({route}) {
           onPress={() => console.log('Pressed')}
         />
       </View>
-      <PostList ListHeaderComponent={MainScreen} />
+      <PostList ListHeaderComponent={MainScreen} coach={coach} />
     </SafeAreaView>
   );
 }
