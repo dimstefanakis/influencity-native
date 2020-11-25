@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, StyleSheet, Dimensions, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import {Button, Avatar, Text, useTheme} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
 import Config from 'react-native-config';
@@ -9,6 +15,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useSelector} from 'react-redux';
 import MyProjects from '../projects/MyProjects';
 import CoachHorizontalList from '../coachHorizontalList/CoachHorizontalList';
+import {useNavigation} from '@react-navigation/native';
 
 function Header({title}) {
   const theme = useTheme();
@@ -186,6 +193,7 @@ const initialLayout = {
 
 function Profile() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const {user} = useSelector((state) => state.authentication);
   let _user = user.coach ? user.coach : user.subscriber;
   const [index, setIndex] = React.useState(0);
@@ -229,6 +237,19 @@ function Profile() {
 
   return (
     <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          top: 15,
+          right: 15,
+        }}>
+        <Icon
+          name="settings"
+          size={25}
+          color="black"
+          onPress={() => navigation.navigate('SettingsScreen')}
+        />
+      </TouchableOpacity>
       <View
         style={{
           width: '100%',

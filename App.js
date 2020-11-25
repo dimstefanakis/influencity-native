@@ -48,6 +48,7 @@ import PostScreen from './src/screens/PostScreen';
 import TeamChatScreen from './src/screens/TeamChatScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
 import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -185,6 +186,20 @@ const App: () => React$Node = () => {
             options={{
               title: 'Complete task',
               ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="ProjectDashboardScreen"
+            component={ProjectDashboardScreen}
+            options={({route}) => {
+              return {title: ''};
+            }}
+          />
+          <VanillaStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={({route}) => {
+              return {title: ''};
             }}
           />
         </VanillaStack.Navigator>

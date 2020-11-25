@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -23,14 +24,15 @@ function SelectTier({route}) {
   const {handleCreateItems} = route.params;
   const {myTiers} = useSelector((state) => state.tiers);
   const [selectedTiers, setSelectedTiers] = useState([]);
+  const [selectedTier, setSelectedTier] = useState(null);
 
   function getTierValuesAndCreateItems() {
-    let tierValues = selectedTiers.map((t) => t.id);
+    // backend accepts array of tier ids
+    // will fix this soon, temporary hack for now
+    let tierValues = selectedTier.length == 0 ? [] : [selectedTier.id]; //selectedTiers.map((t) => t.id);
     handleCreateItems(tierValues);
-    console.log(tierValues);
   }
 
-  console.log(selectedTiers);
   return (
     <ScrollView
       contentContainerStyle={{
@@ -45,7 +47,9 @@ function SelectTier({route}) {
             tier={t}
             label={t.label}
             subheading={t.subheading}
+            selectedTier={selectedTier}
             setSelectedTiers={setSelectedTiers}
+            setSelectedTier={setSelectedTier}
           />
         );
       })}
@@ -62,33 +66,24 @@ function SelectTier({route}) {
   );
 }
 
-function Tier({tier, setSelectedTiers, style = {}}) {
+function Tier({
+  tier,
+  selectedTier,
+  setSelectedTiers,
+  setSelectedTier,
+  style = {},
+}) {
   const theme = useTheme();
-  const [selected, setSelected] = useState(false);
+  const selected = tier.label == selectedTier?.label;
 
-  useEffect(() => {
+  function handleSelect() {
     if (selected) {
-      setSelectedTiers((tiers) => {
-        let newTiers = [...tiers];
-        newTiers.push(tier);
-        return newTiers;
-      });
+      setSelectedTier(null);
     } else {
-      setSelectedTiers((tiers) => {
-        let newTiers = [...tiers];
-        let foundIndex = newTiers.findIndex((t) => t.label == tier.label);
-        console.log(foundIndex);
-
-        if (foundIndex != -1) {
-          console.log(foundIndex);
-
-          newTiers.splice(foundIndex, 1);
-        }
-        console.log(newTiers);
-        return newTiers;
-      });
+      setSelectedTier(tier);
     }
-  }, [selected]);
+  }
+  useEffect(() => {}, [selected]);
 
   return (
     <View
@@ -101,9 +96,7 @@ function Tier({tier, setSelectedTiers, style = {}}) {
         borderWidth: selected ? 3 : 1,
         overflow: 'hidden',
       }}>
-      <TouchableNativeFeedback
-        useForeground
-        onPress={() => setSelected(!selected)}>
+      <TouchableNativeFeedback useForeground onPress={handleSelect}>
         <View
           style={{
             height: '100%',

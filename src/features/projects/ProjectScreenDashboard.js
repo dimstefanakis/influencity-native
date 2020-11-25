@@ -47,9 +47,9 @@ function ProjectScreenDashboard({route}) {
       ),
     });
   }, [navigation]);
-  console.log(project);
+
   return (
-    <ScrollView style={{height: '100%'}}>
+    <ScrollView style={{height: '100%', backgroundColor:'white'}}>
       <Text
         style={{
           marginTop: 10,
@@ -86,7 +86,7 @@ function Progress({project}) {
       }}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Text style={{fontSize: 24, ...theme.fonts.medium}}>
-          {(completedTasks / project.milestones.length) * 100}%
+          {Math.round((completedTasks / project.milestones.length) * 100)}%
         </Text>
         <Subheading>Work done</Subheading>
       </View>

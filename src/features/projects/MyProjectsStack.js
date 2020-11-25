@@ -35,13 +35,7 @@ export default function MyProjectsStack() {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="ProjectDashboardScreen"
-          component={ProjectDashboardScreen}
-          options={({route}) => {
-            return {title: ''};
-          }}
-        />
+        
         {/*<Stack.Screen
           name="TeamChatScreen"
           component={TeamChatScreen}
