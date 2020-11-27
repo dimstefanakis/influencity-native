@@ -197,7 +197,7 @@ function Team({project}) {
       <Headline>Your team</Headline>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         {project.my_team.members.map((member) => {
-          return <TeamMember member={member}/>;
+          return <TeamMember member={member} />;
         })}
       </View>
     </View>

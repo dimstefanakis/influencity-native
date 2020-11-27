@@ -3,18 +3,17 @@ import React, {useEffect} from 'react';
 import {SafeAreaView} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-import ProjectDashboardScreen from '../../screens/ProjectDashboardScreen';
-import {MyProjectsScreen} from '../../screens/ProjectsScreen';
-import TeamChatScreen from '../../screens/TeamChatScreen';
-import MyProjects from './MyProjects';
+import Settings from './Settings';
+import TierSettings from './TierSettings';
+import ChangeTier from '../tiers/ChangeTier';
 
 const Stack = createSharedElementStackNavigator();
 
-export default function MyProjectsStack() {
+function SettingsStack() {
   return (
     <SafeAreaView style={{flexGrow: 1}}>
       <Stack.Navigator
-        initialRouteName="MyProjectsScreen"
+        initialRouteName="SettingsScreen"
         mode="modal"
         headerMode="screen"
         screenOptions={{
@@ -29,8 +28,22 @@ export default function MyProjectsStack() {
           },
         }}>
         <Stack.Screen
-          name="MyProjectsScreen"
-          component={MyProjects}
+          name="SettingsScreen"
+          component={Settings}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="TierSettings"
+          component={TierSettings}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="ChangeTierScreen"
+          component={ChangeTier}
           options={{
             headerShown: false,
           }}
@@ -39,3 +52,5 @@ export default function MyProjectsStack() {
     </SafeAreaView>
   );
 }
+
+export default SettingsStack;

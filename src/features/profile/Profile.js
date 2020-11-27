@@ -247,7 +247,7 @@ function Profile() {
           name="settings"
           size={25}
           color="black"
-          onPress={() => navigation.navigate('SettingsScreen')}
+          onPress={() => navigation.push('SettingsScreen')}
         />
       </TouchableOpacity>
       <View

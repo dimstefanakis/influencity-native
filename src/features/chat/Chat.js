@@ -1,10 +1,13 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {View} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
+import {useSelector} from 'react-redux';
 
-function Chat() {
+function Chat({route}) {
+  const {room} = route.params;
   const [messages, setMessages] = useState([]);
 
+  console.log(room)
   // test message
   useEffect(() => {
     setMessages([

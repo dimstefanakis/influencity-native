@@ -9,6 +9,7 @@ import {
 import {Text, Divider, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {useNavigation} from '@react-navigation/native';
 
 function Settings() {
   const theme = useTheme();
@@ -43,10 +44,14 @@ function ProfileSettings() {
 function GeneralSettings() {}
 
 function MyTiersSettings() {
+  const navigation = useNavigation();
+  function handlePress() {
+    navigation.push('TierSettings');
+  }
   return (
     <View style={{marginTop: 10, marginBottom: 10}}>
       <Header title="My tiers" />
-      <Setting icon="staro" text="Change my tiers" />
+      <Setting icon="staro" text="Change my tiers" onPress={handlePress} />
     </View>
   );
 }
@@ -67,9 +72,9 @@ function Header({title}) {
   );
 }
 
-function Setting({text, icon, color = 'black'}) {
+function Setting({text, icon, color = 'black', onPress}) {
   return (
-    <TouchableNativeFeedback onPress={() => {}}>
+    <TouchableNativeFeedback onPress={onPress}>
       <View
         style={{
           flexDirection: 'row',

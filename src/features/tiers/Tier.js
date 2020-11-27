@@ -1,17 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  View,
-  TouchableNativeFeedback,
-} from 'react-native';
-import {
-  Text,
-  Subheading,
-} from 'react-native-paper';
+import {View, TouchableNativeFeedback} from 'react-native';
+import {Text, Subheading} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Tier({tier, handleSelect}) {
+function Tier({tier, onPress}) {
   return (
     <View
       style={{
@@ -23,7 +17,7 @@ function Tier({tier, handleSelect}) {
         borderWidth: 1,
         overflow: 'hidden',
       }}>
-      <TouchableNativeFeedback useForeground onPress={handleSelect}>
+      <TouchableNativeFeedback useForeground onPress={onPress}>
         <View
           style={{
             height: '100%',

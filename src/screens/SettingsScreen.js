@@ -1,3 +1,3 @@
-import Settings from '../features/settings/Settings';
+import SettingsStack from '../features/settings/SettingsStack';
 
-export default Settings;
+export default SettingsStack;

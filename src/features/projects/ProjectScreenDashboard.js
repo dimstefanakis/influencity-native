@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
   View,
   ScrollView,
@@ -22,7 +23,8 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Config from 'react-native-config';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {getChatRoomMessages} from '../chat/chatSlice';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -30,26 +32,38 @@ let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
 function ProjectScreenDashboard({route}) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   //const {project} = route.params;
   const {myProjects} = useSelector((state) => state.projects);
-
+  const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated
-  const project = myProjects.find((p) => p.id == route.params.project.id);
+  const project =
+    myProjects.find((p) => p.id == route.params.project.id) || myProjects[0];
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => navigation.navigate('TeamChatScreen')}
+          onPress={() =>
+            navigation.navigate('TeamChatScreen', {
+              room: myChatRooms.find((room) => room.project == project.id),
+              project: project,
+            })
+          }
           style={{padding: 20}}>
           <Feather name="send" size={20} />
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+  }, [myChatRooms, navigation, project]);
+
+  useEffect(() => {
+    let teamChatId = myChatRooms.find((room) => room.project == project.id);
+    dispatch(getChatRoomMessages(teamChatId.id));
+  }, [dispatch, project]);
 
   return (
-    <ScrollView style={{height: '100%', backgroundColor:'white'}}>
+    <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
       <Text
         style={{
           marginTop: 10,

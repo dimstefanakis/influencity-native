@@ -14,7 +14,7 @@ function useGetPosts(endpoint) {
   const hasMore = useRef(true);
 
   async function getPosts() {
-    if(!hasMore.current){
+    if (!hasMore.current) {
       return;
     }
     try {
@@ -24,12 +24,11 @@ function useGetPosts(endpoint) {
       if (!response.data.next) {
         hasMore.current = false;
       }
-      if(!response.data.previous){
+      if (!response.data.previous) {
         setPosts(response.data.results);
-      }else{
+      } else {
         setPosts([...posts, ...response.data.results]);
       }
-
     } catch (e) {}
   }
 
