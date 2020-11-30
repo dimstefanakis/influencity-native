@@ -53,6 +53,7 @@ import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
+import {WsContext} from './src/context/wsContext';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 
 const fontConfig = {

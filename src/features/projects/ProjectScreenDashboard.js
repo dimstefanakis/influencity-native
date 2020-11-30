@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useContext} from 'react';
 import {
   View,
   ScrollView,
@@ -25,15 +25,16 @@ import Feather from 'react-native-vector-icons/Feather';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
 import {getChatRoomMessages} from '../chat/chatSlice';
+import WsContext from '../../context/wsContext';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
 let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
 function ProjectScreenDashboard({route}) {
+  console.log('in');
   const theme = useTheme();
   const dispatch = useDispatch();
-  //const {project} = route.params;
   const {myProjects} = useSelector((state) => state.projects);
   const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated

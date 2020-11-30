@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "177132675901",
+    "firebase_url": "https://coach-f9944.firebaseio.com",
+    "project_id": "coach-f9944",
+    "storage_bucket": "coach-f9944.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177132675901:android:2cb11cb0ad0e12d229db54",
+        "android_client_info": {
+          "package_name": "com.influencity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177132675901-esatkf423n72bh7d7qq20b8jmcj7hpv5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2ZTeK01vRqO93QFTFn5pDoDdv2jx-tAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177132675901-esatkf423n72bh7d7qq20b8jmcj7hpv5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,13 +19,21 @@ import {
 } from 'react-native-paper';
 import Project from './Project';
 import {useDispatch, useSelector} from 'react-redux';
+import Config from 'react-native-config';
 import {getMyProjects} from '../projects/projectsSlice';
 import {getMyChatRooms} from '../chat/chatSlice';
+import handleChatEvents from '../chat/handleWsEvents';
+import {WsContext} from '../../context/wsContext';
 
 function MyProjects({viewAs = 'sub'}) {
   const theme = useTheme();
+  const wsContext = useContext(WsContext);
   const dispatch = useDispatch();
   const {myProjects} = useSelector((state) => state.projects);
+  console.log(wsContext);
+
+  // hook that handles all chat events (populating redux chat state etc.)
+  handleChatEvents();
 
   useEffect(() => {
     // since this component is used in two other screens we do not need to get the data twice
@@ -34,7 +42,7 @@ function MyProjects({viewAs = 'sub'}) {
       dispatch(getMyProjects());
       dispatch(getMyChatRooms());
     }
-  }, [dispatch]);
+  }, []);
 
   return (
     <View>
