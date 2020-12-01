@@ -13,6 +13,26 @@ import {useTheme, Avatar, Button} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
 import Config from 'react-native-config';
+import PushNotification from 'react-native-push-notification';
+
+const LocalNotification = () => {
+  PushNotification.checkPermissions((permissions) =>
+    console.log('permissions', permissions),
+  );
+  PushNotification.localNotification({
+    autoCancel: true,
+    bigText:
+      'This is local notification demo in React Native app. Only shown, when expanded.',
+    subText: 'Local Notification Demo',
+    title: 'Local Notification Title',
+    message: 'Expand me to see more',
+    vibrate: true,
+    vibration: 300,
+    playSound: true,
+    soundName: 'default',
+    actions: '["Yes", "No"]',
+  });
+};
 
 function CoachActionsList() {
   const {user} = useSelector((state) => state.authentication);
@@ -20,7 +40,8 @@ function CoachActionsList() {
   console.log(user);
 
   function handleCreatePostPress() {
-    navigation.navigate('PostEditor');
+    //navigation.navigate('PostEditor');
+    LocalNotification();
   }
 
   function handleViewProjectsPress() {
@@ -30,22 +51,32 @@ function CoachActionsList() {
   return (
     <View style={{marginTop: 10}}>
       <ScrollView
-        contentContainerStyle={{flexDirection: 'row', alignItems: 'center',paddingLeft:20,paddingRight:20}}
+        contentContainerStyle={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
         horizontal
         showsHorizontalScrollIndicator={false}>
-        <Avatar.Image
-          size={60}
-          source={{uri: Config.DOMAIN + user.coach.avatar}}
-          style={{
-            borderRadius: 200,
-            //backgroundColor: 'white',
-            //borderWidth: 2,
-            overflow: 'hidden',
-            marginTop: 10,
-            marginBottom: 10,
-            marginRight: 10,
-          }}
-        />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('CoachMainScreen', {coach: user.coach})
+          }>
+          <Avatar.Image
+            size={60}
+            source={{uri: Config.DOMAIN + user.coach.avatar}}
+            style={{
+              borderRadius: 200,
+              //backgroundColor: 'white',
+              //borderWidth: 2,
+              overflow: 'hidden',
+              marginTop: 10,
+              marginBottom: 10,
+              marginRight: 10,
+            }}
+          />
+        </TouchableOpacity>
         <Button
           icon="plus-circle"
           compact

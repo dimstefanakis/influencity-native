@@ -23,6 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Config from 'react-native-config';
+import PushNotification from 'react-native-push-notification';
 import {useSelector, useDispatch} from 'react-redux';
 import {getChatRoomMessages} from '../chat/chatSlice';
 import WsContext from '../../context/wsContext';
@@ -31,8 +32,25 @@ let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
 let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
+const LocalNotification = () => {
+  console.log("inn")
+  PushNotification.checkPermissions((permissions)=>console.log("permissions",permissions)) 
+  PushNotification.localNotification({
+    autoCancel: true,
+    bigText:
+      'This is local notification demo in React Native app. Only shown, when expanded.',
+    subText: 'Local Notification Demo',
+    title: 'Local Notification Title',
+    message: 'Expand me to see more',
+    vibrate: true,
+    vibration: 300,
+    playSound: true,
+    soundName: 'default',
+    actions: '["Yes", "No"]',
+  });
+};
+
 function ProjectScreenDashboard({route}) {
-  console.log('in');
   const theme = useTheme();
   const dispatch = useDispatch();
   const {myProjects} = useSelector((state) => state.projects);
@@ -63,6 +81,9 @@ function ProjectScreenDashboard({route}) {
     dispatch(getChatRoomMessages(teamChatId.id));
   }, [dispatch, project]);
 
+  useEffect(() => {
+    LocalNotification();
+  }, []);
   return (
     <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
       <Text

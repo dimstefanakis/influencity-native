@@ -55,6 +55,7 @@ import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
 import {WsContext} from './src/context/wsContext';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
+import {notifHandler} from './notifHandler';
 
 const fontConfig = {
   default: {
@@ -98,6 +99,7 @@ const theme = {
 };
 
 function ReduxWrapper() {
+  notifHandler();
   return (
     <Provider store={store}>
       <SafeAreaProvider>

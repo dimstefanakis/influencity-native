@@ -25,7 +25,7 @@ public class MainApplication extends MultiDexApplication  implements ReactApplic
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new RNFetchBlobPackage());
+          //packages.add(new ReactNativePushNotificationPackage());
           return packages;
         }
 

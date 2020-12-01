@@ -23,7 +23,7 @@ function SearchFocus({route, navigation}) {
 
   async function getResults() {
     try {
-      let url = `${Config.API_URL}/v1/coaches?expertise=${selectedExpertise.name}`;
+      let url = `${Config.API_URL}/v1/coaches?expertise=${selectedExpertise.name}&name=${searchQuery}`;
       let response = await axios.get(url);
       setResults(response.data);
     } catch (e) {
@@ -36,7 +36,7 @@ function SearchFocus({route, navigation}) {
     if (selectedExpertise) {
       getResults();
     }
-  }, [selectedExpertise]);
+  }, [selectedExpertise, searchQuery]);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
