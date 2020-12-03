@@ -18,11 +18,9 @@ function PostBox() {
     dispatch(getNewPosts());
   }, [dispatch]);
 
-  console.log(newPosts);
   return newPosts && newPosts.length > 0 ? (
     <View style={{marginTop: 10}}>
       {newPosts.map((bundle) => {
-        console.log(bundle);
         return (
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Avatar.Image

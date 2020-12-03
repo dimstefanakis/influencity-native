@@ -49,10 +49,6 @@ function Login() {
     navigation.navigate('Signup');
   }
 
-  useEffect(() => {
-    console.log(token);
-  }, [loading, token]);
-
   return (
     <View
       style={{

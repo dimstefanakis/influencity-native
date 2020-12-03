@@ -170,7 +170,6 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 function ChainedPostCarousel({post}) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [chainedPosts] = useState([post, ...post.chained_posts]);
-  console.log(chainedPosts);
   function pagination() {
     return (
       <Pagination

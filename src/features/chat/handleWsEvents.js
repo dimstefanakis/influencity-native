@@ -12,7 +12,6 @@ function handleWsEvents() {
   const wsContext = useContext(WsContext);
   const dispatch = useDispatch();
   const {myChatRooms} = useSelector((state) => state.chat);
-  console.log(wsContext);
 
   function connect(room, url) {
     let ws = new WebSocket(url);

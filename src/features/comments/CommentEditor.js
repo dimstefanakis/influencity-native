@@ -2,7 +2,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
-  Text,
   View,
   TouchableNativeFeedback,
   Image,
@@ -11,20 +10,32 @@ import {
   Platform,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {TextInput, Button, Subheading} from 'react-native-paper';
+import {
+  TextInput,
+  Text,
+  Button,
+  Subheading,
+  useTheme,
+} from 'react-native-paper';
 import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import axios from 'axios';
-import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
 function CommentEditor({route}) {
+  const theme = useTheme();
   const navigation = useNavigation();
-  const {post, setComments} = route.params;
+  const {
+    post,
+    setComments,
+    replyComment,
+    setTopLevelComments,
+    squeezeReplies,
+  } = route.params;
   const [comment, setComment] = useState({text: '', images: []});
   const isKeyboardVisible = useKeyboardOpen();
   const [text, setText] = useState('');
@@ -51,6 +62,9 @@ function CommentEditor({route}) {
       let formdata = new FormData();
       formdata.append('text', comment.text);
       formdata.append('post', post.id);
+      if (replyComment) {
+        formdata.append('parent', replyComment.id);
+      }
 
       comment.images.map((image) => {
         formdata.append('images', {
@@ -63,10 +77,15 @@ function CommentEditor({route}) {
         });
       });
       let response = await axios.post(url, formdata);
-      console.log(response.data);
-      setComments((comments) => [...comments, response.data]);
+      if (replyComment) {
+        squeezeReplies(setComments, [response.data], replyComment);
+      } else {
+        setComments((comments) => [...comments, response.data]);
+      }
       navigation.goBack();
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   function handleChangeText(value) {
@@ -113,7 +132,6 @@ function CommentEditor({route}) {
       _comment.images = results;
 
       setComment(_comment);
-      console.log(images);
       //setImages([...images, ...results]);
     });
   }
@@ -125,12 +143,27 @@ function CommentEditor({route}) {
         alignItems: 'center',
         width: '100%',
         minHeight: '100%',
+        backgroundColor: 'white',
       }}>
+      {replyComment ? (
+        <View
+          style={{justifyContent: 'flex-start', width: '100%', padding: 20}}>
+          <Text style={{...theme.fonts.medium}}>
+            Replying to {replyComment.user.name}
+          </Text>
+          <Text style={{color: 'gray'}}>{replyComment.text}</Text>
+        </View>
+      ) : null}
       <TextInput
         multiline
         mode="flat"
         label="Post your knowledge"
-        style={{backgroundColor: 'white', width: '100%', flex: 1}}
+        style={{
+          backgroundColor: 'white',
+          width: '100%',
+          minHeight: 200,
+          flex: 1,
+        }}
         underlineColor="transparent"
         onChangeText={handleChangeText}
       />
@@ -159,7 +192,14 @@ function CommentEditor({route}) {
         })}
       </View>
 
-      <View style={{flexDirection: 'row', height: 80}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          height: 80,
+          position: 'absolute',
+          bottom: 50,
+          justifyContent: 'center',
+        }}>
         <TouchableNativeFeedback onPress={handleSelectImages}>
           <View
             style={{

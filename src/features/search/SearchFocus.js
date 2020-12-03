@@ -32,7 +32,6 @@ function SearchFocus({route, navigation}) {
   }
 
   useEffect(() => {
-    console.log(selectedExpertise);
     if (selectedExpertise) {
       getResults();
     }

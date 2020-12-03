@@ -30,7 +30,6 @@ function MyProjects({viewAs = 'sub'}) {
   const wsContext = useContext(WsContext);
   const dispatch = useDispatch();
   const {myProjects} = useSelector((state) => state.projects);
-  console.log(wsContext);
 
   // hook that handles all chat events (populating redux chat state etc.)
   handleChatEvents();

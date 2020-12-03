@@ -17,7 +17,6 @@ function CompleteTask({route}) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {task, project, report} = route.params;
-  console.log('sadadsads', route.params);
   const [loading, setLoading] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState(report?.members || []);
   const [message, setSelectedMessage] = useState(report?.message || '');

@@ -27,7 +27,6 @@ const HeaderHeight = 300;
 function CoachMainScreen({route}) {
   const scrollY = useRef(new Animated.Value(0)).current;
   const coach = route.params.coach;
-  console.log(coach);
   return (
     <View
       style={{

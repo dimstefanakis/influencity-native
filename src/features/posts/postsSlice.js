@@ -9,7 +9,6 @@ export const getPosts = createAsyncThunk(
     const {user} = thunkApi.getState().authentication;
     const url = Config.API_URL + '/v1/posts/';
     try {
-      console.log(url);
       let response = await axios.get(url);
       return response.data;
     } catch (e) {
@@ -23,7 +22,6 @@ export const getNewPosts = createAsyncThunk(
   async (arg, thunkApi) => {
     const url = Config.API_URL + '/v1/new_posts/';
     try {
-      console.log(url);
       let response = await axios.get(url);
       return response.data;
     } catch (e) {

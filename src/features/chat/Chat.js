@@ -26,15 +26,11 @@ function Chat({route}) {
       },
     };
   });
-  console.log(myChatRooms);
-  console.log(room);
-
   const onSend = useCallback(
     (messages = []) => {
       //setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
       try {
         const ws = wsContext.data.find((d) => d.room.id == room.id).ws;
-        console.log("room", room)
         let message = {
           text: messages[0].text,
           user: messages[0].user._id,

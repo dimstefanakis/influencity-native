@@ -37,7 +37,6 @@ const LocalNotification = () => {
 function CoachActionsList() {
   const {user} = useSelector((state) => state.authentication);
   const navigation = useNavigation();
-  console.log(user);
 
   function handleCreatePostPress() {
     //navigation.navigate('PostEditor');

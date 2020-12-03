@@ -26,7 +26,6 @@ function Search() {
   const [selectedExpertise, setSelectedExpertise] = useState(null);
   const [results, setResults] = useState(null);
   const onChangeSearch = (query) => setSearchQuery(query);
-  console.log(expertiseFields);
 
   useEffect(() => {
     dispatch(getExpertiseFields());

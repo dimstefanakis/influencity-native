@@ -33,7 +33,6 @@ let stockImage =
 let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
 const LocalNotification = () => {
-  console.log("inn")
   PushNotification.checkPermissions((permissions)=>console.log("permissions",permissions)) 
   PushNotification.localNotification({
     autoCancel: true,
@@ -201,7 +200,6 @@ function Task({children, done = false, status, milestone, onPress}) {
   const theme = useTheme();
   const [isDone, setDone] = useState(done);
   const report = milestone.reports.find((r) => r.milestone == milestone.id);
-  console.log(report, 'report');
   let doneStyle =
     isDone || status == 'pending'
       ? {

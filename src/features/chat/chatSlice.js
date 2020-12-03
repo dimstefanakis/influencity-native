@@ -39,7 +39,6 @@ export const chatSlice = createSlice({
       const {room, newMessages} = action.payload;
       let foundChatRoom = state.myChatRooms.findIndex((r) => r.id == room.id);
       let test = GiftedChat.append(room.messages, newMessages);
-      console.log(test, foundChatRoom);
       state.myChatRooms[foundChatRoom].messages = GiftedChat.append(
         state.myChatRooms[foundChatRoom].messages,
         newMessages,

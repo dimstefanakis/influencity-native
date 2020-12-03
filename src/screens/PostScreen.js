@@ -9,9 +9,8 @@ function PostScreen({route}) {
   const theme = useTheme();
   const {post} = route.params;
   const rest = post.chained_posts || [];
-  console.log('rest',rest);
   const [chainedPosts] = useState([post, ...rest]);
-  console.log('chainedPosts',chainedPosts);
+
   const renderItem = ({item, index, separators}) => {
     // index 0 corresponds to part 1
     const part = index + 1;

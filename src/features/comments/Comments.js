@@ -8,33 +8,91 @@ import {
   SafeAreaView,
   StyleSheet,
   StatusBar,
+  TouchableOpacity,
 } from 'react-native';
 import {Text, Avatar, FAB, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {Config} from 'react-native-config';
+import CommentToolbar from './CommentToolbar';
 import axios from 'axios';
 
-const Item = ({comment}) => {
+function squeezeReplies(setComments, replies, parent) {
+  setComments((comments) => {
+    // even though the comments are nested, flatlist is still displaying the comments linearly
+    // here we squeeze the replies between the top level comments so flatlist can render them
+    let newComments = [...comments];
+    let parentPostIndex = newComments.findIndex((c) => c.id == parent.id);
+    newComments = [
+      ...newComments.slice(0, parentPostIndex + 1),
+      ...replies,
+      ...newComments.slice(parentPostIndex + 1),
+    ];
+    return newComments;
+  });
+}
+
+function setTopLevelComments(setComments, data) {
+  setComments((comments) => [...comments, data]);
+}
+
+const Item = ({comment, post, setComments}) => {
   const theme = useTheme();
-  console.log('comment', comment);
-  const poster = comment.user.subscriber
-    ? comment.user.subscriber
-    : comment.user.coach;
+  const poster = comment.user;
+  const [replies, setReplies] = useState([]);
+  const [repliesLoaded, setRepliesLoaded] = useState(false);
+
+  async function getReplies() {
+    try {
+      let url = `${Config.API_URL}/v1/comment_replies/${comment.id}/`;
+      let response = await axios.get(url);
+      setReplies(response.data.results);
+      setRepliesLoaded(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    if (replies.length > 0) {
+      squeezeReplies(setComments, replies, comment);
+    }
+  }, [replies]);
 
   return (
-    <View
-      style={{
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 10,
-        marginBottom: 10,
-        flexDirection: 'row',
-      }}>
-      <Avatar.Image source={{uri: Config.DOMAIN + poster.avatar}} size={50} />
-      <View style={{marginLeft: 10, marginRight: 10, flexShrink: 1}}>
-        <Text style={{...theme.fonts.medium, fontSize: 18}}>{poster.name}</Text>
-        <Text>{comment.text}</Text>
+    // we use 60 so the comments can horizontally align with the above comments
+    <View style={{marginLeft: comment.level * 60}}>
+      <View
+        style={{
+          marginLeft: 20,
+          marginRight: 20,
+          marginTop: 10,
+          marginBottom: 10,
+          flexDirection: 'row',
+        }}>
+        <Avatar.Image source={{uri: Config.DOMAIN + poster.avatar}} size={50} />
+        <View style={{marginLeft: 10, marginRight: 10, flexShrink: 1}}>
+          <Text style={{...theme.fonts.medium, fontSize: 18}}>
+            {poster.name}
+          </Text>
+          <Text>{comment.text}</Text>
+        </View>
       </View>
+      <CommentToolbar
+        comment={comment}
+        setComments={setComments}
+        originalPost={post}
+        squeezeReplies={squeezeReplies}
+        setTopLevelComments={squeezeReplies}
+      />
+      {comment.reply_count && !repliesLoaded ? (
+        <TouchableOpacity
+          style={{marginLeft: 20, marginRight: 20}}
+          onPress={() => getReplies()}>
+          <Text style={{...theme.fonts.medium}}>
+            View all {comment.reply_count} replies...
+          </Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -46,7 +104,10 @@ function Comments({route}) {
   const [next, setNext] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  const renderItem = ({item}) => <Item comment={item} />;
+  console.log("comments",comments)
+  const renderItem = ({item}) => (
+    <Item comment={item} post={post} setComments={setComments} />
+  );
 
   async function getComments() {
     try {
@@ -76,7 +137,10 @@ function Comments({route}) {
         onPress={() =>
           navigation.navigate('CommentsEditor', {
             post: post,
+            replyComment: null,
             setComments: setComments,
+            setTopLevelComments: setTopLevelComments,
+            squeezeReplies: squeezeReplies,
           })
         }
       />
