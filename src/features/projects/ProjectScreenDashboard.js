@@ -33,7 +33,9 @@ let stockImage =
 let coachStockImage = 'https://randomuser.me/api/portraits/men/75.jpg';
 
 const LocalNotification = () => {
-  PushNotification.checkPermissions((permissions)=>console.log("permissions",permissions)) 
+  PushNotification.checkPermissions((permissions) =>
+    console.log('permissions', permissions),
+  );
   PushNotification.localNotification({
     autoCancel: true,
     bigText:

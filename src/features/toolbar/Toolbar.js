@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity, Animated} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Config from 'react-native-config';
@@ -11,17 +12,19 @@ export function IconWrapper({children, onPress}) {
     <TouchableOpacity
       onPress={onPress}
       style={{
-        justifyContent: 'center',
+        marginLeft: 8,
         alignItems: 'center',
         height: '100%',
-        width: '13%',
+        width: '16%',
+        flexDirection: 'row',
       }}>
       {children}
     </TouchableOpacity>
   );
 }
 
-export function LikeButton({url, hasReacted}) {
+export function LikeButton({text, url, hasReacted}) {
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [reacted, setReacted] = useState(hasReacted);
 
@@ -57,6 +60,15 @@ export function LikeButton({url, hasReacted}) {
         size={25}
         color={reacted ? 'red' : '#212121'}
       />
+      <Text
+        style={{
+          ...theme.fonts.medium,
+          fontSize: 16,
+          marginLeft: 5,
+          color: reacted ? 'red' : '#212121',
+        }}>
+        {text}
+      </Text>
     </IconWrapper>
   );
 }

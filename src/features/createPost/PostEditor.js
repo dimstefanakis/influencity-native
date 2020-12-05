@@ -19,7 +19,6 @@ import Config from 'react-native-config';
 import axios from 'axios';
 import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
-import { create } from 'react-test-renderer';
 const {width: screenWidth} = Dimensions.get('window');
 
 function ChainedPostsCarousel({route}) {

@@ -14,6 +14,7 @@ function CommentToolbar({
   squeezeReplies,
 }) {
   const navigation = useNavigation();
+  const url = `${Config.API_URL}/v1/posts/${comment.id}/change_react/`;
 
   function handleReplyClick() {
     //navigation.navigate('PostEditor', {isComment: true, currentPost: post});
@@ -34,7 +35,10 @@ function CommentToolbar({
         marginLeft: 10,
         marginRight: 10,
       }}>
-      <LikeButton />
+      <LikeButton
+        url={url}
+        text={comment.reacts != 0 ? comment.reacts : null}
+      />
       <IconWrapper onPress={handleReplyClick}>
         <Icon name="reply-outline" size={25} color="#212121" />
       </IconWrapper>
