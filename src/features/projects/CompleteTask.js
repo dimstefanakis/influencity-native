@@ -59,13 +59,16 @@ function CompleteTask({route}) {
       }));
       formdata.append('message', message);
       let imageData = images.map((i) => {
+        console.log(i);
+        const path = i.path.split('/');
         return {
-          name: 'image',
-          filename: i.fileName,
-          type: i.type,
+          name: 'images',
+          filename: path[path.length - 1],
+          type: i.mime,
           data: RNFetchBlob.wrap(i.path),
         };
       });
+      console.log(imageData, members);
       setLoading(true);
       //let response = await axios.post(url, formdata);
       //let uploadUrl = response.data.url;
@@ -82,6 +85,10 @@ function CompleteTask({route}) {
         .then((r) => {
           setLoading(false);
           console.log(r, 'response');
+          if (r.respInfo.status == 200 || r.respInfo.status == 201) {
+            dispatch(getMyProjects());
+            navigation.goBack();
+          }
         })
         .catch((e) => {
           console.error(e, 'error');

@@ -30,6 +30,52 @@ function ChangeTier({route}) {
         onChangeText={(text) => setCredit(text)}
         keyboardType="numeric"
       />
+      <SmallHeader title="Benefits" />
+      <Benefits />
+      <CreateBenefit />
+    </View>
+  );
+}
+
+function Benefits() {
+  const [benefits, setBenefits] = useState([{text: 'Benefit numero 1'}]);
+
+  return benefits.map((b) => {
+    return <Benefit benefit={b} />;
+  });
+}
+
+function Benefit({benefit}) {
+  return (
+    <TextInput
+      label=""
+      style={{backgroundColor: 'white'}}
+      underlineColor="transparent"
+      placeholder="Add your new benefit here"
+    />
+  );
+}
+
+function CreateBenefit() {
+  return (
+    <View
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 30,
+        width: '100%',
+      }}>
+      <TouchableNativeFeedback>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}>
+          <Icon name="plus" size={30} />
+          <Text>Add benefit</Text>
+        </View>
+      </TouchableNativeFeedback>
     </View>
   );
 }
