@@ -39,7 +39,7 @@ function CoachActionsList() {
   const navigation = useNavigation();
 
   function handleCreatePostPress() {
-    //navigation.navigate('PostEditor');
+    navigation.navigate('PostEditor');
     LocalNotification();
   }
 

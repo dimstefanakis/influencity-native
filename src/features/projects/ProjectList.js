@@ -20,11 +20,12 @@ import {getProjects} from './projectsSlice';
 // Using this for now to prevent spaghetti variables in a single component
 function ProjectsList({route, projectList = []}) {
   const projects = route ? route.params.projects : projectList;
+  const viewAs = route ? route.params.viewAs : 'sub';
 
   return (
     <View style={{padding: 10}}>
       {projects.map((project) => {
-        return <Project project={project} viewAs="sub" />;
+        return <Project project={project} viewAs={viewAs} />;
       })}
     </View>
   );

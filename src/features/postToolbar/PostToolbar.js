@@ -4,6 +4,7 @@ import {View, TouchableOpacity, Animated} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Config from 'react-native-config';
 import axios from 'axios';
 
@@ -14,6 +15,16 @@ function PostToolbar({post}) {
     //navigation.navigate('PostEditor', {isComment: true, currentPost: post});
     navigation.navigate('CommentsScreen', {post: post});
   }
+
+  function handleLinkedProjectClick() {
+    // TODO check if the user is already assigned to this project.
+    // If he is navigate him in his projects screen else navigate in the preview project screen
+    navigation.navigate('ProjectListScreen', {
+      projects: [post.linked_project],
+      viewAs: 'preview',
+    });
+  }
+
   return (
     <View
       style={{
@@ -27,11 +38,17 @@ function PostToolbar({post}) {
       <IconWrapper onPress={handleCommentClick}>
         <Icon name="comment-text-outline" size={25} color="#212121" />
       </IconWrapper>
+      <View style={{flex: 1}} />
+      {post.linked_project ? (
+        <IconWrapper onPress={handleLinkedProjectClick}>
+          <AntDesign name="rocket1" size={24} color="#212121" />
+        </IconWrapper>
+      ) : null}
     </View>
   );
 }
 
-function IconWrapper({children, onPress}) {
+function IconWrapper({children, onPress, style = {}}) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -41,6 +58,7 @@ function IconWrapper({children, onPress}) {
         height: '100%',
         width: '16%',
         flexDirection: 'row',
+        ...style,
       }}>
       {children}
     </TouchableOpacity>

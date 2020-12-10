@@ -2,17 +2,25 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
-  Text,
   View,
   TouchableNativeFeedback,
+  TouchableOpacity,
   Image,
   Keyboard,
   Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {TextInput, Button, Subheading} from 'react-native-paper';
+import {
+  Avatar,
+  TextInput,
+  Button,
+  Subheading,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
@@ -32,6 +40,7 @@ function ChainedPostsCarousel({route}) {
       text: '',
       images: [],
       videos: [],
+      linked_project: null,
     },
   ]);
 
@@ -44,6 +53,7 @@ function ChainedPostsCarousel({route}) {
         let url = Config.API_URL + '/v1/posts/';
         let formData = new FormData();
         formData.append('text', post.text);
+        formData.append('linked_project', post.linked_project);
         selectedTiers.map((t) => {
           formData.append('tiers', t);
         });
@@ -74,7 +84,7 @@ function ChainedPostsCarousel({route}) {
     }
 
     let previewPost = createdPosts[0];
-    previewPost.chained_posts = createdPosts.slice(1, createdPosts.length)
+    previewPost.chained_posts = createdPosts.slice(1, createdPosts.length);
     navigation.navigate('PostScreen', {post: previewPost});
   }
 
@@ -148,10 +158,14 @@ function ChainedPostsCarousel({route}) {
 }
 
 function PostEditor({post, posts, setPosts, index, isComment}) {
+  const navigation = useNavigation();
+  const theme = useTheme();
   const isKeyboardVisible = useKeyboardOpen();
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
   const [fileData, setData] = useState('');
+  const [attachedProject, setAttachedProject] = useState(null);
+
   function handleChangeText(value) {
     let _post = post;
     _post.text = value;
@@ -212,10 +226,42 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
   function chainNewPost() {
     setPosts((oldPosts) => {
       const lastIndex = oldPosts[oldPosts.length - 1].index;
-      return [...oldPosts, {index: lastIndex + 1, text: '', images: []}];
+      return [
+        ...oldPosts,
+        {
+          index: lastIndex + 1,
+          text: '',
+          images: [],
+          videos: [],
+          linked_project: null,
+        },
+      ];
     });
   }
 
+  function handleAttachProjectPress() {
+    navigation.push('MyCreatedProjectsScreen', {
+      handleSelectProject: (project) => {
+        setAttachedProject(project);
+      },
+    });
+  }
+
+  useEffect(() => {
+    // update post with the corresponding attached project
+    if(attachedProject){
+      setPosts((oldPosts) => {
+        let _post = post;
+        _post.linked_project = attachedProject.id;
+        let foundIndex = oldPosts.findIndex((element) => element.index === index);
+        oldPosts[foundIndex] = _post;
+        return oldPosts;
+      });
+    }
+    
+  }, [attachedProject]);
+
+  console.log(post)
   return (
     <View
       style={{
@@ -256,31 +302,76 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
           );
         })}
       </View>
-
-      <View style={{flexDirection: 'row', height: 80}}>
+      {attachedProject ? (
+        <View style={{width: '100%', padding: 10, backgroundColor: 'white'}}>
+          <Text style={{fontSize: 20, ...theme.fonts.medium}}>
+            Attached project
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 10,
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              style={{
+                padding: 5,
+                backgroundColor: '#f7f7f9',
+                borderRadius: 100,
+              }}
+              onPress={() => setAttachedProject(null)}>
+              <Icon size={14} name="close" color="gray" />
+            </TouchableOpacity>
+            <Avatar.Icon
+              size={30}
+              icon="code-tags"
+              color="white"
+              style={{marginLeft: 5}}
+            />
+            <Text style={{marginLeft: 5, ...theme.fonts.medium}}>
+              {attachedProject.name}
+            </Text>
+          </View>
+        </View>
+      ) : null}
+      <View
+        style={{flexDirection: 'row', height: 80, backgroundColor: 'white'}}>
         <TouchableNativeFeedback onPress={handleSelectImages}>
           <View
             style={{
-              width: '50%',
+              width: '33%',
               height: '100%',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon size={30} name="camera-outline" />
-            <Subheading>Add media</Subheading>
+            <Icon size={24} name="camera-outline" />
+            <Subheading style={{fontSize: 12}}>Add media</Subheading>
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={chainNewPost}>
+          <View
+            style={{
+              width: '33%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Icon size={24} name="link-variant" />
+            <Subheading style={{fontSize: 12}}>Chain posts</Subheading>
           </View>
         </TouchableNativeFeedback>
         {isComment ? null : (
-          <TouchableNativeFeedback onPress={chainNewPost}>
+          <TouchableNativeFeedback onPress={handleAttachProjectPress}>
             <View
               style={{
-                width: '50%',
+                width: '33%',
                 height: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon size={30} name="link-variant" />
-              <Subheading>Chain more posts</Subheading>
+              <AntDesign size={24} name="rocket1" />
+              <Subheading style={{fontSize: 12}}>Attach project</Subheading>
             </View>
           </TouchableNativeFeedback>
         )}

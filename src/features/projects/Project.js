@@ -16,21 +16,35 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProjects} from '../projects/projectsSlice';
 
-function Project({project, viewAs = 'sub'}) {
+function Project({project, handleSelectProject, viewAs = 'sub'}) {
   const theme = useTheme();
   const navigation = useNavigation();
+
+  // have to check later if sub also has subscribed to the project
   function handleProjectClick() {
-    if (viewAs == 'sub' || viewAs=="my_profile") {
+    // used for custom click events, for example select which project was selected
+    if (handleSelectProject) {
+      handleSelectProject(project);
+      navigation.goBack();
+    }
+    if (viewAs == 'sub' || viewAs == 'my_profile') {
       navigation.navigate('ProjectDashboardScreen', {project: project});
+    }
+
+    if (viewAs == 'preview') {
+      navigation.navigate('ProjectListScreen', {
+        projects: [project],
+        viewAs: viewAs,
+      });
     }
   }
 
-  if (viewAs == 'sub'  || viewAs=="my_profile") {
+  if (viewAs == 'sub' || viewAs == 'my_profile') {
     return <ProjectAsSub project={project} />;
   }
   return (
     <TouchableNativeFeedback onPress={handleProjectClick}>
-      <Surface style={styles.surface}>
+      <Surface style={viewAs == 'preview' ? {} : {...styles.surface}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Avatar.Icon size={30} icon="code-tags" color="white" />
           <Title
@@ -54,7 +68,7 @@ function Project({project, viewAs = 'sub'}) {
             <ReviewedTasksProgressBar />
             <TaskButtonsWrapper project={project} />
           </>
-        ) : (
+        ) : viewAs == 'preview' ? null : (
           <>
             <Tasks project={project} />
             <Team />

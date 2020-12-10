@@ -6,6 +6,7 @@ import {createSharedElementStackNavigator} from 'react-navigation-shared-element
 import Settings from './Settings';
 import TierSettings from './TierSettings';
 import ChangeTier from '../tiers/ChangeTier';
+import EditProfile from '../profile/EditProfile';
 
 const Stack = createSharedElementStackNavigator();
 
@@ -46,6 +47,13 @@ function SettingsStack() {
           component={ChangeTier}
           options={{
             headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="EditProfileScreen"
+          component={EditProfile}
+          options={({route}) => {
+            return {title: ''};
           }}
         />
       </Stack.Navigator>

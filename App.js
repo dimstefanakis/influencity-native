@@ -10,14 +10,7 @@ import React, {useEffect} from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {SafeAreaView, Text, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
@@ -53,7 +46,6 @@ import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
-import {WsContext} from './src/context/wsContext';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 
@@ -176,6 +168,14 @@ const App: () => React$Node = () => {
             }}
           />
           <VanillaStack.Screen
+            name="SelectTierScreen"
+            component={SelectTierScreen}
+            options={{
+              title: 'Select tier',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
             name="CommentsEditor"
             component={CommentsEditor}
             options={{
@@ -203,6 +203,14 @@ const App: () => React$Node = () => {
             component={SettingsScreen}
             options={({route}) => {
               return {title: ''};
+            }}
+          />
+          <VanillaStack.Screen
+            name="MyCreatedProjectsScreen"
+            component={MyCreatedProjectsScreen}
+            options={{
+              title: 'My projects',
+              ...TransitionPresets.ModalPresentationIOS,
             }}
           />
         </VanillaStack.Navigator>
@@ -331,22 +339,11 @@ function HomeStack() {
               options={{title: 'My projects'}}
             />*/}
           <Stack.Screen
-            name="MyCreatedProjectsScreen"
-            component={MyCreatedProjectsScreen}
-            options={{title: 'My projects'}}
-          />
-          <Stack.Screen
             name="ProjectListScreen"
             component={ProjectListScreen}
             options={{title: ''}}
           />
-          <Stack.Screen
-            name="SelectTierScreen"
-            component={SelectTierScreen}
-            options={{
-              title: 'Select tier',
-            }}
-          />
+
           {/*<Stack.Screen
               name="ProjectDashboardScreen"
               component={ProjectDashboardScreen}
