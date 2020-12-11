@@ -53,7 +53,7 @@ function SettingsStack() {
           name="EditProfileScreen"
           component={EditProfile}
           options={({route}) => {
-            return {title: ''};
+            return {title: 'Edit your profile'};
           }}
         />
       </Stack.Navigator>
