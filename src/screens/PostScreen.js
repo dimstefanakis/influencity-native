@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, FlatList, View} from 'react-native';
+import {View, ScrollView, FlatList} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {SharedElement} from 'react-navigation-shared-element';
 import PostItem from '../features/posts/PostItem';
@@ -38,7 +38,7 @@ function PostScreen({route}) {
   };
 
   return (
-    <SafeAreaView style={{flexGrow: 1}}>
+    <View style={{flexGrow: 1}}>
       <View>
         <FlatList
           data={chainedPosts}
@@ -46,7 +46,7 @@ function PostScreen({route}) {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

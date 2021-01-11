@@ -7,10 +7,9 @@
  */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {SafeAreaView, Text, StatusBar} from 'react-native';
+import {View, Text, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
@@ -19,6 +18,7 @@ import {
   Provider as PaperProvider,
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {changeNavigationBarColor} from 'react-native-navigation-bar-color';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {enableScreens} from 'react-native-screens';
 enableScreens();
@@ -48,7 +48,7 @@ import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
-
+notifHandler();
 const fontConfig = {
   default: {
     regular: {
@@ -84,19 +84,16 @@ const theme = {
   fonts: configureFonts(fontConfig),
   colors: {
     ...DefaultTheme.colors,
-    primary: '#00BBF9',
+    primary: '#aaf0d1', //'#00BBF9',
     accent: '#5CD6FF',
     textPrimary: '#141414',
   },
 };
 
 function ReduxWrapper() {
-  notifHandler();
   return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <App />
-      </SafeAreaProvider>
+      <App />
     </Provider>
   );
 }
@@ -107,7 +104,16 @@ const App: () => React$Node = () => {
   const {myTeams} = useSelector((state) => state.teams);
   const dispatch = useDispatch();
 
+  const setNavigationBarColor = async () => {
+    try {
+      const response = await changeNavigationBarColor('#ffffff');
+      console.log(response); // {success: true}
+    } catch (e) {
+      console.log(e); // {success: false}
+    }
+  };
   useEffect(() => {
+    setNavigationBarColor();
     dispatch(getUserData());
     dispatch(getMyTiers());
     dispatch(getMyTeams());
@@ -119,7 +125,7 @@ const App: () => React$Node = () => {
   }
   return (
     <PaperProvider theme={theme}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       <NavigationContainer>
         <VanillaStack.Navigator
           mode="modal"
@@ -275,85 +281,83 @@ function BottomStackNavigation() {
 
 function HomeStack() {
   return (
-    <SafeAreaView style={{height: '100%'}}>
-      <Stack.Navigator
-        initialRouteName="Home"
-        mode="modal"
-        headerMode="screen"
-        screenOptions={{
-          gestureEnabled: true,
-          cardOverlayEnabled: true,
-          cardStyle: {backgroundColor: 'white'},
-          ...TransitionPresets.ModalPresentationIOS,
-          headerStyle: {
-            backgroundColor: 'white',
-            elevation: 0, // remove shadow on Android
-            shadowOpacity: 0, // remove shadow on iOS
-          },
-        }}>
-        <>
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="CoachMainScreen"
-            component={CoachScreen}
-            options={({route}) => {
-              //return {title: route.params.coach.name};
-              return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
-            }}
-            //options={({route}) => ({title: route.params.coach.name})}
-            sharedElements={(route, otherRoute, showing) => {
-              /*if (otherRoute.name !== 'ProjectListScreen') {
+    <Stack.Navigator
+      initialRouteName="Home"
+      mode="modal"
+      headerMode="screen"
+      screenOptions={{
+        gestureEnabled: true,
+        cardOverlayEnabled: true,
+        cardStyle: {backgroundColor: 'white'},
+        ...TransitionPresets.ModalPresentationIOS,
+        headerStyle: {
+          backgroundColor: 'white',
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
+        },
+      }}>
+      <>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="CoachMainScreen"
+          component={CoachScreen}
+          options={({route}) => {
+            //return {title: route.params.coach.name};
+            return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+          }}
+          //options={({route}) => ({title: route.params.coach.name})}
+          sharedElements={(route, otherRoute, showing) => {
+            /*if (otherRoute.name !== 'ProjectListScreen') {
                 const coach = route.params.coach;
                 console.log(coach, otherRoute.name);
                 return [`coach.${coach.name}.avatar`];
               }*/
-            }}
-          />
-          <Stack.Screen
-            name="PostScreen"
-            component={PostScreen}
-            options={({route}) => {
-              //return {title: route.params.coach.name};
-              return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
-            }}
-            //options={({route}) => ({title: route.params.coach.name})}
-            sharedElements={(route, otherRoute, showing) => {
-              const post = route.params.post;
-              return [`post.${post.id}.text`];
-            }}
-          />
-          <Stack.Screen
-            name="NewPostsScreen"
-            component={NewPostsScreen}
-            options={{title: ''}}
-          />
-          {/*<Stack.Screen
+          }}
+        />
+        <Stack.Screen
+          name="PostScreen"
+          component={PostScreen}
+          options={({route}) => {
+            //return {title: route.params.coach.name};
+            return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+          }}
+          //options={({route}) => ({title: route.params.coach.name})}
+          sharedElements={(route, otherRoute, showing) => {
+            const post = route.params.post;
+            return [`post.${post.id}.text`];
+          }}
+        />
+        <Stack.Screen
+          name="NewPostsScreen"
+          component={NewPostsScreen}
+          options={{title: ''}}
+        />
+        {/*<Stack.Screen
               name="MyProjectsScreen"
               component={MyProjectsScreen}
               options={{title: 'My projects'}}
             />*/}
-          <Stack.Screen
-            name="ProjectListScreen"
-            component={ProjectListScreen}
-            options={{title: ''}}
-          />
+        <Stack.Screen
+          name="ProjectListScreen"
+          component={ProjectListScreen}
+          options={{title: ''}}
+        />
 
-          {/*<Stack.Screen
-              name="ProjectDashboardScreen"
-              component={ProjectDashboardScreen}
-              options={({route}) => {
-                return {title: route.params.project.name};
-              }}
-            />*/}
-        </>
-      </Stack.Navigator>
-    </SafeAreaView>
+        {/*<Stack.Screen
+          name="ProjectDashboardScreen"
+          component={ProjectDashboardScreen}
+          options={({route}) => {
+            return {title: route.params.project.name};
+          }}
+        />*/}
+      </>
+    </Stack.Navigator>
   );
 }
 

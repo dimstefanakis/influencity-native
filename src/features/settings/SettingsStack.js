@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {View} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import Settings from './Settings';
@@ -12,7 +12,7 @@ const Stack = createSharedElementStackNavigator();
 
 function SettingsStack() {
   return (
-    <SafeAreaView style={{flexGrow: 1}}>
+    <View style={{flexGrow: 1}}>
       <Stack.Navigator
         initialRouteName="SettingsScreen"
         mode="modal"
@@ -57,7 +57,7 @@ function SettingsStack() {
           }}
         />
       </Stack.Navigator>
-    </SafeAreaView>
+    </View>
   );
 }
 

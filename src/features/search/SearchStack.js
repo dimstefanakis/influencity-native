@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {View} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import Search from './Search';
@@ -9,7 +9,7 @@ const Stack = createSharedElementStackNavigator();
 
 function SearchStack() {
   return (
-    <SafeAreaView style={{flexGrow: 1}}>
+    <View style={{flexGrow: 1}}>
       <Stack.Navigator
         initialRouteName="Search"
         mode="modal"
@@ -59,7 +59,7 @@ function SearchStack() {
           }}
         />
       </Stack.Navigator>
-    </SafeAreaView>
+    </View>
   );
 }
 

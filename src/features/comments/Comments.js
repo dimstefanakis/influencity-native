@@ -5,7 +5,6 @@ import {
   ScrollView,
   View,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   StatusBar,
   TouchableOpacity,
@@ -124,7 +123,7 @@ function Comments({route}) {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <FlatList
         data={comments}
         renderItem={renderItem}
@@ -144,7 +143,7 @@ function Comments({route}) {
           })
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -249,19 +249,20 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
 
   useEffect(() => {
     // update post with the corresponding attached project
-    if(attachedProject){
+    if (attachedProject) {
       setPosts((oldPosts) => {
         let _post = post;
         _post.linked_project = attachedProject.id;
-        let foundIndex = oldPosts.findIndex((element) => element.index === index);
+        let foundIndex = oldPosts.findIndex(
+          (element) => element.index === index,
+        );
         oldPosts[foundIndex] = _post;
         return oldPosts;
       });
     }
-    
   }, [attachedProject]);
 
-  console.log(post)
+  console.log(post);
   return (
     <View
       style={{

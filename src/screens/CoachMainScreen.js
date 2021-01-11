@@ -6,7 +6,6 @@ import {
   ScrollView,
   FlatList,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
 import {Button, Chip, FAB, Portal, Text, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
@@ -294,7 +293,7 @@ function CoachMainScreenWithPosts({route}) {
   const coach = route.params.coach;
   const MainScreen = <CoachMainScreen2 route={route} />;
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <View style={{flex: 1}}>
       <View
         style={{
           position: 'absolute',
@@ -313,7 +312,7 @@ function CoachMainScreenWithPosts({route}) {
         />
       </View>
       <PostList ListHeaderComponent={MainScreen} coach={coach} />
-    </SafeAreaView>
+    </View>
   );
 }
 export default CoachMainScreenWithPosts;

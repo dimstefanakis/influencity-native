@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {View} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import ProjectDashboardScreen from '../../screens/ProjectDashboardScreen';
@@ -12,7 +12,7 @@ const Stack = createSharedElementStackNavigator();
 
 export default function MyProjectsStack() {
   return (
-    <SafeAreaView style={{flexGrow: 1}}>
+    <View style={{flexGrow: 1}}>
       <Stack.Navigator
         initialRouteName="MyProjectsScreen"
         mode="modal"
@@ -36,6 +36,6 @@ export default function MyProjectsStack() {
           }}
         />
       </Stack.Navigator>
-    </SafeAreaView>
+    </View>
   );
 }

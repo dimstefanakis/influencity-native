@@ -78,8 +78,11 @@ function ProjectScreenDashboard({route}) {
   }, [myChatRooms, navigation, project]);
 
   useEffect(() => {
+    console.log(myChatRooms, project);
     let teamChatId = myChatRooms.find((room) => room.project == project.id);
-    dispatch(getChatRoomMessages(teamChatId.id));
+    if (teamChatId) {
+      dispatch(getChatRoomMessages(teamChatId.id));
+    }
   }, [dispatch, project]);
 
   useEffect(() => {

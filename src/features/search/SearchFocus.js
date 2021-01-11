@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {SafeAreaView, View, TouchableNativeFeedback} from 'react-native';
+import {View, TouchableNativeFeedback} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {SharedElement} from 'react-navigation-shared-element';
