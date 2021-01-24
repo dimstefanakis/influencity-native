@@ -25,12 +25,13 @@ function SelectTier({route}) {
   const {myTiers} = useSelector((state) => state.tiers);
   const [selectedTiers, setSelectedTiers] = useState([]);
   const [selectedTier, setSelectedTier] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  function getTierValuesAndCreateItems() {
+  async function getTierValuesAndCreateItems() {
     // backend accepts array of tier ids
     // will fix this soon, temporary hack for now
     let tierValues = selectedTier.length == 0 ? [] : [selectedTier.id]; //selectedTiers.map((t) => t.id);
-    handleCreateItems(tierValues);
+    await handleCreateItems(tierValues, setLoading);
   }
 
   return (
@@ -59,7 +60,8 @@ function SelectTier({route}) {
         contentStyle={{padding: 10}}
         style={{borderRadius: 50, width: 200, margin: 20}}
         dark={true}
-        onPress={() => getTierValuesAndCreateItems(myTiers)}>
+        onPress={() => getTierValuesAndCreateItems(myTiers)}
+        loading={loading}>
         Finish post
       </Button>
     </ScrollView>

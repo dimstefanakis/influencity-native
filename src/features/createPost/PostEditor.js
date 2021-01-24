@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useRef} from 'react';
 import {
   View,
   TouchableNativeFeedback,
@@ -18,21 +18,23 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import Video from 'react-native-video';
 import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
+import {useSelector} from 'react-redux';
 import axios from 'axios';
-import * as UpChunk from '@mux/upchunk';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
 function ChainedPostsCarousel({route}) {
+  const carouselRef = useRef();
   const currentPost = route.params?.currentPost;
   const isComment = route.params?.isComment;
-
+  const {token} = useSelector((state) => state.authentication);
   const navigation = useNavigation();
   const [posts, setPosts] = useState([
     {
@@ -44,14 +46,54 @@ function ChainedPostsCarousel({route}) {
     },
   ]);
 
-  async function handleCreatePosts(selectedTiers) {
+  async function handleCreatePosts(selectedTiers, setLoading) {
     let newPostIds = [];
     let createdPosts = [];
     // first create each post separetaly
     for await (let post of posts) {
+      let imageData = post.images.map((i) => {
+        console.log(i);
+        const path = i.path.split('/');
+        return {
+          name: 'images',
+          filename: path[path.length - 1],
+          type: i.mime,
+          data: RNFetchBlob.wrap(i.path),
+        };
+      });
       try {
         let url = Config.API_URL + '/v1/posts/';
-        let formData = new FormData();
+        setLoading(true);
+        await RNFetchBlob.fetch(
+          'POST',
+          url,
+          {
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + token,
+          },
+          [
+            ...imageData,
+            {name: 'text', data: post.text},
+            {name: 'linked_project', data: post.linked_project},
+            {name: 'tiers', data: selectedTiers[0].toString()}, // without toString backned receives empty data
+          ],
+        )
+          .then(async (response) => {
+            console.log(response, 'response');
+            let data = JSON.parse(response.data);
+            let {id} = data;
+            createdPosts.push(data);
+            if (post.videos.length > 0) {
+              await handleCreateVideo(data);
+            }
+            newPostIds.push(id);
+            setLoading(false);
+          })
+          .catch((e) => {
+            console.error(e, 'error');
+            setLoading(false);
+          });
+        /*let formData = new FormData();
         formData.append('text', post.text);
         formData.append('linked_project', post.linked_project);
         selectedTiers.map((t) => {
@@ -64,9 +106,10 @@ function ChainedPostsCarousel({route}) {
           handleCreateVideo(response.data);
         }
 
-        newPostIds.push(id);
+        newPostIds.push(id);*/
       } catch (e) {
         console.error(e);
+        setLoading(false);
       }
     }
 
@@ -83,25 +126,36 @@ function ChainedPostsCarousel({route}) {
       }
     }
 
-    let previewPost = createdPosts[0];
+    try {
+      let url = Config.API_URL + `/v1/posts/${createdPosts[0].id}/`;
+      let response = await axios.get(url);
+      navigation.navigate('PostScreen', {post: response.data});
+    } catch (e) {
+      console.error(e);
+    }
+    /*let previewPost = createdPosts[0];
     previewPost.chained_posts = createdPosts.slice(1, createdPosts.length);
-    navigation.navigate('PostScreen', {post: previewPost});
+    navigation.navigate('PostScreen', {post: previewPost});*/
   }
 
   async function handleCreateVideo(post) {
     try {
-      const image = posts[0].images[0];
+      const videos = post.videos;
+      const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
+
+      // get mux upload url with the secret key found through our backend endpoint
       let url = Config.API_URL + '/v1/upload_video/';
       let formData = new FormData();
       formData.append('post', post.id);
+
+      // upload to the mux upload url
       let response = await axios.post(url, formData);
       let uploadUrl = response.data.url;
-      RNFetchBlob.fetch(
+      await RNFetchBlob.fetch(
         'PUT',
         uploadUrl,
         {'Content-Type': 'application/octet-stream'},
-
-        RNFetchBlob.wrap(image.path),
+        data,
       )
         .then((r) => {
           console.log(r, 'response');
@@ -142,6 +196,7 @@ function ChainedPostsCarousel({route}) {
         posts={posts}
         setPosts={setPosts}
         isComment={isComment}
+        carouselRef={carouselRef}
       />
     );
   }
@@ -153,11 +208,12 @@ function ChainedPostsCarousel({route}) {
       itemWidth={screenWidth}
       data={posts}
       renderItem={renderItem}
+      ref={carouselRef}
     />
   );
 }
 
-function PostEditor({post, posts, setPosts, index, isComment}) {
+function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
   const navigation = useNavigation();
   const theme = useTheme();
   const isKeyboardVisible = useKeyboardOpen();
@@ -182,6 +238,7 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
       multiple: true,
       includeBase64: true,
     }).then((results) => {
+      console.log(results);
       setImages(results); // delete later
       let data = '';
       RNFetchBlob.fs
@@ -210,7 +267,13 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
         });
 
       let _post = post;
-      _post.images = results;
+      results.forEach((result) => {
+        if (result.mime.includes('image')) {
+          _post.images.push(result);
+        } else if (result.mime.includes('video')) {
+          _post.videos.push(result);
+        }
+      });
 
       setPosts((oldPosts) => {
         let foundIndex = oldPosts.findIndex(
@@ -237,6 +300,12 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
         },
       ];
     });
+
+    // lazy fix
+    // just delay this a bit until state get updated then snap to next
+    setTimeout(() => {
+      carouselRef.current.snapToNext();
+    }, 500);
   }
 
   function handleAttachProjectPress() {
@@ -270,6 +339,7 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
         alignItems: 'center',
         width: '100%',
         minHeight: '100%',
+        backgroundColor: 'white',
       }}>
       <TextInput
         multiline
@@ -288,6 +358,24 @@ function PostEditor({post, posts, setPosts, index, isComment}) {
           alignItems: 'center',
           width: '100%',
         }}>
+        {post.videos.map((vid) => {
+          return (
+            <Video
+              source={{
+                uri: vid.path,
+                type: 'm3u8',
+              }}
+              resizeMode="cover"
+              style={{
+                height: 100,
+                width: 100,
+                borderColor: '#f9f9f9',
+                borderWidth: 1,
+                borderRadius: 15,
+              }}
+            />
+          );
+        })}
         {post.images.map((im) => {
           return (
             <Image

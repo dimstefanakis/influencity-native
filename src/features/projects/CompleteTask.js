@@ -39,17 +39,6 @@ function CompleteTask({route}) {
   const [images, setImages] = useState([]);
   async function handleCompleteTask() {
     try {
-      /*let url = `${Config.API_URL}/v1/milestone_reports/${task.id}/`;
-      let formdata = new FormData();
-      selectedMembers.forEach((m) => formdata.append('members', m.id));
-      formdata.append('message', message);
-      images.forEach((i) => {
-        formdata.append('images', {
-          uri: i.path,
-          name: i.fileName,
-          type: i.type,
-        });
-      })*/
       let url = `${Config.API_URL}/v1/milestone_reports/${task.id}/`;
       let formdata = new FormData();
       selectedMembers.forEach((m) => formdata.append('members', m.id));

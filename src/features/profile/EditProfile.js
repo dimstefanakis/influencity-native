@@ -17,15 +17,21 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import Config from 'react-native-config';
 import RNFetchBlob from 'rn-fetch-blob';
-import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import axios from 'axios';
 
 function EditProfile() {
   const theme = useTheme();
   const {user, token} = useSelector((state) => state.authentication);
+  console.log(user);
   const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState(user.subscriber.name);
+  const [bio, setBio] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   function handleChangeAvatar() {
     ImagePicker.openPicker({mediaType: 'photo'}).then((results) => {
@@ -35,38 +41,33 @@ function EditProfile() {
 
   function handleUpdateProfile() {
     const path = avatar.path.split('/');
-    const url = `${Config.API_URL}/`
-    let imageData = avatar
-      ? {
-          name: 'images',
-          filename: path[path.length - 1],
-          type: avatar.mime,
-          data: RNFetchBlob.wrap(avatar.path),
-        }
-      : null;
+    const url = `${Config.API_URL}/subscriber/me`;
+    let data = [];
+    if (name) {
+      data.push({name: 'name', data: name});
+    }
+    if (avatar) {
+      data.push({
+        name: 'avatar',
+        filename: path[path.length - 1],
+        type: avatar.mime,
+        data: RNFetchBlob.wrap(avatar.path),
+      });
+    }
     RNFetchBlob.fetch(
-      'POST',
+      'PATCH',
       url,
       {
         'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + token,
       },
-
-      [
-        {
-          name: 'images',
-          filename: avatar[path.length - 1],
-          type: i.mime,
-          data: RNFetchBlob.wrap(i.path),
-        },
-      ],
+      data,
     )
       .then((r) => {
         setLoading(false);
         console.log(r, 'response');
         if (r.respInfo.status == 200 || r.respInfo.status == 201) {
-          dispatch(getMyProjects());
-          navigation.goBack();
+          //navigation.goBack();
         }
       })
       .catch((e) => {
@@ -123,6 +124,21 @@ function EditProfile() {
             style={{borderWidth: 0, backgroundColor: 'white'}}
           />
         </View>
+        {/*{user.is_coach ? (
+          <>
+            <SmallHeader title="Coach">Coach profile</SmallHeader>
+            <View style={{marginTop: 20}}>
+              <TextInput
+                value={bio}
+                multiline
+                numberOfLines={4}
+                onChangeText={(text) => setBio(text)}
+                label="Bio"
+                style={{borderWidth: 0, backgroundColor: 'white'}}
+              />
+            </View>
+          </>
+        ) : null}*/}
       </View>
     </ScrollView>
   );

@@ -61,6 +61,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 
   function renderItem({item, index}, parallaxProps) {
     let ratio = item.height / item.width;
+    console.log("in");
     return (
       <View style={styles.item}>
         <ParallaxImage
@@ -157,66 +158,11 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
         itemWidth={screenWidth}
-        data={post.videos}
-        renderItem={renderVideos}
+        data={post.images}
+        renderItem={renderItem}
         hasParallaxImages={true}
       />
       <PostToolbar post={post} />
-      {pagination()}
-    </View>
-  );
-}
-
-function ChainedPostCarousel({post}) {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [chainedPosts] = useState([post, ...post.chained_posts]);
-  function pagination() {
-    return (
-      <Pagination
-        dotsLength={chainedPosts.length}
-        activeDotIndex={activeSlide}
-        containerStyle={{margin: 0, paddingVertical: 5}}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: 8,
-          padding: 0,
-          marginTop: 0,
-          backgroundColor: 'black',
-        }}
-        inactiveDotStyle={
-          {
-            // Define styles for inactive dots here
-          }
-        }
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-      />
-    );
-  }
-
-  function handleSnapToItem(index) {
-    setActiveSlide(index);
-  }
-
-  function renderItem({item, index}, parallaxProps) {
-    return (
-      <View style={styles.item}>
-        <PostItem post={item} />
-      </View>
-    );
-  }
-
-  return (
-    <View>
-      <Carousel
-        onSnapToItem={handleSnapToItem}
-        sliderWidth={screenWidth}
-        itemWidth={screenWidth}
-        data={chainedPosts}
-        renderItem={renderItem}
-      />
       {pagination()}
     </View>
   );
@@ -230,7 +176,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
-    borderRadius: 8,
+    borderRadius: 0,
     //maxHeight:500,
   },
   image: {

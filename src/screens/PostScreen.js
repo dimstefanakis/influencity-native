@@ -11,6 +11,9 @@ function PostScreen({route}) {
   const rest = post.chained_posts || [];
   const [chainedPosts] = useState([post, ...rest]);
 
+  // Check if any of the posts are processing, then display an information box to the user
+  const isProcessing = chainedPosts.some((p) => p.status == 'PR');
+
   const renderItem = ({item, index, separators}) => {
     // index 0 corresponds to part 1
     const part = index + 1;
@@ -39,6 +42,29 @@ function PostScreen({route}) {
 
   return (
     <View style={{flexGrow: 1}}>
+      {isProcessing ? (
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '90%',
+              padding: 20,
+              backgroundColor: '#1794ff',
+              borderRadius: 10,
+            }}>
+            <Text style={{color: 'white'}}>
+              Thank you for uploading to Troosh! Your post is currently being
+              processed by our servers and will be available shortly. Thank you
+              for your patience!
+            </Text>
+          </View>
+        </View>
+      ) : null}
+
       <View>
         <FlatList
           data={chainedPosts}

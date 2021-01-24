@@ -20,6 +20,9 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {changeNavigationBarColor} from 'react-native-navigation-bar-color';
 import {Provider, useDispatch, useSelector} from 'react-redux';
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import Config from 'react-native-config';
 import {enableScreens} from 'react-native-screens';
 enableScreens();
 import Home from './src/screens/Home';
@@ -42,6 +45,8 @@ import TeamChatScreen from './src/screens/TeamChatScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
 import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
+import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -49,6 +54,7 @@ import {getMyTeams} from './src/features/teams/teamsSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 notifHandler();
+const stripePromise = loadStripe(Config.STRIPE_PUBLISHABLE_KEY);
 const fontConfig = {
   default: {
     regular: {
@@ -212,11 +218,25 @@ const App: () => React$Node = () => {
             }}
           />
           <VanillaStack.Screen
+            name="SubscribePaymentScreen"
+            component={SubscribePaymentScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
             name="MyCreatedProjectsScreen"
             component={MyCreatedProjectsScreen}
             options={{
               title: 'My projects',
               ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="BecomeMemberScreen"
+            component={BecomeMemberScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.ModalPresentationIOS};
             }}
           />
         </VanillaStack.Navigator>
