@@ -7,7 +7,7 @@
  */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {View, Text, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
@@ -106,7 +106,7 @@ function ReduxWrapper() {
 
 const App: () => React$Node = () => {
   const isKeyboardOpen = useKeyboardOpen();
-  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {user, loading, token, checkingForToken} = useSelector((state) => state.authentication);
   const {myTeams} = useSelector((state) => state.teams);
   const dispatch = useDispatch();
 
@@ -126,9 +126,7 @@ const App: () => React$Node = () => {
   }, [dispatch, token]);
 
   console.log(user);
-  if (loading) {
-    return <Text>Loaing</Text>;
-  }
+  
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -136,6 +134,7 @@ const App: () => React$Node = () => {
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
+          initialRouteName="Login"
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
@@ -146,6 +145,14 @@ const App: () => React$Node = () => {
               shadowOpacity: 0, // remove shadow on iOS
             },
           }}>
+          <VanillaStack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
           <VanillaStack.Screen
             name="BottomStackNavigation"
             component={BottomStackNavigation}
@@ -246,7 +253,10 @@ const App: () => React$Node = () => {
 };
 
 function BottomStackNavigation() {
-  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {user, loading, token, checkingForToken} = useSelector((state) => state.authentication);
+  if (checkingForToken) {
+    return <Text>Loaing</Text>;
+  }
   return (
     <BottomStack.Navigator
       //swipeEnabled={false}

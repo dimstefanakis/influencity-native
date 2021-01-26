@@ -15,8 +15,10 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
-import {TextInput} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import {login} from '../authenticationSlices';
+import TopLeft from './Illustrations/TopLeftIllustration';
+import BottomRight from './Illustrations/BottomRightIllustration';
 
 function Login() {
   const navigation = useNavigation();
@@ -48,13 +50,22 @@ function Login() {
     navigation.navigate('Signup');
   }
 
+  if(token){
+    navigation.navigate('BottomStackNavigation');
+  }
+
   return (
     <View
       style={{
         alignItems: 'center',
+        justifyContent: 'center',
         height: '100%',
         flexDirection: 'column',
+        backgroundColor: 'white',
       }}>
+      <TopLeft style={{position: 'absolute', top: 0, left: 0}} />
+      <BottomRight style={{position: 'absolute', bottom: 0, right: 0}} />
+      <Image source={require('../../../../assets/images/96.png')} />
       <Text
         style={{
           fontSize: 24,
@@ -62,12 +73,12 @@ function Login() {
           marginTop: 20,
           color: 'black',
         }}>
-        Login to Westeria
+        Login to Troosh
       </Text>
       <View style={{width: '80%', margin: 5}}>
         <TextInput
           label="Email"
-          style={{backgroundColor: '#ffffff'}}
+          style={{backgroundColor: 'transparent'}}
           onChangeText={(text) => setEmail(text)}
         />
       </View>
@@ -85,12 +96,14 @@ function Login() {
           return <Text style={{color: 'red', marginTop: 10}}>{e}</Text>;
         })}
       </View>
-      <TouchableOpacity style={styles.loginButton} onPress={handlePress}>
-        <View style={{position: 'absolute', left: 10}}>
-          <ActivityIndicator size="large" color="white" animating={loading} />
-        </View>
-        <Text style={{color: 'white', fontSize: 18}}>Login</Text>
-      </TouchableOpacity>
+      <Button
+        mode="contained"
+        style={styles.loginButton}
+        loading={loading}
+        onPress={handlePress}
+        contentStyle={{width: 200, height: 60}}>
+        Login
+      </Button>
       <TouchableOpacity
         style={{flexDirection: 'row', marginTop: 20}}
         onPress={handleRegisterPress}>
@@ -108,11 +121,8 @@ function Login() {
 
 const styles = StyleSheet.create({
   loginButton: {
-    width: 200,
-    height: 60,
     zIndex: 1,
     flexDirection: 'row',
-    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
@@ -124,7 +134,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-
     elevation: 2,
   },
 });
