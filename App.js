@@ -27,6 +27,9 @@ import {enableScreens} from 'react-native-screens';
 enableScreens();
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
+import Register from './src/screens/Register';
+import PostRegisterUpdateProfileScreen from './src/screens/PostRegisterUpdateProfileScreen';
+import Notifications from './src/screens/NotificationsScreen';
 import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
 import CommentsEditor from './src/screens/CommentEditor';
@@ -47,6 +50,7 @@ import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
+import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -106,7 +110,9 @@ function ReduxWrapper() {
 
 const App: () => React$Node = () => {
   const isKeyboardOpen = useKeyboardOpen();
-  const {user, loading, token, checkingForToken} = useSelector((state) => state.authentication);
+  const {user, loading, token, checkingForToken} = useSelector(
+    (state) => state.authentication,
+  );
   const {myTeams} = useSelector((state) => state.teams);
   const dispatch = useDispatch();
 
@@ -119,14 +125,19 @@ const App: () => React$Node = () => {
     }
   };
   useEffect(() => {
-    setNavigationBarColor();
-    dispatch(getUserData());
+    //setNavigationBarColor();
     dispatch(getMyTiers());
     dispatch(getMyTeams());
   }, [dispatch, token]);
 
+  useEffect(()=>{
+    dispatch(getUserData());
+  },[dispatch])
   console.log(user);
-  
+
+  if (checkingForToken) {
+    return <SplashScreen />;
+  }
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -134,7 +145,7 @@ const App: () => React$Node = () => {
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
-          initialRouteName="Login"
+          initialRouteName={token ? 'BottomStackNavigation' : 'Login'}
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
@@ -148,6 +159,22 @@ const App: () => React$Node = () => {
           <VanillaStack.Screen
             name="Login"
             component={Login}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="Register"
+            component={Register}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="PostRegisterUpdateProfileScreen"
+            component={PostRegisterUpdateProfileScreen}
             options={{
               title: '',
               headerShown: false,
@@ -253,10 +280,10 @@ const App: () => React$Node = () => {
 };
 
 function BottomStackNavigation() {
-  const {user, loading, token, checkingForToken} = useSelector((state) => state.authentication);
-  if (checkingForToken) {
-    return <Text>Loaing</Text>;
-  }
+  const {user, loading, token, checkingForToken} = useSelector(
+    (state) => state.authentication,
+  );
+
   return (
     <BottomStack.Navigator
       //swipeEnabled={false}
@@ -279,6 +306,9 @@ function BottomStackNavigation() {
             return <AntDesign name="rocket1" size={24} color={color} />;
           }
 
+          if (route.name === 'Notifications') {
+            return <AntDesign name="bells" size={24} color={color} />;
+          }
           if (route.name === 'ProfileScreen') {
             return <AntDesign name={'user'} size={24} color={color} />;
           }
@@ -295,16 +325,11 @@ function BottomStackNavigation() {
           return <AntDesign name={iconName} size={24} color={color} />;
         },
       })}>
-      {token ? (
-        <>
-          <BottomStack.Screen name="Home" component={HomeStack} />
-          <BottomStack.Screen name="Search" component={SearchScreen} />
-          <BottomStack.Screen name="Projects" component={MyProjectsScreen} />
-          <BottomStack.Screen name="ProfileScreen" component={ProfileScreen} />
-        </>
-      ) : (
-        <BottomStack.Screen name="Login" component={Login} />
-      )}
+      <BottomStack.Screen name="Home" component={HomeStack} />
+      <BottomStack.Screen name="Search" component={SearchScreen} />
+      <BottomStack.Screen name="Projects" component={MyProjectsScreen} />
+      <BottomStack.Screen name="Notifications" component={Notifications} />
+      <BottomStack.Screen name="ProfileScreen" component={ProfileScreen} />
     </BottomStack.Navigator>
   );
 }

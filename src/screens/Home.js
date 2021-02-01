@@ -3,7 +3,8 @@ import React from 'react';
 import {View, ScrollView, Image, StyleSheet} from 'react-native';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
-import CoachActionsList from '../features/coachActionsList/CoachActionsList';
+import SubscriberActionsList from '../features/homeActionsList/SubscriberActionsList';
+import CoachActionsList from '../features/homeActionsList/CoachActionsList';
 import PostList from '../features/posts/PostList';
 import {useTheme, Text, Subheading, Title} from 'react-native-paper';
 import {useSelector} from 'react-redux';
@@ -85,9 +86,9 @@ function FeedHeaderComponent() {
           Good afternoon!
         </Subheading>
         <Text style={{fontSize: 24, ...theme.fonts.medium, ...styles.spacing}}>
-          {user.username}
+          {user.subscriber.name}
         </Text>
-        {user.is_coach ? <CoachActionsList /> : null}
+        {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
       <Text
         style={{

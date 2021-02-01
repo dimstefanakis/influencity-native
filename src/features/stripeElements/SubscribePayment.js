@@ -10,6 +10,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import TextInputMask from 'react-native-text-input-mask';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import stripe from 'tipsi-stripe';
@@ -25,6 +26,7 @@ function SubscribePayment({route}) {
   const navigation = useNavigation();
   const coach = route.params.coach;
   const tier = route.params.tier;
+  const [cardholderName, setCardholderName] = useState('');
   const [cardNumber, setCardNumber] = useState('');
 
   function onChangePlan() {
@@ -32,7 +34,12 @@ function SubscribePayment({route}) {
   }
 
   return (
-    <ScrollView contentContainerStyle={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView
+      contentContainerStyle={{
+        backgroundColor: 'white',
+        width: '100%',
+        minHeight: '100%',
+      }}>
       <View style={{...styles.spacing}}>
         <BigHeader title={`Complete your payment to ${coach.name}`} />
         <Surface
@@ -63,6 +70,11 @@ function SubscribePayment({route}) {
         </Surface>
         <SmallHeader title="Payment details" />
         <TextInput
+          label="Cardholder name"
+          style={{backgroundColor: 'transparent'}}
+          onChangeText={(text) => setCardholderName(text)}
+        />
+        <TextInput
           keyboardType={'numeric'}
           placeholder="0000 0000 0000 0000"
           label="Card number"
@@ -70,10 +82,32 @@ function SubscribePayment({route}) {
           value={cardNumber}
           onChangeText={(text) => setCardNumber(text.replace(' ', ''))}
           style={{backgroundColor: 'transparent'}}
+          left={
+            <TextInput.Icon
+              name={() => (
+                <AntDesign name="creditcard" size={24} color="gray" />
+              )}
+            />
+          }
           render={(props) => (
             <TextInputMask {...props} mask="[0000] [0000] [0000] [0000]" />
           )}
         />
+        <View style={{flexDirection: 'row', width:'100%'}}>
+          <TextInput
+            style={{backgroundColor: 'transparent', width:'40%'}}
+            placeholder="mm/yy"
+            label="Date"
+            maxLength={5}
+            render={(props) => <TextInputMask {...props} mask="[00]/[00]" />}
+          />
+          <TextInput
+            style={{backgroundColor: 'transparent', width:'40%', marginLeft:10}}
+            placeholder="CVV"
+            label="CVV"
+            maxLength={3}
+          />
+        </View>
       </View>
     </ScrollView>
   );

@@ -197,15 +197,25 @@ function Profile() {
   const {user} = useSelector((state) => state.authentication);
   let _user = user.coach ? user.coach : user.subscriber;
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    {key: 'first', title: 'Student'},
-    {key: 'second', title: 'Coach'},
-  ]);
+  const [routes] = React.useState(
+    _user.is_coach
+      ? [
+          {key: 'first', title: 'Student'},
+          {key: 'second', title: 'Coach'},
+        ]
+      : [],
+  );
 
-  const renderScene = SceneMap({
-    first: StudentRoute,
-    second: SecondRoute,
-  });
+  const renderScene = () => {
+    return _user.is_coach
+      ? SceneMap({
+          first: StudentRoute,
+          second: SecondRoute,
+        })
+      : SceneMap({
+          first: StudentRoute,
+        });
+  };
 
   function getLabelExtraStyle(focused) {
     return focused ? {...theme.fonts.medium} : {};
@@ -262,13 +272,17 @@ function Profile() {
           {_user.name}
         </Text>
       </View>
-      <TabView
-        renderTabBar={renderTabBar}
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={initialLayout}
-      />
+      {_user.is_coach ? (
+        <TabView
+          renderTabBar={renderTabBar}
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={initialLayout}
+        />
+      ) : (
+        <StudentRoute />
+      )}
     </ScrollView>
   );
 }

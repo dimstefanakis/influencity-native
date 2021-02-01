@@ -14,47 +14,45 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
-import {TextInput, Button, Text, useTheme} from 'react-native-paper';
-import {login, getUserData} from '../authenticationSlices';
+import {TextInput, Text, Button, useTheme} from 'react-native-paper';
+import {register} from '../authenticationSlices';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
 
-function Login() {
+function Register() {
   const theme = useTheme();
   const navigation = useNavigation();
-  const {loading, token, user} = useSelector((state) => state.authentication);
+  const {loading, token} = useSelector((state) => state.authentication);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
   const [errors, setErrors] = useState([]);
 
   async function handlePress() {
     setErrors([]);
     dispatch(
-      login({
+      register({
         email: email,
-        password: password,
+        password1: password1,
+        password2: password2,
       }),
     )
       .then(unwrapResult)
-      .then(async (result) => {
+      .then((result) => {
         if (result.non_field_errors) {
           setErrors(result.non_field_errors);
         } else {
-          await dispatch(getUserData());
-          navigation.navigate('BottomStackNavigation');
+          console.log("PostRegisterUpdateProfileScreen")
+          navigation.navigate('PostRegisterUpdateProfileScreen');
         }
         console.log('Rer', result);
       });
   }
 
-  function handleRegisterPress() {
-    navigation.navigate('Register');
-  }
-
-  if (token && user) {
-    navigation.navigate('BottomStackNavigation');
+  function handleLoginPress() {
+    navigation.navigate('Login');
   }
 
   return (
@@ -76,7 +74,7 @@ function Login() {
           color: 'black',
           ...theme.fonts.medium,
         }}>
-        Login to Troosh
+        Register to Troosh
       </Text>
       <View style={{width: '80%', margin: 5}}>
         <TextInput
@@ -91,7 +89,16 @@ function Login() {
           autoCompleteType="password"
           label="Password"
           style={{backgroundColor: 'transparent', height: 50}}
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={(text) => setPassword1(text)}
+        />
+      </View>
+      <View style={{width: '80%', margin: 5}}>
+        <TextInput
+          secureTextEntry={true}
+          autoCompleteType="password"
+          label="Password again"
+          style={{backgroundColor: 'transparent', height: 50}}
+          onChangeText={(text) => setPassword2(text)}
         />
       </View>
       <View>
@@ -101,19 +108,19 @@ function Login() {
       </View>
       <Button
         mode="contained"
-        style={styles.loginButton}
+        style={styles.registerButton}
         loading={loading}
         onPress={handlePress}
         contentStyle={{width: 150, height: 40}}>
-        Login
+        Register
       </Button>
       <TouchableOpacity
         style={{flexDirection: 'row', marginTop: 20}}
-        onPress={handleRegisterPress}>
+        onPress={handleLoginPress}>
         <Text style={{color: 'black', fontSize: 16}}>
-          Don't have an account?
+          Already have an account?
         </Text>
-        <Text style={{color: '#4b9be0', fontSize: 16}}>{''} Sign up</Text>
+        <Text style={{color: '#4b9be0', fontSize: 16}}>{''} Login</Text>
       </TouchableOpacity>
       <TouchableOpacity>
         <Text style={{color: '#4b9be0', fontSize: 16}}>Forgot password?</Text>
@@ -123,7 +130,7 @@ function Login() {
 }
 
 const styles = StyleSheet.create({
-  loginButton: {
+  registerButton: {
     zIndex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -141,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default Register;
