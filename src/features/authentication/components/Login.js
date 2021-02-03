@@ -39,12 +39,18 @@ function Login() {
     )
       .then(unwrapResult)
       .then(async (result) => {
-        if (result.non_field_errors) {
-          setErrors(result.non_field_errors);
+        let newErrors = [];
+        navigation.navigate('BottomStackNavigation');
+        // needs fixing 
+        if (result.data.non_field_errors) {
+          newErrors = [...newErrors, ...result.data.non_field_errors];
+        } else if (result.data.email) {
+          newErrors = [...newErrors, ...result.data.email];
         } else {
           await dispatch(getUserData());
           navigation.navigate('BottomStackNavigation');
         }
+        setErrors(newErrors);
         console.log('Rer', result);
       });
   }
@@ -96,7 +102,7 @@ function Login() {
       </View>
       <View>
         {errors.map((e) => {
-          return <Text style={{color: 'red', marginTop: 10}}>{e}</Text>;
+          return <Text style={{color: '#e00606', marginTop: 10}}>{e}</Text>;
         })}
       </View>
       <Button

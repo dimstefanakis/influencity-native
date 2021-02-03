@@ -67,6 +67,7 @@ function PostRegisterUpdateProfile() {
         data: RNFetchBlob.wrap(avatar.path),
       });
     }
+    setLoading(true);
     RNFetchBlob.fetch(
       'PATCH',
       url,
@@ -87,10 +88,12 @@ function PostRegisterUpdateProfile() {
         dispatch(updateUserData())
           .then(unwrapResult)
           .then((result) => {
+            console.log(result);
             navigation.navigate('BottomStackNavigation');
           });
       })
       .catch((e) => {
+        setLoading(false);
         console.error(e, 'error');
       });
   }

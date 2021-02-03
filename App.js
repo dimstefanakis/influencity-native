@@ -29,6 +29,8 @@ import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import PostRegisterUpdateProfileScreen from './src/screens/PostRegisterUpdateProfileScreen';
+import BecomeCoachPostRegisterScreen from './src/screens/BecomeCoachPostRegisterScreen';
+import ChooseAccountTypeScreen from './src/screens/ChooseAccountTypeScreen';
 import Notifications from './src/screens/NotificationsScreen';
 import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
@@ -130,9 +132,9 @@ const App: () => React$Node = () => {
     dispatch(getMyTeams());
   }, [dispatch, token]);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getUserData());
-  },[dispatch])
+  }, [dispatch]);
   console.log(user);
 
   if (checkingForToken) {
@@ -145,7 +147,7 @@ const App: () => React$Node = () => {
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
-          initialRouteName={token ? 'BottomStackNavigation' : 'Login'}
+          initialRouteName={token ? 'ChooseAccountTypeScreen' : 'Login'}
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
@@ -173,8 +175,24 @@ const App: () => React$Node = () => {
             }}
           />
           <VanillaStack.Screen
+            name="ChooseAccountTypeScreen"
+            component={ChooseAccountTypeScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
             name="PostRegisterUpdateProfileScreen"
             component={PostRegisterUpdateProfileScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="BecomeCoachPostRegisterScreen"
+            component={BecomeCoachPostRegisterScreen}
             options={{
               title: '',
               headerShown: false,

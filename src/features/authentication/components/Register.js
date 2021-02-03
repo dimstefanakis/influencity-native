@@ -41,12 +41,17 @@ function Register() {
     )
       .then(unwrapResult)
       .then((result) => {
-        if (result.non_field_errors) {
-          setErrors(result.non_field_errors);
+        let newErrors = [];
+        if (result.data.non_field_errors) {
+          newErrors = [...newErrors, ...result.data.non_field_errors];
+        } else if (result.data.password1) {
+          newErrors = [...newErrors, ...result.data.password1];
+        } else if (result.data.email) {
+          newErrors = [...newErrors, ...result.data.email];
         } else {
-          console.log("PostRegisterUpdateProfileScreen")
           navigation.navigate('PostRegisterUpdateProfileScreen');
         }
+        setErrors(newErrors);
         console.log('Rer', result);
       });
   }
@@ -103,7 +108,12 @@ function Register() {
       </View>
       <View>
         {errors.map((e) => {
-          return <Text style={{color: 'red', marginTop: 10}}>{e}</Text>;
+          return (
+            <Text
+              style={{color: '#e00606', marginTop: 10, textAlign: 'center'}}>
+              {e}
+            </Text>
+          );
         })}
       </View>
       <Button
