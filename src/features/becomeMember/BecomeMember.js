@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView, Surface} from 'react-native';
@@ -11,12 +12,6 @@ function BecomeMember({route}) {
 
   async function handleSelect(tier) {
     navigation.navigate('SubscribePaymentScreen', {tier: tier, coach: coach});
-    try{
-      const url = `${Config.API_URL}/v1/subscribe/${tier.surrogate}`;
-      let response = await axios.post(url);
-    }catch(e){
-
-    }
   }
 
   return (

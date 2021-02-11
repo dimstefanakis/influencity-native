@@ -4,21 +4,17 @@ import {View, ScrollView, Image, Text, TouchableOpacity} from 'react-native';
 import {SharedElement} from 'react-navigation-shared-element';
 import {useTheme, Avatar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import Config from 'react-native-config';
+import {getMyCoaches} from '../myCoaches/myCoachesSlice';
 
 function CoachHorizontalList({withTiers = false}) {
-  const [coaches, setCoaches] = useState([]);
+  //const [coaches, setCoaches] = useState([]);
+  const {myCoaches} = useSelector((state) => state.myCoaches);
   const theme = useTheme();
   const navigation = useNavigation();
-
-  async function getCoaches() {
-    try {
-      let response = await axios.get(`${Config.API_URL}/v1/my_coaches/`);
-      let data = response.data;
-      setCoaches(data);
-    } catch (e) {}
-  }
+  const dispatch = useDispatch();
 
   function navigateToCoach(coach) {
     navigation.navigate('CoachMainScreen', {
@@ -27,8 +23,9 @@ function CoachHorizontalList({withTiers = false}) {
   }
 
   useEffect(() => {
-    getCoaches();
-  }, []);
+    //getCoaches();
+    dispatch(getMyCoaches());
+  }, [dispatch]);
 
   return (
     <ScrollView
@@ -36,7 +33,7 @@ function CoachHorizontalList({withTiers = false}) {
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}>
       <View style={{flexDirection: 'row'}}>
-        {coaches.map((c, i) => {
+        {myCoaches.map((c, i) => {
           return (
             <TouchableOpacity
               onPress={() => navigateToCoach(c)}

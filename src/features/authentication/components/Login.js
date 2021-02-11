@@ -18,6 +18,7 @@ import {TextInput, Button, Text, useTheme} from 'react-native-paper';
 import {login, getUserData} from '../authenticationSlices';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
+import SubmitButton from '../../../flat/SubmitButton/SubmitButton';
 
 function Login() {
   const theme = useTheme();
@@ -39,19 +40,16 @@ function Login() {
     )
       .then(unwrapResult)
       .then(async (result) => {
+        console.log('Rer', result);
         let newErrors = [];
-        navigation.navigate('BottomStackNavigation');
-        // needs fixing 
-        if (result.data.non_field_errors) {
-          newErrors = [...newErrors, ...result.data.non_field_errors];
-        } else if (result.data.email) {
-          newErrors = [...newErrors, ...result.data.email];
+        if (result.status === 401) {
+          newErrors = [...newErrors, 'Your email or password is incorrect.'];
         } else {
           await dispatch(getUserData());
           navigation.navigate('BottomStackNavigation');
         }
-        setErrors(newErrors);
         console.log('Rer', result);
+        setErrors(newErrors);
       });
   }
 
@@ -105,14 +103,9 @@ function Login() {
           return <Text style={{color: '#e00606', marginTop: 10}}>{e}</Text>;
         })}
       </View>
-      <Button
-        mode="contained"
-        style={styles.loginButton}
-        loading={loading}
-        onPress={handlePress}
-        contentStyle={{width: 150, height: 40}}>
+      <SubmitButton loading={loading} onPress={handlePress}>
         Login
-      </Button>
+      </SubmitButton>
       <TouchableOpacity
         style={{flexDirection: 'row', marginTop: 20}}
         onPress={handleRegisterPress}>

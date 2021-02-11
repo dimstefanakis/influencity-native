@@ -5,6 +5,7 @@ import {projectsSlice} from './features/projects/projectsSlice';
 import {expertiseSlice} from './features/expertise/expertiseSlice';
 import {tiersSlice} from './features/tiers/tiersSlice';
 import {teamsSlice} from './features/teams/teamsSlice';
+import {myCoachesSlice} from './features/myCoaches/myCoachesSlice';
 import {chatSlice} from './features/chat/chatSlice';
 
 export default configureStore({
@@ -15,6 +16,7 @@ export default configureStore({
     expertiseFields: expertiseSlice.reducer,
     tiers: tiersSlice.reducer,
     teams: teamsSlice.reducer,
+    myCoaches: myCoachesSlice.reducer,
     chat: chatSlice.reducer,
   },
 });

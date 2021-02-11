@@ -31,6 +31,7 @@ import Register from './src/screens/Register';
 import PostRegisterUpdateProfileScreen from './src/screens/PostRegisterUpdateProfileScreen';
 import BecomeCoachPostRegisterScreen from './src/screens/BecomeCoachPostRegisterScreen';
 import ChooseAccountTypeScreen from './src/screens/ChooseAccountTypeScreen';
+import CoachSubmissionSentScreen from './src/screens/CoachSubmissionSentScreen';
 import Notifications from './src/screens/NotificationsScreen';
 import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
@@ -147,7 +148,7 @@ const App: () => React$Node = () => {
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
-          initialRouteName={token ? 'ChooseAccountTypeScreen' : 'Login'}
+          initialRouteName={token ? 'BottomStackNavigation' : 'Login'}
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
@@ -193,6 +194,14 @@ const App: () => React$Node = () => {
           <VanillaStack.Screen
             name="BecomeCoachPostRegisterScreen"
             component={BecomeCoachPostRegisterScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="CoachSubmissionSentScreen"
+            component={CoachSubmissionSentScreen}
             options={{
               title: '',
               headerShown: false,

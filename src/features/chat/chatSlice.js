@@ -8,7 +8,7 @@ export const getMyChatRooms = createAsyncThunk(
   async () => {
     const url = Config.API_URL + '/v1/my_chat_rooms/';
     try {
-      let response = await axios.get(url);      
+      let response = await axios.get(url);
       return response.data;
     } catch (e) {
       console.error(e);

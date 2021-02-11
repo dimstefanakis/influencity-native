@@ -53,13 +53,14 @@ function PostRegisterUpdateProfile() {
     handleUpdateProfile();
   }
   function handleUpdateProfile() {
-    const path = avatar.path.split('/');
     const url = `${Config.API_URL}/v1/subscriber/me/`;
     let data = [];
     if (name) {
       data.push({name: 'name', data: name});
     }
     if (avatar) {
+      const path = avatar.path.split('/');
+
       data.push({
         name: 'avatar',
         filename: path[path.length - 1],
@@ -89,7 +90,7 @@ function PostRegisterUpdateProfile() {
           .then(unwrapResult)
           .then((result) => {
             console.log(result);
-            navigation.navigate('BottomStackNavigation');
+            navigation.navigate('ChooseAccountTypeScreen');
           });
       })
       .catch((e) => {
@@ -178,6 +179,7 @@ function PostRegisterUpdateProfile() {
         mode="contained"
         style={styles.registerButton}
         loading={loading}
+        disabled={name === ''}
         onPress={handlePress}
         contentStyle={{width: 150, height: 40}}>
         Continue

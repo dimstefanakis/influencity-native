@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 import {View} from 'react-native';
 import {TextInput, Button, Text} from 'react-native-paper';
 
-function BecomeCoachForm() {
-  const [text, setText] = useState('');
-
+function BecomeCoachForm({noBackground = false, text, setText}) {
   return (
     <View>
       <TextInput
@@ -12,6 +10,7 @@ function BecomeCoachForm() {
         value={text}
         onChangeText={(_text) => setText(_text)}
         multiline
+        style={{backgroundColor: noBackground ? 'white' : null}}
         placeholder="Tell us some quick stuff about yourself"
       />
     </View>

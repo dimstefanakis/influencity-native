@@ -1,3 +1,3 @@
-import BecomeCoachPostRegister from '../features/becomeCoachPostRegister';
+import BecomeCoachPostRegister from '../features/becomeCoachPostRegister/BecomeCoachPostRegister';
 
 export default BecomeCoachPostRegister;

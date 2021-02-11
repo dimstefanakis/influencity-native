@@ -1,13 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, ScrollView, Image, StyleSheet} from 'react-native';
+import {View, ScrollView, Image, Dimensions, StyleSheet} from 'react-native';
+import {useTheme, Text, Subheading, Title} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
 import SubscriberActionsList from '../features/homeActionsList/SubscriberActionsList';
 import CoachActionsList from '../features/homeActionsList/CoachActionsList';
 import PostList from '../features/posts/PostList';
-import {useTheme, Text, Subheading, Title} from 'react-native-paper';
-import {useSelector} from 'react-redux';
+import EmptyHome from '../features/emptyHome/EmptyHome';
 
 let url =
   'https://d3u9nsvugag1ev.cloudfront.net/media/images/group_images/profile/no.jpg';
@@ -78,7 +79,7 @@ function Home() {
 function FeedHeaderComponent() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
-
+  const {myCoaches} = useSelector((state) => state.myCoaches);
   return (
     <View>
       <View>
@@ -90,29 +91,35 @@ function FeedHeaderComponent() {
         </Text>
         {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
-      <Text
-        style={{
-          fontSize: 20,
-          ...styles.spacing,
-          marginTop: 10,
-          marginBottom: 10,
-          color: '#1d1d1d',
-          ...theme.fonts.medium,
-        }}>
-        Your coaches
-      </Text>
-      <CoachHorizontalList />
-      <Text
-        style={{
-          fontSize: 20,
-          marginTop: 10,
-          marginBottom: 10,
-          color: '#1d1d1d',
-          ...theme.fonts.medium,
-          ...styles.spacing,
-        }}>
-        Your feed
-      </Text>
+      {myCoaches.length == 0 ? (
+        <EmptyHome />
+      ) : (
+        <>
+          <Text
+            style={{
+              fontSize: 20,
+              ...styles.spacing,
+              marginTop: 10,
+              marginBottom: 10,
+              color: '#1d1d1d',
+              ...theme.fonts.medium,
+            }}>
+            Your coaches
+          </Text>
+          <CoachHorizontalList />
+          <Text
+            style={{
+              fontSize: 20,
+              marginTop: 10,
+              marginBottom: 10,
+              color: '#1d1d1d',
+              ...theme.fonts.medium,
+              ...styles.spacing,
+            }}>
+            Your feed
+          </Text>
+        </>
+      )}
     </View>
   );
 }

@@ -2,14 +2,20 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {BigHeader} from '../../flat/Headers/Headers';
 
 function ChooseAccountType() {
   const theme = useTheme();
+  const navigation = useNavigation();
 
-  function handleAccountSelect() {
-    console.log('in');
+  function handleUserSelect() {
+    navigation.navigate('BottomStackNavigation');
+  }
+
+  function handleCoachSelect() {
+    navigation.navigate('BecomeCoachPostRegisterScreen');
   }
   return (
     <View
@@ -31,19 +37,20 @@ function ChooseAccountType() {
           style={{
             fontSize: 16,
             marginTop: 5,
+            color: '#6f6f6f',
           }}>
           You can always change this later through settings
         </Text>
       </View>
       <View style={{flex: 1}}>
-        <TouchableOpacity onPress={handleAccountSelect}>
+        <TouchableOpacity onPress={handleUserSelect}>
           <View style={styles.accountType}>
             <Material size={60} name="account-outline" />
             <Text style={{...theme.fonts.medium, fontSize: 20}}>Mentee</Text>
             <Text>Learn from mentors</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleAccountSelect}>
+        <TouchableOpacity onPress={handleCoachSelect}>
           <View style={styles.accountType}>
             <Material size={60} name="brain" />
             <Text style={{...theme.fonts.medium, fontSize: 20}}>Mentor</Text>
