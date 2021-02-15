@@ -68,21 +68,20 @@ function CoachActionsList() {
             }}
           />
         </TouchableOpacity>
+
         <Button
           icon="plus-circle"
           compact
-          mode="outlined"
+          mode="contained"
           style={{borderRadius: 50, justifyContent: 'center'}}
-          color="#1890ff"
           contentStyle={{padding: 10, height: 60}}
-          dark={true}
           onPress={handleCreatePostPress}>
           Create post
         </Button>
         <Button
           icon="clipboard-text-outline"
           compact
-          mode="outlined"
+          mode="contained"
           contentStyle={{padding: 10, height: 60}}
           style={{
             borderRadius: 50,
@@ -90,8 +89,6 @@ function CoachActionsList() {
             marginLeft: 10,
             marginRight: 10,
           }}
-          color="#1890ff"
-          dark={true}
           onPress={handleViewProjectsPress}>
           View projects
         </Button>

@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -51,8 +44,10 @@ import TeamChatScreen from './src/screens/TeamChatScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
 import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import CreateProjectScreen from './src/screens/CreateProjectScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
+import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
@@ -279,10 +274,24 @@ const App: () => React$Node = () => {
             }}
           />
           <VanillaStack.Screen
+            name="CreateProjectScreen"
+            component={CreateProjectScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
             name="SubscribePaymentScreen"
             component={SubscribePaymentScreen}
             options={({route}) => {
               return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
+            name="StripeWebViewScreen"
+            component={StripeWebViewScreen}
+            options={({route}) => {
+              return {title: ''};
             }}
           />
           <VanillaStack.Screen

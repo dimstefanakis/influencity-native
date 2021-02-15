@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,9 +13,12 @@ import Config from 'react-native-config';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/Feather';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {WebView} from 'react-native-webview';
 import MyProjects from '../projects/MyProjects';
 import CoachHorizontalList from '../coachHorizontalList/CoachHorizontalList';
-import {useNavigation} from '@react-navigation/native';
+import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import axios from 'axios';
 
 function Header({title}) {
   const theme = useTheme();
@@ -82,12 +85,49 @@ function MyCoachList() {
 
 function MyBalance() {
   const theme = useTheme();
+  const navigation = useNavigation();
+  const [balance, setBalance] = useState(0);
+  const [balanceLoading, setBalanceLoading] = useState(false);
+  const [stripeLoginLink, setStripeLoginLink] = useState(null);
+  const [stripeLoginLoading, setStripeLoginLoading] = useState(false);
+
+  async function getBalance() {
+    try {
+      const url = `${Config.API_URL}/v1/get_stripe_balance/`;
+      setBalanceLoading(true);
+      let response = await axios.get(url);
+      setBalanceLoading(false);
+      setBalance(response.data.balance);
+    } catch (e) {
+      setBalanceLoading(false);
+      console.error(e);
+    }
+  }
+
+  async function getStripeLoginLink() {
+    try {
+      const url = `${Config.API_URL}/v1/get_stripe_login_link/`;
+      setStripeLoginLoading(true);
+      let response = await axios.get(url);
+      setStripeLoginLoading(false);
+      setStripeLoginLink(response.data.url);
+    } catch (e) {
+      setStripeLoginLoading(false);
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getBalance();
+    getStripeLoginLink();
+  }, []);
+
   return (
     <View>
       <Header title="My balance" />
       <View style={{...styles.spacing, flexDirection: 'row'}}>
         <Text style={{...theme.fonts.medium, fontSize: 36, flex: 1}}>
-          $47.8
+          ${balance}
         </Text>
         <Button
           style={{
@@ -96,8 +136,11 @@ function MyBalance() {
             alignItems: 'center',
             borderRadius: 25,
           }}
-          labelStyle={{color: 'white'}}
-          onPress={() => {}}>
+          labelStyle={{color: 'black'}}
+          loading={stripeLoginLoading}
+          onPress={() =>
+            navigation.navigate('StripeWebViewScreen', {url: stripeLoginLink})
+          }>
           Get paid
         </Button>
       </View>
@@ -178,12 +221,56 @@ const StudentRoute = () => {
   );
 };
 
-const SecondRoute = () => (
-  <View>
-    <MyBalance />
-    <SubscriberData />
-  </View>
-);
+const SecondRoute = () => {
+  const {user} = useSelector((state) => state.authentication);
+  return (
+    <View>
+      {user.coach.charges_enabled ? (
+        <>
+          <MyBalance />
+          <SubscriberData />
+        </>
+      ) : (
+        <SetupStripeAccount />
+      )}
+    </View>
+  );
+};
+
+function SetupStripeAccount() {
+  const theme = useTheme();
+  const navigation = useNavigation();
+  const {user} = useSelector((state) => state.authentication);
+  const [loading, setLoading] = useState(false);
+
+  async function handleCreateStripeAccount() {
+    try {
+      const url = `${Config.API_URL}/v1/create_stripe_account_link/`;
+      setLoading(true);
+      let response = await axios.get(url);
+      setLoading(false);
+      navigation.navigate('StripeWebViewScreen', {url: response.data.url});
+    } catch (e) {
+      setLoading(false);
+      console.error(e);
+    }
+  }
+
+  return (
+    <View style={{margin: 20, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{...theme.fonts.medium, fontSize: 24}}>Payout status</Text>
+      <Text style={{marginTop: 20, fontSize: 16, textAlign: 'center'}}>
+        Troosh uses Stripe to get you paid quickly and keep your personal and
+        payment information secure. Thousands of companies around the world
+        trust Stripe to process payments for their users. Set up a Stripe
+        account to get paid with Troosh.
+      </Text>
+      <ActionButton loading={loading} onPress={handleCreateStripeAccount}>
+        Setup account
+      </ActionButton>
+    </View>
+  );
+}
 
 const initialLayout = {
   width: Dimensions.get('window').width,
@@ -195,10 +282,11 @@ function Profile() {
   const theme = useTheme();
   const navigation = useNavigation();
   const {user} = useSelector((state) => state.authentication);
+  let isCoach = user.is_coach;
   let _user = user.coach ? user.coach : user.subscriber;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState(
-    _user.is_coach
+    isCoach
       ? [
           {key: 'first', title: 'Student'},
           {key: 'second', title: 'Coach'},
@@ -206,16 +294,10 @@ function Profile() {
       : [],
   );
 
-  const renderScene = () => {
-    return _user.is_coach
-      ? SceneMap({
-          first: StudentRoute,
-          second: SecondRoute,
-        })
-      : SceneMap({
-          first: StudentRoute,
-        });
-  };
+  const renderScene = SceneMap({
+    first: StudentRoute,
+    second: SecondRoute,
+  });
 
   function getLabelExtraStyle(focused) {
     return focused ? {...theme.fonts.medium} : {};
@@ -272,7 +354,7 @@ function Profile() {
           {_user.name}
         </Text>
       </View>
-      {_user.is_coach ? (
+      {isCoach ? (
         <TabView
           renderTabBar={renderTabBar}
           navigationState={{index, routes}}
