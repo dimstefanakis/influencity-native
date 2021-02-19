@@ -5,17 +5,20 @@ import {Button} from 'react-native-paper';
 function SubmitButton({
   loading = false,
   disabled = false,
+  icon = null,
+  circular = false,
   onPress = () => {},
   children,
 }) {
   return (
     <Button
+      icon={icon}
       mode="contained"
       style={styles.submitButton}
       loading={loading}
       onPress={onPress}
       disabled={disabled}
-      contentStyle={{width: 200, height: 40}}>
+      contentStyle={{width: circular ? 40 : 200, height: 40}}>
       {children}
     </Button>
   );
@@ -39,6 +42,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
+  },
+  circular: {
+    width: 40,
+    height: 40,
   },
 });
 

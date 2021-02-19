@@ -335,12 +335,14 @@ function Profile() {
           top: 15,
           right: 15,
         }}>
-        <Icon
-          name="settings"
-          size={25}
-          color="black"
-          onPress={() => navigation.push('SettingsScreen')}
-        />
+        <View>
+          <Icon
+            name="settings"
+            size={25}
+            color="black"
+            onPress={() => navigation.push('SettingsScreen')}
+          />
+        </View>
       </TouchableOpacity>
       <View
         style={{

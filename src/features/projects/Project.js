@@ -284,6 +284,7 @@ const styles = StyleSheet.create({
     padding: 16,
     elevation: 4,
     borderRadius: 5,
+    marginBottom: 50,
   },
 });
 

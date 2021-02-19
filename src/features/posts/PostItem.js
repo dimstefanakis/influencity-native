@@ -170,8 +170,9 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 
 const styles = StyleSheet.create({
   item: {
-    width: screenWidth,
-    //height: screenWidth,
+    width: '100%',
+    maxWidth: screenWidth,
+    // width: screenWidth,
   },
   imageContainer: {
     flex: 1,

@@ -1,19 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {View, StyleSheet, TouchableNativeFeedback} from 'react-native';
-import {
-  Text,
-  Title,
-  Paragraph,
-  Subheading,
-  Surface,
-  Avatar,
-  Chip,
-  useTheme,
-} from 'react-native-paper';
+import {View} from 'react-native';
 import Project from './Project';
-import {useDispatch, useSelector} from 'react-redux';
-import {getProjects} from './projectsSlice';
 
 // Usage is identical to ./MyCreatedProjects and ./MyProjects
 // but this components accepts params and a "projectList" prop

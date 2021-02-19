@@ -48,6 +48,7 @@ import CreateProjectScreen from './src/screens/CreateProjectScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
+import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
@@ -307,6 +308,14 @@ const App: () => React$Node = () => {
             component={BecomeMemberScreen}
             options={({route}) => {
               return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
+            name="SelectablePostListScreen"
+            component={SelectablePostListScreen}
+            options={{
+              title: 'My posts',
+              ...TransitionPresets.ModalPresentationIOS,
             }}
           />
         </VanillaStack.Navigator>

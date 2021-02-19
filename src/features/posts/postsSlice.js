@@ -35,7 +35,21 @@ export const postsSlice = createSlice({
   initialState: {
     posts: [],
     newPosts: [],
+    selectedForAttachment: [],
     loading: false,
+  },
+  reducers: {
+    addAttachedPost(state, action) {
+      const {id} = action.payload;
+      console.log(state.selectedForAttachment)
+      state.selectedForAttachment = [...state.selectedForAttachment, id];
+    },
+    removeAttachedPost(state, action) {
+      const {id} = action.payload;
+      state.selectedForAttachment = state.selectedForAttachment.filter(
+        (selected) => selected != id,
+      );
+    },
   },
   extraReducers: {
     [getPosts.fulfilled]: (state, action) => {
@@ -55,3 +69,5 @@ export const postsSlice = createSlice({
     [getNewPosts.rejected]: (state, action) => {},
   },
 });
+
+export const {addAttachedPost, removeAttachedPost} = postsSlice.actions;
