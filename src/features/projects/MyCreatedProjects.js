@@ -19,7 +19,12 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
   const dispatch = useDispatch();
 
   const {createdProjects} = useSelector((state) => state.projects);
-  const handleSelectProject = route?.params?.handleSelectProject;
+
+  function handleProjectPress(project) {
+    navigation.navigate('ProjectCoachScreenDashboardScreen', {
+      project: project,
+    });
+  }
 
   useEffect(() => {
     dispatch(getMyCreatedProjects());
@@ -33,7 +38,7 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
             <Project
               project={project}
               viewAs={viewAs}
-              handleSelectProject={handleSelectProject}
+              handleProjectPress={handleProjectPress}
             />
           );
         })}

@@ -1,9 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Text, useTheme} from 'react-native-paper';
+import {View} from 'react-native';
+import {Text, Avatar, useTheme} from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export function SmallHeader({title}) {
   const theme = useTheme();
+
   return (
     <Text
       style={{
@@ -18,16 +21,28 @@ export function SmallHeader({title}) {
   );
 }
 
-export function BigHeader({title}) {
+export function BigHeader({title, icon}) {
   const theme = useTheme();
+
   return (
-    <Text
-      style={{
-        marginTop: 20,
-        fontSize: 24,
-        ...theme.fonts.medium,
-      }}>
-      {title}
-    </Text>
+    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+      {icon ? (
+        <Avatar.Icon
+          size={30}
+          style={{marginRight: 10}}
+          color="white"
+          icon={({size, color}) => (
+            <AntDesign name="rocket1" size={size} color="black" />
+          )}
+        />
+      ) : null}
+      <Text
+        style={{
+          fontSize: 24,
+          ...theme.fonts.medium,
+        }}>
+        {title}
+      </Text>
+    </View>
   );
 }

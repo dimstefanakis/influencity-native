@@ -16,12 +16,21 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {getProjects} from '../projects/projectsSlice';
 
-function Project({project, handleSelectProject, viewAs = 'sub'}) {
+function Project({
+  project,
+  handleSelectProject,
+  handleProjectPress,
+  viewAs = 'sub',
+}) {
   const theme = useTheme();
   const navigation = useNavigation();
 
   // have to check later if sub also has subscribed to the project
   function handleProjectClick() {
+    if (handleProjectPress) {
+      handleProjectPress(project);
+    }
+
     // used for custom click events, for example select which project was selected
     if (handleSelectProject) {
       handleSelectProject(project);

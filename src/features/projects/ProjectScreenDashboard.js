@@ -316,7 +316,7 @@ function Chat() {
           margin: 20,
         }}>
         <Image
-          source={{uri: stockImage}}
+          source={{uri: `${Config.DOMAIN}/media/images/51.jpg`}}
           style={{height: 30, width: 30, borderRadius: 100}}
         />
 
@@ -331,12 +331,11 @@ function Chat() {
               }}>
               William
             </Text>
-            <Text style={{fontSize: 15, color: 'gray'}}>5 hours ago</Text>
+            <Text style={{fontSize: 15, color: 'gray'}}>1 hours ago</Text>
           </View>
           <Text>
-            Etiam et vulputate ligula. Suspendisse maximus dolor sapien, vitae
-            lacinia metus scelerisque vel. Aenean nibh lectus, pellentesque non
-            magna eget, elementum finibus nisi.
+            I have some trouble understanding some of the pandas plots. Could
+            you give my some insights?
           </Text>
         </View>
       </View>

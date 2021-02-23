@@ -49,6 +49,9 @@ import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
 import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
+import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
+import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
+import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
@@ -56,7 +59,9 @@ import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
+
 notifHandler();
+
 const stripePromise = loadStripe(Config.STRIPE_PUBLISHABLE_KEY);
 const fontConfig = {
   default: {
@@ -300,6 +305,30 @@ const App: () => React$Node = () => {
             component={MyCreatedProjectsScreen}
             options={{
               title: 'My projects',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="ProjectCoachScreenDashboardScreen"
+            component={ProjectCoachScreenDashboardScreen}
+            options={{
+              title: '',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="TeamMentorDashboardScreen"
+            component={TeamMentorDashboardScreen}
+            options={{
+              title: '',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="CompleteTaskMentorScreen"
+            component={CompleteTaskMentorScreen}
+            options={{
+              title: '',
               ...TransitionPresets.ModalPresentationIOS,
             }}
           />
