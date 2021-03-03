@@ -9,7 +9,6 @@ import {
   Button,
   useTheme,
 } from 'react-native-paper';
-import TextInputMask from 'react-native-text-input-mask';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import stripe from 'tipsi-stripe';
@@ -156,54 +155,6 @@ function SubscribePayment({route}) {
             <Button mode="contained" onPress={handleOpenPaymentCardForm}>
               Add method
             </Button>
-            {/* <SmallHeader title="Payment details" />
-            <TextInput
-              label="Cardholder name"
-              style={{backgroundColor: 'transparent'}}
-              onChangeText={(text) => setCardholderName(text)}
-            />
-            <TextInput
-              keyboardType={'numeric'}
-              placeholder="0000 0000 0000 0000"
-              label="Card number"
-              maxLength={19}
-              value={cardNumber}
-              onChangeText={(text) => setCardNumber(text.replace(' ', ''))}
-              style={{backgroundColor: 'transparent'}}
-              left={
-                <TextInput.Icon
-                  name={() => (
-                    <AntDesign name="creditcard" size={24} color="gray" />
-                  )}
-                />
-              }
-              render={(props) => (
-                <TextInputMask {...props} mask="[0000] [0000] [0000] [0000]" />
-              )}
-            />
-            <View style={{flexDirection: 'row', width: '100%'}}>
-              <TextInput
-                style={{backgroundColor: 'transparent', width: '40%'}}
-                placeholder="mm/yy"
-                label="Date"
-                maxLength={5}
-                onChangeText={(text) => setDate(text)}
-                render={(props) => (
-                  <TextInputMask {...props} mask="[00]/[00]" />
-                )}
-              />
-              <TextInput
-                style={{
-                  backgroundColor: 'transparent',
-                  width: '40%',
-                  marginLeft: 10,
-                }}
-                placeholder="CVV"
-                label="CVV"
-                maxLength={3}
-                onChangeText={(text) => setCvC(text)}
-              />
-            </View> */}
           </>
         )}
         <View
