@@ -41,6 +41,7 @@ function SelectTier({route}) {
         width: '100%',
         alignItems: 'center',
         justifyContent: 'space-around',
+        backgroundColor: 'white',
       }}>
       {myTiers.map((t) => {
         return (
@@ -59,7 +60,6 @@ function SelectTier({route}) {
         mode="contained"
         contentStyle={{padding: 10}}
         style={{borderRadius: 50, width: 200, margin: 20}}
-        dark={true}
         onPress={() => getTierValuesAndCreateItems(myTiers)}
         loading={loading}>
         Finish post
@@ -94,8 +94,9 @@ function Tier({
         borderRadius: 100,
         width: '80%',
         height: 100,
-        borderColor: selected ? theme.colors.primary : '#eee',
-        borderWidth: selected ? 3 : 1,
+        borderColor: '#eee',
+        borderWidth: selected ? 0 : 1,
+        backgroundColor: selected ? theme.colors.primary : 'transparent',
         overflow: 'hidden',
       }}>
       <TouchableNativeFeedback useForeground onPress={handleSelect}>

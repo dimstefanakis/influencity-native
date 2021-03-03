@@ -45,7 +45,7 @@ function CoachHorizontalList({withTiers = false}) {
               }}>
               <SharedElement id={`coach.${c.name}.avatar`}>
                 <Avatar.Image
-                  source={{uri: Config.DOMAIN + c.avatar}}
+                  source={{uri: c.avatar}}
                   size={60}
                   style={{
                     borderRadius: 200,

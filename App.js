@@ -328,7 +328,7 @@ const App: () => React$Node = () => {
             name="CompleteTaskMentorScreen"
             component={CompleteTaskMentorScreen}
             options={{
-              title: '',
+              title: 'Milestone completion report',
               ...TransitionPresets.ModalPresentationIOS,
             }}
           />

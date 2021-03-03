@@ -25,7 +25,7 @@ function PostBox() {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Avatar.Image
               size={24}
-              source={{uri: Config.DOMAIN + bundle.coach.avatar}}
+              source={{uri: bundle.coach.avatar}}
             />
             <Text style={{marginLeft: 5}}>
               {bundle.new_posts.length} new posts

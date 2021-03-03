@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableNativeFeedback,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {Text, Avatar, Surface, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
@@ -18,8 +18,11 @@ function TeamMentorDashboard({route}) {
   const navigation = useNavigation();
   const {team, project} = route.params;
 
-  function handleTaskPress(task){
-    navigation.navigate('CompleteTaskMentorScreen', {project:project,task:task})
+  function handleTaskPress(task) {
+    navigation.navigate('CompleteTaskMentorScreen', {
+      project: project,
+      task: task,
+    });
   }
 
   return (

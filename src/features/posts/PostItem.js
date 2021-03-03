@@ -32,7 +32,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
   function pagination() {
     return (
       <Pagination
-        dotsLength={post.images.length}
+        dotsLength={post.images.length + post.videos.length}
         activeDotIndex={activeSlide}
         containerStyle={{margin: 10, paddingVertical: 5}}
         dotStyle={{
@@ -59,24 +59,23 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
     setActiveSlide(index);
   }
 
-  function renderItem({item, index}, parallaxProps) {
+  function renderItem({item, index}) {
     let ratio = item.height / item.width;
-    console.log("in");
+    console.log(ratio * screenWidth, ratio, "aaaaa");
     return (
-      <View style={styles.item}>
-        <ParallaxImage
-          source={{uri: Config.DOMAIN + item.image}}
-          containerStyle={{
-            ...styles.imageContainer,
-            minHeight: ratio * screenWidth,
+      <View
+        style={{
+          ...styles.item,
+          minHeight: ratio * screenWidth,
+          height: item.height,
+        }}>
+        <Image
+          source={{uri: item.image}}
+          style={{
+            ...styles.image,
+            height: '100%',
           }}
-          style={styles.image}
-          parallaxFactor={0.4}
-          {...parallaxProps}
         />
-        {/*<Text style={styles.title} numberOfLines={2}>
-          {item.title}
-        </Text>*/}
       </View>
     );
   }
@@ -89,14 +88,15 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
     } catch (e) {}
   }
 
-  function renderVideos({item, index}, parallaxProps) {
+  function renderVideos({item, index}) {
     console.log(`${Config.MUX_API_URL}/video/v1/assets/${item.asset_id}`);
     const playback_id = item.playback_ids[0].playback_id;
     const inputInfo = getInputInfo(item);
 
     return (
-      <View style={styles.item}>
+      <View style={{...styles.item, minHeight: 200}}>
         <Video
+          repeat
           source={{
             uri: `https://stream.mux.com/${playback_id}.m3u8`,
             type: 'm3u8',
@@ -111,6 +111,17 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
     );
   }
 
+  function handleMultiTypeRender({item, index}) {
+    if (item.image) {
+      return renderItem({item, index});
+    } else {
+      return renderVideos({item, index});
+    }
+
+    console.log("sadsaddasasdasd");
+
+  }
+
   return (
     <View>
       <View
@@ -123,10 +134,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={handleCoachPress}>
-          <Avatar.Image
-            size={40}
-            source={{uri: Config.DOMAIN + post.coach.avatar}}
-          />
+          <Avatar.Image size={40} source={{uri: post.coach.avatar}} />
           <Subheading style={{marginLeft: 10, fontWeight: 'bold'}}>
             {post.coach.name}
           </Subheading>
@@ -154,13 +162,13 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         </View>
       </TouchableNativeFeedback>
       <Carousel
+        layout="stack"
         onSnapToItem={handleSnapToItem}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
         itemWidth={screenWidth}
-        data={post.images}
-        renderItem={renderItem}
-        hasParallaxImages={true}
+        data={[...post.videos, ...post.images]}
+        renderItem={handleMultiTypeRender}
       />
       <PostToolbar post={post} />
       {pagination()}
@@ -171,7 +179,11 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 const styles = StyleSheet.create({
   item: {
     width: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     maxWidth: screenWidth,
+    maxHeight: 600,
     // width: screenWidth,
   },
   imageContainer: {
@@ -183,8 +195,7 @@ const styles = StyleSheet.create({
   image: {
     //...StyleSheet.absoluteFillObject,
     flex: 1,
-    height: null,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     width: '100%',
     maxWidth: screenWidth,
   },

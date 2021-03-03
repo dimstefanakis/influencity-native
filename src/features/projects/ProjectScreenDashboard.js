@@ -273,7 +273,7 @@ function Task({children, done = false, status, milestone, onPress}) {
 function TeamMember({member}) {
   return (
     <View style={{margin: 2}}>
-      <Chip avatar={<Image source={{uri: Config.DOMAIN + member.avatar}} />}>
+      <Chip avatar={<Image source={{uri: member.avatar}} />}>
         {member.name}
       </Chip>
     </View>
@@ -316,7 +316,7 @@ function Chat() {
           margin: 20,
         }}>
         <Image
-          source={{uri: `${Config.DOMAIN}/media/images/51.jpg`}}
+          source={{uri: `${Config.MEDIA}/media/images/51.jpg`}}
           style={{height: 30, width: 30, borderRadius: 100}}
         />
 

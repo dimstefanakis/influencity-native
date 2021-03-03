@@ -18,6 +18,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import ImagePicker from 'react-native-image-crop-picker';
+import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
@@ -37,6 +38,40 @@ function CompleteTask({route}) {
   const [selectedMembers, setSelectedMembers] = useState(report?.members || []);
   const [message, setSelectedMessage] = useState(report?.message || '');
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
+
+  async function handleCreateVideo(milestoneReport) {
+    try {
+      // const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
+
+      // get mux upload url with the secret key found through our backend endpoint
+      let url = Config.API_URL + '/v1/upload_milestonecompletion_video/';
+      let formData = new FormData();
+      formData.append('milestone_completion_report', milestoneReport.surrogate);
+
+      for await (let video of videos) {
+        const data = RNFetchBlob.wrap(video.path);
+        // upload to the mux upload url
+        let response = await axios.post(url, formData);
+        let uploadUrl = response.data.url;
+        await RNFetchBlob.fetch(
+          'PUT',
+          uploadUrl,
+          null, // {'Content-Type': 'application/octet-stream'},
+          data,
+        )
+          .then((r) => {
+            console.log(r, 'response');
+          })
+          .catch((e) => {
+            console.error(e, 'error');
+          });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async function handleCompleteTask() {
     try {
       let url = `${Config.API_URL}/v1/milestone_reports/${task.id}/`;
@@ -71,10 +106,15 @@ function CompleteTask({route}) {
 
         [...imageData, ...members, {name: 'message', data: message}],
       )
-        .then((r) => {
-          setLoading(false);
+        .then(async (r) => {
           console.log(r, 'response');
           if (r.respInfo.status == 200 || r.respInfo.status == 201) {
+            let data = JSON.parse(r.data);
+            let {surrogate} = data;
+            if (videos.length > 0) {
+              await handleCreateVideo(data);
+            }
+            setLoading(false);
             dispatch(getMyProjects());
             navigation.goBack();
           }
@@ -119,7 +159,12 @@ function CompleteTask({route}) {
           message={message}
           setSelectedMessage={setSelectedMessage}
         />
-        <AddMedia images={images} setImages={setImages} />
+        <AddMedia
+          images={images}
+          setImages={setImages}
+          videos={videos}
+          setVideos={setVideos}
+        />
         <SubmitButton
           task={task}
           handleCompleteTask={handleCompleteTask}
@@ -142,7 +187,7 @@ function FinalMessage({task, message, setSelectedMessage}) {
           color: '#1d1d1d',
           ...theme.fonts.medium,
         }}>
-        How did you complete this task
+        Feedback for your mentor
       </Text>
       <Text>
         Your mentor needs to be sure you completed your task, so you should
@@ -166,48 +211,24 @@ function FinalMessage({task, message, setSelectedMessage}) {
   );
 }
 
-function AddMedia({images, setImages}) {
+function AddMedia({images, setImages, videos, setVideos}) {
   function handleSelectImages() {
     ImagePicker.openPicker({
       multiple: true,
       includeBase64: true,
     }).then((results) => {
-      setImages(results);
-    });
-  }
-
-  async function handleCreateVideo(post) {
-    try {
-      const image = images;
-      let url = Config.API_URL + '/v1/upload_video/';
-      let formData = new FormData();
-      formData.append('post', post.id);
-      let imageData = images.map((i) => {
-        return {
-          name: i.fileName,
-          filename: i.fileName,
-          type: i.type,
-          data: RNFetchBlob.wrap(i.path),
-        };
+      let _images = [];
+      let _videos = [];
+      results.forEach((result) => {
+        if (result.mime.includes('image')) {
+          _images.push(result);
+        } else if (result.mime.includes('video')) {
+          _videos.push(result);
+        }
       });
-      let response = await axios.post(url, formData);
-      let uploadUrl = response.data.url;
-      RNFetchBlob.fetch(
-        'PUT',
-        uploadUrl,
-        {'Content-Type': 'multipart/form-data'},
-
-        [...imageData],
-      )
-        .then((r) => {
-          console.log(r, 'response');
-        })
-        .catch((e) => {
-          console.error(e, 'error');
-        });
-    } catch (e) {
-      console.error(e);
-    }
+      setImages(_images);
+      setVideos(_videos);
+    });
   }
 
   return (
@@ -225,6 +246,24 @@ function AddMedia({images, setImages}) {
           return (
             <Image
               source={{uri: im.path}}
+              style={{
+                height: 100,
+                width: 100,
+                borderColor: '#f9f9f9',
+                borderWidth: 1,
+                borderRadius: 15,
+              }}
+            />
+          );
+        })}
+        {videos.map((vid) => {
+          return (
+            <Video
+              source={{
+                uri: vid.path,
+                type: 'm3u8',
+              }}
+              resizeMode="cover"
               style={{
                 height: 100,
                 width: 100,
@@ -316,7 +355,7 @@ function TeamMember({member, selectedMembers, onPress = () => {}}) {
   return (
     <View style={{margin: 2}}>
       <Chip
-        avatar={<Image source={{uri: Config.DOMAIN + member.avatar}} />}
+        avatar={<Image source={{uri: member.avatar}} />}
         onPress={handlePress}
         selected={selected}>
         {member.name}
@@ -342,7 +381,7 @@ function SubmitButton({task, handleCompleteTask, loading}) {
         loading={loading}
         mode="contained"
         disabled={task.status == 'pending' ? true : false}
-        labelStyle={{color: 'white'}}
+        labelStyle={{color: 'black'}}
         onPress={handleCompleteTask}>
         {text}
       </Button>

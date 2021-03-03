@@ -1,8 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, ScrollView, StyleSheet, Image} from 'react-native';
 import {Text, TextInput, Chip, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
+import {BigHeader, SmallHeader} from '../../flat/Headers/Headers';
 
 function CompleteTaskMentor({route}) {
   const {project, task} = route.params;
@@ -14,25 +15,29 @@ function CompleteTaskMentor({route}) {
       : null;
 
   return (
-    <View style={{...styles.spacing}}>
-      <View>
-        {report.members.map((member) => {
-          return (
-            <View style={{margin: 2}}>
-              <Chip
-                avatar={
-                  <Image source={{uri: Config.DOMAIN + member.avatar}} />
-                }>
-                {member.name}
-              </Chip>
-            </View>
-          );
-        })}
+    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
+      <View style={{...styles.spacing}}>
+        <SmallHeader title="Who worked on this milestone" />
+        <View style={{flexDirection: 'row', flexWrap: 'wrap', marginTop: 10}}>
+          {report.members.map((member) => {
+            return (
+              <View style={{margin: 2}}>
+                <Chip
+                  avatar={
+                    <Image source={{uri: member.avatar}} />
+                  }>
+                  {member.name}
+                </Chip>
+              </View>
+            );
+          })}
+        </View>
+        <View>
+          <SmallHeader title="Team feedback" />
+          <Text>{report.message}</Text>
+        </View>
       </View>
-      <View>
-        <Text>{report.message}</Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 

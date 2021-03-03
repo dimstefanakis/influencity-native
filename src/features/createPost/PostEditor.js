@@ -64,6 +64,7 @@ function ChainedPostsCarousel({route}) {
       try {
         let url = Config.API_URL + '/v1/posts/';
         setLoading(true);
+
         await RNFetchBlob.fetch(
           'POST',
           url,
@@ -75,7 +76,13 @@ function ChainedPostsCarousel({route}) {
             ...imageData,
             {name: 'text', data: post.text},
             {name: 'linked_project', data: post.linked_project},
-            {name: 'tiers', data: selectedTiers[0].toString()}, // without toString backned receives empty data
+            // TODO
+            // since videos are directly uploaded to mux and have no initial attachment to the backend until some processing happens
+            // we are notifying backend if the post has videos or not
+            // we should later fix this so that backend discovers the initial state on its own
+
+            {name: 'has_videos', data: (post.videos.length > 0).toString()},
+            {name: 'tier', data: selectedTiers[0].toString()}, // without toString backend receives empty data
           ],
         )
           .then(async (response) => {
@@ -84,7 +91,7 @@ function ChainedPostsCarousel({route}) {
             let {id} = data;
             createdPosts.push(data);
             if (post.videos.length > 0) {
-              await handleCreateVideo(data);
+              await handleCreateVideo(data, post.videos);
             }
             newPostIds.push(id);
             setLoading(false);
@@ -138,31 +145,34 @@ function ChainedPostsCarousel({route}) {
     navigation.navigate('PostScreen', {post: previewPost});*/
   }
 
-  async function handleCreateVideo(post) {
+  async function handleCreateVideo(post, postVideos) {
     try {
-      const videos = post.videos;
-      const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
+      const videos = postVideos;
+      // const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
 
       // get mux upload url with the secret key found through our backend endpoint
       let url = Config.API_URL + '/v1/upload_video/';
       let formData = new FormData();
       formData.append('post', post.id);
 
-      // upload to the mux upload url
-      let response = await axios.post(url, formData);
-      let uploadUrl = response.data.url;
-      await RNFetchBlob.fetch(
-        'PUT',
-        uploadUrl,
-        {'Content-Type': 'application/octet-stream'},
-        data,
-      )
-        .then((r) => {
-          console.log(r, 'response');
-        })
-        .catch((e) => {
-          console.error(e, 'error');
-        });
+      for await (let video of videos) {
+        const data = RNFetchBlob.wrap(video.path);
+        // upload to the mux upload url
+        let response = await axios.post(url, formData);
+        let uploadUrl = response.data.url;
+        await RNFetchBlob.fetch(
+          'PUT',
+          uploadUrl,
+          null, // {'Content-Type': 'application/octet-stream'},
+          data,
+        )
+          .then((r) => {
+            console.log(r, 'response');
+          })
+          .catch((e) => {
+            console.error(e, 'error');
+          });
+      }
     } catch (e) {
       console.error(e);
     }

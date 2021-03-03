@@ -94,7 +94,7 @@ function EditProfile() {
                 source={{
                   uri: avatar
                     ? avatar.path
-                    : Config.DOMAIN + user.subscriber.avatar,
+                    : user.subscriber.avatar,
                 }}
                 size={120}
               />

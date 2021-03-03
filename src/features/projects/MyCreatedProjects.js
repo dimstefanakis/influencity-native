@@ -48,7 +48,8 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
           width: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: 100,
+          marginTop: 50,
+          marginBottom: 50,
         }}>
         <View style={{borderRadius: 100, overflow: 'hidden'}}>
           <TouchableNativeFeedback
@@ -66,7 +67,13 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
             </View>
           </TouchableNativeFeedback>
         </View>
-        <Text style={{fontSize: 24, marginTop: 20, color: '#6f6f6f'}}>
+        <Text
+          style={{
+            fontSize: 24,
+            marginTop: 20,
+            marginBottom: 20,
+            color: '#6f6f6f',
+          }}>
           Create project
         </Text>
       </View>

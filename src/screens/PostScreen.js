@@ -58,7 +58,7 @@ function PostScreen({route}) {
             }}>
             <Text style={{color: 'white'}}>
               Thank you for uploading to Troosh! Your post is currently being
-              processed by our servers and will be available shortly. Thank you
+              uploaded to our servers and will be available shortly. Thank you
               for your patience!
             </Text>
           </View>

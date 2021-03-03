@@ -33,7 +33,7 @@ function SubscriberActionsList() {
         <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
           <Avatar.Image
             size={60}
-            source={{uri: Config.DOMAIN + user.subscriber.avatar}}
+            source={{uri: user.subscriber.avatar}}
             style={{
               borderRadius: 200,
               //backgroundColor: 'white',

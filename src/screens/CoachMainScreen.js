@@ -66,7 +66,7 @@ function CoachTopHeader({coach}) {
           }}>
           <SharedElement id={`coach.${coach.name}.avatar`}>
             <Image
-              source={{uri: Config.DOMAIN + coach.avatar}}
+              source={{uri: coach.avatar}}
               style={{
                 backgroundColor: 'white',
                 height: 90,

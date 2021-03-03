@@ -21,7 +21,7 @@ function Chat({route}) {
       text: message.text,
       user: {
         name: message.user.name,
-        avatar: Config.DOMAIN + message.user.avatar,
+        avatar: message.user.avatar,
         _id: message.user.id,
       },
     };

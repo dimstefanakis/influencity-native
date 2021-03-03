@@ -351,7 +351,7 @@ function Profile() {
           alignItems: 'center',
           marginTop: 40,
         }}>
-        <Avatar.Image source={{uri: Config.DOMAIN + _user.avatar}} size={130} />
+        <Avatar.Image source={{uri: _user.avatar}} size={130} />
         <Text style={{...theme.fonts.medium, fontSize: 24, marginTop: 5}}>
           {_user.name}
         </Text>

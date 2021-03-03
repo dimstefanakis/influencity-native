@@ -68,7 +68,7 @@ const Item = ({comment, post, setComments}) => {
           marginBottom: 10,
           flexDirection: 'row',
         }}>
-        <Avatar.Image source={{uri: Config.DOMAIN + poster.avatar}} size={50} />
+        <Avatar.Image source={{uri: poster.avatar}} size={50} />
         <View style={{marginLeft: 10, marginRight: 10, flexShrink: 1}}>
           <Text style={{...theme.fonts.medium, fontSize: 18}}>
             {poster.name}
@@ -103,7 +103,6 @@ function Comments({route}) {
   const [next, setNext] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
-  console.log("comments",comments)
   const renderItem = ({item}) => (
     <Item comment={item} post={post} setComments={setComments} />
   );

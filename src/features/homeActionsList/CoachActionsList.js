@@ -56,7 +56,7 @@ function CoachActionsList() {
           }>
           <Avatar.Image
             size={60}
-            source={{uri: Config.DOMAIN + user.coach.avatar}}
+            source={{uri: user.coach.avatar}}
             style={{
               borderRadius: 200,
               //backgroundColor: 'white',

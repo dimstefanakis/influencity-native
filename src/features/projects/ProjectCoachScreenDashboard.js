@@ -73,7 +73,7 @@ function ProjectCoachScreenDashboard({route}) {
                     <View style={avatarContainer}>
                       <Image
                         style={avatar}
-                        source={{uri: `${Config.DOMAIN}${member.avatar}`}}
+                        source={{uri: `${Config.MEDIA}${member.avatar}`}}
                       />
                     </View>
                   );
