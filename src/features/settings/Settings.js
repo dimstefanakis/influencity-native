@@ -10,9 +10,12 @@ import {Text, Divider, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 function Settings() {
   const theme = useTheme();
+  const {user} = useSelector((state) => state.authentication);
+
   return (
     <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
       <View style={{...styles.spacing}}>
@@ -25,8 +28,12 @@ function Settings() {
           Settings
         </Text>
         <ProfileSettings />
-        <Divider />
-        <MyTiersSettings />
+        {user.is_coach ? (
+          <>
+            <Divider />
+            <MyTiersSettings />
+          </>
+        ) : null}
       </View>
     </ScrollView>
   );
@@ -34,14 +41,14 @@ function Settings() {
 
 function ProfileSettings() {
   const navigation = useNavigation();
-  function handlePress(){
+  function handlePress() {
     navigation.push('EditProfileScreen');
   }
 
   return (
     <View style={{marginTop: 20, marginBottom: 10}}>
       <Header title="Personilization" />
-      <Setting icon="user" text="Edit your profile" onPress={handlePress}/>
+      <Setting icon="user" text="Edit your profile" onPress={handlePress} />
     </View>
   );
 }

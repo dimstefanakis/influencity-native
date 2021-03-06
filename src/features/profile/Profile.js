@@ -6,6 +6,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import {Button, Avatar, Text, useTheme} from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -328,46 +329,48 @@ function Profile() {
   );
 
   return (
-    <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
-      <TouchableOpacity
-        style={{
-          position: 'absolute',
-          top: 15,
-          right: 15,
-        }}>
-        <View>
-          <Icon
-            name="settings"
-            size={25}
-            color="black"
-            onPress={() => navigation.push('SettingsScreen')}
-          />
+    <SafeAreaView style={{flexGrow: 1, backgroundColor: 'white'}}>
+      <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 15,
+            right: 15,
+          }}>
+          <View>
+            <Icon
+              name="settings"
+              size={25}
+              color="black"
+              onPress={() => navigation.push('SettingsScreen')}
+            />
+          </View>
+        </TouchableOpacity>
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 40,
+          }}>
+          <Avatar.Image source={{uri: _user.avatar}} size={130} />
+          <Text style={{...theme.fonts.medium, fontSize: 24, marginTop: 5}}>
+            {_user.name}
+          </Text>
         </View>
-      </TouchableOpacity>
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 40,
-        }}>
-        <Avatar.Image source={{uri: _user.avatar}} size={130} />
-        <Text style={{...theme.fonts.medium, fontSize: 24, marginTop: 5}}>
-          {_user.name}
-        </Text>
-      </View>
-      {isCoach ? (
-        <TabView
-          renderTabBar={renderTabBar}
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={initialLayout}
-        />
-      ) : (
-        <StudentRoute />
-      )}
-    </ScrollView>
+        {isCoach ? (
+          <TabView
+            renderTabBar={renderTabBar}
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={initialLayout}
+          />
+        ) : (
+          <StudentRoute />
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

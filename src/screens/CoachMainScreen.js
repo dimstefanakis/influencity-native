@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect} from 'react';
 import {Image, View} from 'react-native';
-import {Button, Chip, FAB, Portal, Text, Avatar} from 'react-native-paper';
+import {Button, Chip, FAB, Portal, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
 import {useNavigation} from '@react-navigation/native';
@@ -154,6 +154,7 @@ function Projects({coach}) {
 }
 
 function CoachMainScreenWithPosts({route}) {
+  const theme = useTheme();
   const coach = route.params.coach;
   const MainScreen = <CoachMainScreen2 route={route} />;
   const navigation = useNavigation();
@@ -176,7 +177,7 @@ function CoachMainScreenWithPosts({route}) {
           alignItems: 'center',
         }}>
         <FAB
-          color="white"
+          style={{backgroundColor:theme.colors.primary}}
           label="Become member"
           icon="plus-circle"
           onPress={handleBecomeMemberPress}

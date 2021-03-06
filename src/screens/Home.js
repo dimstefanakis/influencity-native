@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, ScrollView, Image, Dimensions, StyleSheet} from 'react-native';
+import {View, ScrollView, Image, SafeAreaView, StyleSheet} from 'react-native';
 import {useTheme, Text, Subheading, Title} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import Box from '../features/box/Box';
@@ -81,7 +81,7 @@ function FeedHeaderComponent() {
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
   return (
-    <View>
+    <SafeAreaView style={{flex: 1}}>
       <View>
         <Subheading style={{marginTop: 30, ...styles.spacing}}>
           Good afternoon!
@@ -120,7 +120,7 @@ function FeedHeaderComponent() {
           </Text>
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

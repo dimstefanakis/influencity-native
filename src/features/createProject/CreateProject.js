@@ -1,32 +1,46 @@
 /* eslint-disable react-native/no-inline-styles */
-import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import {View, ScrollView, TouchableNativeFeedback} from 'react-native';
-import {TapGestureHandler} from 'react-native-gesture-handler';
 import {Text, TextInput, RadioButton, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import {getMyCreatedProjects} from '../projects/projectsSlice';
 
-function CreateProject() {
+function CreateProject({editMode = false, project = project}) {
+  console.log(project);
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [disabled, setDisabled] = useState(true);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [teamSize, setTeamSize] = useState(0);
+  const [title, setTitle] = useState(editMode ? project.name : '');
+  const [description, setDescription] = useState(
+    editMode ? project.description : '',
+  );
+  const [teamSize, setTeamSize] = useState(editMode ? project.team_size : 0);
   const [difficulty, setDifficulty] = useState('EA');
-  const [prerequisites, setPrerequisites] = useState([
-    {id: uuidv4(), description: ''},
-  ]);
-  const [tasks, setTasks] = useState([{id: uuidv4(), description: ''}]);
+  const [prerequisites, setPrerequisites] = useState(
+    editMode
+      ? project.prerequisites.map((pr) => {
+          return {
+            ...pr,
+            id: uuidv4(),
+          };
+        })
+      : [{id: uuidv4(), description: ''}],
+  );
+
+  const [tasks, setTasks] = useState(
+    editMode ? project.milestones : [{id: uuidv4(), description: ''}],
+  );
   const [loading, setLoading] = useState(false);
   const {selectedForAttachment} = useSelector((state) => state.posts);
 
   async function handleSubmit() {
-    console.log("omm")
     try {
       let formData = new FormData();
       formData.append('name', title);
@@ -37,14 +51,31 @@ function CreateProject() {
         formData.append('prerequisites', p.description);
       });
       tasks.forEach((t) => {
-        formData.append('milestones', t.description);
+        formData.append(
+          'milestones',
+          JSON.stringify({
+            description: t.description,
+            id: t.id,
+          }),
+        );
       });
       selectedForAttachment.forEach((a) => {
         formData.append('attached_posts', a);
       });
       setLoading(true);
-      const url = `${Config.API_URL}/v1/projects/`;
-      let response = await axios.post(url, formData);
+      let url = `${Config.API_URL}/v1/projects/`;
+      if (editMode) {
+        url = `${Config.API_URL}/v1/projects/${project.id}/`;
+      }
+
+      let response = editMode
+        ? await axios.patch(url, formData)
+        : await axios.post(url, formData);
+
+      if (response.status == 200 || response.status == 201) {
+        dispatch(getMyCreatedProjects());
+        navigation.navigate('MyCreatedProjectsScreen');
+      }
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -52,6 +83,7 @@ function CreateProject() {
     }
   }
 
+  console.log(tasks);
   useEffect(() => {
     if (
       !(title && description && teamSize > 0 && difficulty && tasks.length > 0)
@@ -67,12 +99,14 @@ function CreateProject() {
       <View style={{margin: 20}}>
         <TextInput
           label="Project title"
+          defaultValue={title}
           onChangeText={(text) => setTitle(text)}
           style={{backgroundColor: 'transparent', fontSize: 26}}
           underlineColor="transparent"
         />
         <TextInput
           label="Description"
+          defaultValue={description}
           onChangeText={(text) => setDescription(text)}
           style={{backgroundColor: 'transparent', fontSize: 18}}
           underlineColor="transparent"
@@ -83,6 +117,15 @@ function CreateProject() {
             Difficulty
           </Text>
           <RadioButton.Group
+            defaultValue={
+              editMode
+                ? project.difficulty == 'Advanced'
+                  ? 'AD'
+                  : project.difficulty == 'Intermediate'
+                  ? 'IM'
+                  : 'EA'
+                : 'EA'
+            }
             onValueChange={(newValue) => setDifficulty(newValue)}
             value={difficulty}>
             <RadioButton.Item label="Easy" value="EA" />
@@ -100,6 +143,7 @@ function CreateProject() {
           </Text>
           <TextInput
             label="Size"
+            defaultValue={teamSize.toString()}
             onChangeText={(text) => setTeamSize(text)}
             style={{
               backgroundColor: 'transparent',
@@ -123,7 +167,10 @@ function CreateProject() {
             alignItems: 'center',
             marginTop: 50,
           }}>
-          <ActionButton disabled={disabled} onPress={handleSubmit}>
+          <ActionButton
+            disabled={disabled}
+            loading={loading}
+            onPress={handleSubmit}>
             Create project
           </ActionButton>
         </View>
@@ -151,7 +198,11 @@ function Tasks({tasks, setTasks}) {
         algorithm). Teams will complete tasks and wait for your feedback.
       </Text>
       {tasks.map((task) => {
-        return <Task task={task} setTasks={setTasks} />;
+        return (
+          <React.Fragment key={task.id}>
+            <Task task={task} setTasks={setTasks} />
+          </React.Fragment>
+        );
       })}
       <View
         style={{
@@ -183,11 +234,11 @@ function Tasks({tasks, setTasks}) {
 
 function Task({task, setTasks}) {
   function handleChangeDescription(text) {
-    setTasks((tasks) => {
-      return [
-        ...tasks.filter((t) => t.id != task.id),
-        {id: task.id, description: text},
-      ];
+    setTasks((oldTasks) => {
+      let newTasks = [...oldTasks];
+      let index = oldTasks.findIndex((t) => t.id == task.id);
+      newTasks[index] = {id: task.id, description: text};
+      return newTasks;
     });
   }
 
@@ -212,6 +263,7 @@ function Task({task, setTasks}) {
       }}>
       <TextInput
         label="Task description"
+        defaultValue={task.description}
         style={{
           backgroundColor: 'transparent',
           fontSize: 26,
@@ -256,10 +308,12 @@ function Prerequisites({prerequisites, setPrerequisites}) {
       </Text>
       {prerequisites.map((prerequisite) => {
         return (
-          <Prerequisite
-            prerequisite={prerequisite}
-            setPrerequisites={setPrerequisites}
-          />
+          <React.Fragment key={prerequisite.id}>
+            <Prerequisite
+              prerequisite={prerequisite}
+              setPrerequisites={setPrerequisites}
+            />
+          </React.Fragment>
         );
       })}
       <View
@@ -292,11 +346,11 @@ function Prerequisites({prerequisites, setPrerequisites}) {
 
 function Prerequisite({prerequisite, setPrerequisites}) {
   function handleChangeDescription(text) {
-    setPrerequisites((prerequisites) => {
-      return [
-        ...prerequisites.filter((t) => t.id != prerequisite.id),
-        {id: prerequisite.id, description: text},
-      ];
+    setPrerequisites((oldPrerequisites) => {
+      let newPrerequisites = [...oldPrerequisites];
+      let index = oldPrerequisites.findIndex((t) => t.id == prerequisite.id);
+      newPrerequisites[index] = {id: prerequisite.id, description: text};
+      return newPrerequisites;
     });
   }
 
@@ -316,6 +370,7 @@ function Prerequisite({prerequisite, setPrerequisites}) {
       }}>
       <TextInput
         label="Prerequisite description"
+        defaultValue={prerequisite.description}
         style={{
           backgroundColor: 'transparent',
           fontSize: 26,
@@ -341,6 +396,7 @@ function Prerequisite({prerequisite, setPrerequisites}) {
 function AttachPosts() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const {selectedForAttachment} = useSelector((state) => state.posts);
 
   function handleAttachPress() {
     navigation.navigate('SelectablePostListScreen');
@@ -356,6 +412,17 @@ function AttachPosts() {
         can attach them here. Your mentees can later use them to complete the
         project.
       </Text>
+      {selectedForAttachment.length > 0 ? (
+        <Text
+          style={{
+            marginLeft: 15,
+            marginTop: 20,
+            fontSize: 18,
+            ...theme.fonts.medium,
+          }}>
+          {selectedForAttachment.length} posts selected
+        </Text>
+      ) : null}
       <View
         style={{
           width: '100%',

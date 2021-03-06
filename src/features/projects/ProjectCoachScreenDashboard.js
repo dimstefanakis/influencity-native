@@ -1,15 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
-import {View, ScrollView, Image, TouchableNativeFeedback} from 'react-native';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
+import {
+  View,
+  ScrollView,
+  Image,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/AntDesign';
 import {Avatar, Text, Subheading, useTheme} from 'react-native-paper';
 import {Config} from 'react-native-config';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import axios from 'axios';
 
 function ProjectCoachScreenDashboard({route}) {
-  //
   const {project} = route.params;
   const {overlapContainer, avatarContainer, avatar} = styles;
   const theme = useTheme();
@@ -41,6 +47,21 @@ function ProjectCoachScreenDashboard({route}) {
     getTeams();
   }, []);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('EditProjectScreen', {
+              project: project,
+            })
+          }
+          style={{marginRight: 20}}>
+          <Icon name="setting" size={20} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.spacing}>

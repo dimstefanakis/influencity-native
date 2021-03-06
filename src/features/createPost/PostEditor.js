@@ -65,6 +65,24 @@ function ChainedPostsCarousel({route}) {
         let url = Config.API_URL + '/v1/posts/';
         setLoading(true);
 
+        const postData = [
+          ...imageData,
+          {name: 'text', data: post.text},
+          // TODO
+          // since videos are directly uploaded to mux and have no initial attachment to the backend until some processing happens
+          // we are notifying backend if the post has videos or not
+          // we should later fix this so that backend discovers the initial state on its own
+
+          {name: 'has_videos', data: (post.videos.length > 0).toString()},
+          {name: 'tier', data: selectedTiers[0].toString()}, // without toString backend receives empty data
+
+          // adding this for legacy purposes
+          {name: 'tiers', data: selectedTiers[0].toString()}, // without toString backend receives empty data
+        ];
+        if (post.linked_project) {
+          postData.push({name: 'linked_project', data: post.linked_project});
+        }
+
         await RNFetchBlob.fetch(
           'POST',
           url,
@@ -72,18 +90,7 @@ function ChainedPostsCarousel({route}) {
             'Content-Type': 'multipart/form-data',
             Authorization: 'Bearer ' + token,
           },
-          [
-            ...imageData,
-            {name: 'text', data: post.text},
-            {name: 'linked_project', data: post.linked_project},
-            // TODO
-            // since videos are directly uploaded to mux and have no initial attachment to the backend until some processing happens
-            // we are notifying backend if the post has videos or not
-            // we should later fix this so that backend discovers the initial state on its own
-
-            {name: 'has_videos', data: (post.videos.length > 0).toString()},
-            {name: 'tier', data: selectedTiers[0].toString()}, // without toString backend receives empty data
-          ],
+          postData,
         )
           .then(async (response) => {
             console.log(response, 'response');

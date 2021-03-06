@@ -20,6 +20,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
+import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import {updateUserData} from '../authentication/authenticationSlices';
 import axios from 'axios';
 
 function EditProfile() {
@@ -39,14 +41,14 @@ function EditProfile() {
     });
   }
 
-  function handleUpdateProfile() {
-    const path = avatar.path.split('/');
-    const url = `${Config.API_URL}/subscriber/me`;
+  async function handleUpdateProfile() {
+    let url = `${Config.API_URL}/v1/subscriber/me/`;
     let data = [];
     if (name) {
       data.push({name: 'name', data: name});
     }
     if (avatar) {
+      const path = avatar.path.split('/');
       data.push({
         name: 'avatar',
         filename: path[path.length - 1],
@@ -54,6 +56,7 @@ function EditProfile() {
         data: RNFetchBlob.wrap(avatar.path),
       });
     }
+    setLoading(true);
     RNFetchBlob.fetch(
       'PATCH',
       url,
@@ -67,12 +70,25 @@ function EditProfile() {
         setLoading(false);
         console.log(r, 'response');
         if (r.respInfo.status == 200 || r.respInfo.status == 201) {
+          dispatch(updateUserData());
           //navigation.goBack();
         }
       })
       .catch((e) => {
+        setLoading(true);
         console.error(e, 'error');
       });
+    if (user.is_coach) {
+      if (bio) {
+        url = `${Config.API_URL}/v1/coaches/${user.coach.surrogate}/`;
+        let formdata = new FormData();
+        formdata.append('bio', bio);
+        setLoading(true);
+        let response = await axios.patch(url, formdata);
+        setLoading(false);
+        dispatch(updateUserData());
+      }
+    }
   }
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
@@ -92,9 +108,7 @@ function EditProfile() {
             <TouchableOpacity onPress={handleChangeAvatar}>
               <Avatar.Image
                 source={{
-                  uri: avatar
-                    ? avatar.path
-                    : user.subscriber.avatar,
+                  uri: avatar ? avatar.path : user.subscriber.avatar,
                 }}
                 size={120}
               />
@@ -124,9 +138,8 @@ function EditProfile() {
             style={{borderWidth: 0, backgroundColor: 'white'}}
           />
         </View>
-        {/*{user.is_coach ? (
+        {user.is_coach ? (
           <>
-            <SmallHeader title="Coach">Coach profile</SmallHeader>
             <View style={{marginTop: 20}}>
               <TextInput
                 value={bio}
@@ -138,7 +151,17 @@ function EditProfile() {
               />
             </View>
           </>
-        ) : null}*/}
+        ) : null}
+        <View
+          style={{
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActionButton onPress={handleUpdateProfile} loading={loading}>
+            Save
+          </ActionButton>
+        </View>
       </View>
     </ScrollView>
   );

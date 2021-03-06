@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import {View, Platform, SafeAreaView} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import ProjectDashboardScreen from '../../screens/ProjectDashboardScreen';
@@ -11,8 +11,12 @@ import MyProjects from './MyProjects';
 const Stack = createSharedElementStackNavigator();
 
 export default function MyProjectsStack() {
+  const preset =
+    Platform.OS == 'ios'
+      ? TransitionPresets.ModalSlideFromBottomIOS
+      : TransitionPresets.ScaleFromCenterAndroid;
   return (
-    <View style={{flexGrow: 1}}>
+    <SafeAreaView style={{flexGrow: 1, backgroundColor: 'white'}}>
       <Stack.Navigator
         initialRouteName="MyProjectsScreen"
         mode="modal"
@@ -21,7 +25,7 @@ export default function MyProjectsStack() {
           gestureEnabled: true,
           cardOverlayEnabled: true,
           cardStyle: {backgroundColor: 'white'},
-          ...TransitionPresets.ScaleFromCenterAndroid,
+          ...preset,
           headerStyle: {
             backgroundColor: 'white',
             elevation: 0, // remove shadow on Android
@@ -36,6 +40,6 @@ export default function MyProjectsStack() {
           }}
         />
       </Stack.Navigator>
-    </View>
+    </SafeAreaView>
   );
 }

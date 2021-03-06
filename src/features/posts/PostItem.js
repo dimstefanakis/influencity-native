@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Image,
@@ -15,13 +15,29 @@ import Video from 'react-native-video';
 import Carousel, {ParallaxImage, Pagination} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {useGalleryItem} from 'react-native-gallery-toolkit';
+
 import PostToolbar from '../postToolbar/PostToolbar';
+import MediaGalleryFullScreen from '../mediaGallery/MediaGalleryFullScreen';
+import Gallery from '../mediaGallery/Gallery';
 import axios from 'axios';
 const {width: screenWidth} = Dimensions.get('window');
 
+const img = Array.from({length: 5}, (_, index) => {
+  const dimensions = Dimensions.get('window');
+
+  return {
+    uri: `https://picsum.photos/id/${index + 200}/200/400`,
+    width: 200,
+    height: dimensions.width,
+  };
+});
+
 function PostItem({post, showProfile = true, fullscreen = false}) {
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const selectedPostItem = useRef(0);
   const rest = post.chained_posts || [];
   const [chainedPosts] = useState([post, ...rest]);
 
@@ -61,22 +77,30 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 
   function renderItem({item, index}) {
     let ratio = item.height / item.width;
-    console.log(ratio * screenWidth, ratio, "aaaaa");
+    console.log(ratio * screenWidth, ratio, 'aaaaa');
     return (
-      <View
-        style={{
-          ...styles.item,
-          minHeight: ratio * screenWidth,
-          height: item.height,
-        }}>
-        <Image
-          source={{uri: item.image}}
+      <TouchableNativeFeedback
+        onPress={() =>
+          navigation.navigate('GalleryScreen', {
+            images: post.images,
+            videos: post.videos,
+          })
+        }>
+        <View
           style={{
-            ...styles.image,
-            height: '100%',
-          }}
-        />
-      </View>
+            ...styles.item,
+            minHeight: ratio * screenWidth,
+            maxHeight: item.height,
+          }}>
+          <Image
+            source={{uri: item.image}}
+            style={{
+              ...styles.image,
+              height: '100%',
+            }}
+          />
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 
@@ -94,20 +118,22 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
     const inputInfo = getInputInfo(item);
 
     return (
-      <View style={{...styles.item, minHeight: 200}}>
-        <Video
-          repeat
-          source={{
-            uri: `https://stream.mux.com/${playback_id}.m3u8`,
-            type: 'm3u8',
-          }}
-          resizeMode="cover"
-          style={{
-            width: screenWidth,
-            minHeight: 200,
-          }}
-        />
-      </View>
+      <TouchableNativeFeedback onPress={() => handleMediaPress(index)}>
+        <View style={{...styles.item, minHeight: 200}}>
+          <Video
+            repeat
+            source={{
+              uri: `https://stream.mux.com/${playback_id}.m3u8`,
+              type: 'm3u8',
+            }}
+            resizeMode="cover"
+            style={{
+              width: screenWidth,
+              minHeight: 200,
+            }}
+          />
+        </View>
+      </TouchableNativeFeedback>
     );
   }
 
@@ -117,13 +143,15 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
     } else {
       return renderVideos({item, index});
     }
+  }
 
-    console.log("sadsaddasasdasd");
-
+  function handleMediaPress(itemIndex) {
+    selectedPostItem.current = itemIndex;
+    setModalVisible(true);
   }
 
   return (
-    <View>
+    <View style={{}}>
       <View
         style={{
           margin: 20,
@@ -165,13 +193,25 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         layout="stack"
         onSnapToItem={handleSnapToItem}
         sliderWidth={screenWidth}
-        sliderHeight={screenWidth}
         itemWidth={screenWidth}
+        slideStyle={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'white',
+        }}
         data={[...post.videos, ...post.images]}
         renderItem={handleMultiTypeRender}
       />
-      <PostToolbar post={post} />
       {pagination()}
+
+      <PostToolbar post={post} />
+      <MediaGalleryFullScreen
+        images={post.images}
+        videos={post.videos}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        firstItem={selectedPostItem.current}
+      />
     </View>
   );
 }
@@ -179,25 +219,21 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
 const styles = StyleSheet.create({
   item: {
     width: '100%',
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     maxWidth: screenWidth,
     maxHeight: 600,
-    // width: screenWidth,
   },
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ios: 0, android: 1}), // Prevent a random Android rendering issue
     borderRadius: 0,
-    //maxHeight:500,
   },
   image: {
     //...StyleSheet.absoluteFillObject,
     flex: 1,
     resizeMode: 'cover',
     width: '100%',
-    maxWidth: screenWidth,
   },
 });
 export default PostItem;

@@ -35,7 +35,8 @@ function SelectablePostList({route}) {
     <TouchableWithoutFeedback onPress={() => handleSelect(item)}>
       <View style={{position: 'relative'}}>
         <View
-          style={{opacity: selectedForAttachment.includes(item.id) ? 0.4 : 1}}>
+          style={{opacity: selectedForAttachment.includes(item.id) ? 0.4 : 1}}
+          pointerEvents="none">
           <PostItem post={item} />
         </View>
         {selectedForAttachment.includes(item.id) ? (

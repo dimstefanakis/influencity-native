@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {View, Text, StatusBar} from 'react-native';
+import {View, Text, Platform, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
@@ -17,6 +17,7 @@ import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import Config from 'react-native-config';
 import {enableScreens} from 'react-native-screens';
+import {useGalleryInit} from 'react-native-gallery-toolkit';
 enableScreens();
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
@@ -45,6 +46,7 @@ import CommentsScreen from './src/screens/CommentsScreen';
 import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import CreateProjectScreen from './src/screens/CreateProjectScreen';
+import EditProjectScreen from './src/screens/EditProjectScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
@@ -52,6 +54,7 @@ import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
 import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
 import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
+import Gallery from './src/screens/GalleryScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
@@ -112,12 +115,17 @@ function ReduxWrapper() {
   );
 }
 
-const App: () => React$Node = () => {
+const App = () => {
+  useGalleryInit();
   const isKeyboardOpen = useKeyboardOpen();
   const {user, loading, token, checkingForToken} = useSelector(
     (state) => state.authentication,
   );
   const {myTeams} = useSelector((state) => state.teams);
+  const preset =
+    Platform.OS == 'ios'
+      ? TransitionPresets.ModalSlideFromBottomIOS
+      : TransitionPresets.ScaleFromCenterAndroid;
   const dispatch = useDispatch();
 
   const setNavigationBarColor = async () => {
@@ -153,7 +161,7 @@ const App: () => React$Node = () => {
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
-            ...TransitionPresets.ScaleFromCenterAndroid,
+            ...preset,
             headerStyle: {
               backgroundColor: 'white',
               elevation: 0, // remove shadow on Android
@@ -287,6 +295,13 @@ const App: () => React$Node = () => {
             }}
           />
           <VanillaStack.Screen
+            name="EditProjectScreen"
+            component={EditProjectScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
             name="SubscribePaymentScreen"
             component={SubscribePaymentScreen}
             options={({route}) => {
@@ -345,6 +360,14 @@ const App: () => React$Node = () => {
             options={{
               title: 'My posts',
               ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="GalleryScreen"
+            component={Gallery}
+            options={{
+              title: 'My posts',
+              headerShown: false,
             }}
           />
         </VanillaStack.Navigator>
@@ -409,6 +432,10 @@ function BottomStackNavigation() {
 }
 
 function HomeStack() {
+  const preset =
+    Platform.OS == 'ios'
+      ? TransitionPresets.ModalSlideFromBottomIOS
+      : TransitionPresets.ScaleFromCenterAndroid;
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -438,7 +465,7 @@ function HomeStack() {
           component={CoachScreen}
           options={({route}) => {
             //return {title: route.params.coach.name};
-            return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+            return {title: '', ...preset};
           }}
           //options={({route}) => ({title: route.params.coach.name})}
           sharedElements={(route, otherRoute, showing) => {
@@ -454,7 +481,7 @@ function HomeStack() {
           component={PostScreen}
           options={({route}) => {
             //return {title: route.params.coach.name};
-            return {title: '', ...TransitionPresets.ScaleFromCenterAndroid};
+            return {title: '', ...preset};
           }}
           //options={({route}) => ({title: route.params.coach.name})}
           sharedElements={(route, otherRoute, showing) => {

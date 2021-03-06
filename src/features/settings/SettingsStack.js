@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {View} from 'react-native';
+import {View, Platform} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import Settings from './Settings';
@@ -11,6 +11,10 @@ import EditProfile from '../profile/EditProfile';
 const Stack = createSharedElementStackNavigator();
 
 function SettingsStack() {
+  const preset =
+    Platform.OS == 'ios'
+      ? TransitionPresets.ModalSlideFromBottomIOS
+      : TransitionPresets.ScaleFromCenterAndroid;
   return (
     <View style={{flexGrow: 1}}>
       <Stack.Navigator
@@ -21,7 +25,7 @@ function SettingsStack() {
           gestureEnabled: true,
           cardOverlayEnabled: true,
           cardStyle: {backgroundColor: 'white'},
-          ...TransitionPresets.ScaleFromCenterAndroid,
+          ...preset,
           headerStyle: {
             backgroundColor: 'white',
             elevation: 0, // remove shadow on Android

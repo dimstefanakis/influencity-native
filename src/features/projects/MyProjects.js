@@ -4,6 +4,7 @@ import React, {useEffect, useContext} from 'react';
 import {
   View,
   StyleSheet,
+  Dimensions,
   TouchableNativeFeedback,
   ScrollView,
 } from 'react-native';
@@ -20,12 +21,16 @@ import {
 import Project from './Project';
 import {useDispatch, useSelector} from 'react-redux';
 import Config from 'react-native-config';
+import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import {getMyProjects} from '../projects/projectsSlice';
 import {getMyChatRooms} from '../chat/chatSlice';
 import handleChatEvents from '../chat/handleWsEvents';
 import {WsContext} from '../../context/wsContext';
+import ActionButton from '../../flat/SubmitButton/SubmitButton';
 
 function MyProjects({viewAs = 'sub'}) {
+  const navigation = useNavigation();
   const theme = useTheme();
   const wsContext = useContext(WsContext);
   const dispatch = useDispatch();
@@ -43,6 +48,10 @@ function MyProjects({viewAs = 'sub'}) {
     }
   }, []);
 
+  function handleExplorePress() {
+    navigation.navigate('Search');
+  }
+
   return (
     <View>
       {viewAs == 'my_profile' ? null : (
@@ -57,6 +66,33 @@ function MyProjects({viewAs = 'sub'}) {
         </Text>
       )}
 
+      {myProjects.length == 0 ? (
+        <View
+          style={{
+            height: Dimensions.get('window').height * 0.6,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <AntDesign name="rocket1" size={200} color="#c7c7c7" />
+          <Text
+            style={{
+              marginLeft: 20,
+              marginRight: 20,
+              marginTop: 20,
+              fontSize: 20,
+              textAlign: 'center',
+              color: 'gray',
+            }}>
+            Subscribe to coaches and participate in interactive projects!
+          </Text>
+          <View>
+            <ActionButton onPress={handleExplorePress}>
+              Explore coaches
+            </ActionButton>
+          </View>
+        </View>
+      ) : null}
       <ListWrapper>
         <View
           style={{
