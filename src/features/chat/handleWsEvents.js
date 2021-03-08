@@ -63,6 +63,7 @@ function handleWsEvents() {
           myChatRooms[i],
           'ws://' + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/',
         );
+        console.log('ws://' + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/')
       }
     }
   }, [myChatRooms]);

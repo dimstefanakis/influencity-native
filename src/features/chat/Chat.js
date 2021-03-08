@@ -1,5 +1,6 @@
 import React, {useState, useCallback, useEffect, useContext} from 'react';
 import {View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {GiftedChat} from 'react-native-gifted-chat';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
@@ -8,6 +9,7 @@ import {WsContext} from '../../context/wsContext';
 
 function Chat({route}) {
   const dispatch = useDispatch();
+  const theme = useTheme();
   //const {room} = route.params;
 
   const wsContext = useContext(WsContext);
@@ -46,7 +48,7 @@ function Chat({route}) {
   );
 
   return (
-    <View style={{backgroundColor: 'white', flex: 1}}>
+    <View style={{backgroundColor: theme.colors.background, flex: 1}}>
       <GiftedChat
         bottomOffset={0}
         messages={messages}

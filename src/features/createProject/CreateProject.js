@@ -95,7 +95,7 @@ function CreateProject({editMode = false, project = project}) {
   }, [title, description, teamSize, difficulty, tasks]);
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView style={{flex: 1, backgroundColor: theme.colors.background}}>
       <View style={{margin: 20}}>
         <TextInput
           label="Project title"

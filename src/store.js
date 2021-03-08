@@ -7,6 +7,7 @@ import {tiersSlice} from './features/tiers/tiersSlice';
 import {teamsSlice} from './features/teams/teamsSlice';
 import {myCoachesSlice} from './features/myCoaches/myCoachesSlice';
 import {chatSlice} from './features/chat/chatSlice';
+import {notificationsSlice} from './features/notifications/notificationsSlice';
 
 export default configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
     teams: teamsSlice.reducer,
     myCoaches: myCoachesSlice.reducer,
     chat: chatSlice.reducer,
+    notifications: notificationsSlice.reducer,
   },
 });

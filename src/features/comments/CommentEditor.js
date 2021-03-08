@@ -143,7 +143,7 @@ function CommentEditor({route}) {
         alignItems: 'center',
         width: '100%',
         minHeight: '100%',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.background,
       }}>
       {replyComment ? (
         <View
@@ -159,7 +159,7 @@ function CommentEditor({route}) {
         mode="flat"
         label="Post your knowledge"
         style={{
-          backgroundColor: 'white',
+          backgroundColor: theme.colors.background,
           width: '100%',
           minHeight: 200,
           flex: 1,

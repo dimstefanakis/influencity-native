@@ -98,6 +98,7 @@ const Item = ({comment, post, setComments}) => {
 
 function Comments({route}) {
   const navigation = useNavigation();
+  const theme = useTheme();
   const {post} = route.params;
   const [comments, setComments] = useState([]);
   const [next, setNext] = useState(null);
@@ -122,7 +123,8 @@ function Comments({route}) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <FlatList
         data={comments}
         renderItem={renderItem}
@@ -149,7 +151,6 @@ function Comments({route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   item: {
     backgroundColor: '#f9c2ff',

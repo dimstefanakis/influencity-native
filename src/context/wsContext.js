@@ -1,3 +1,4 @@
 import React from 'react';
 
-export const WsContext = React.createContext({data: []});
+// the data key is used for chatting, we should rename it later on
+export const WsContext = React.createContext({data: [], notificationData: []});

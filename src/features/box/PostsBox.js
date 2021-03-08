@@ -23,10 +23,7 @@ function PostBox() {
       {newPosts.map((bundle) => {
         return (
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Avatar.Image
-              size={24}
-              source={{uri: bundle.coach.avatar}}
-            />
+            <Avatar.Image size={24} source={{uri: bundle.coach.avatar}} />
             <Text style={{marginLeft: 5}}>
               {bundle.new_posts.length} new posts
             </Text>

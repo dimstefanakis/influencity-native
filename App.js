@@ -6,8 +6,10 @@ import {View, Text, Platform, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
+  useTheme,
   configureFonts,
   DefaultTheme,
+  DarkTheme,
   Provider as PaperProvider,
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -104,6 +106,20 @@ const theme = {
     primary: '#aaf0d1', //'#00BBF9',
     accent: '#5CD6FF',
     textPrimary: '#141414',
+    background: 'white',
+  },
+};
+
+const darkTheme = {
+  ...DarkTheme,
+  roundness: 2,
+  fonts: configureFonts(fontConfig),
+  colors: {
+    ...DarkTheme.colors,
+    primary: '#aaf0d1', //'#00BBF9',
+    accent: '#5CD6FF',
+    textPrimary: '#141414',
+    background: 'black',
   },
 };
 
@@ -150,6 +166,8 @@ const App = () => {
   if (checkingForToken) {
     return <SplashScreen />;
   }
+
+  // change dark theme here
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -163,7 +181,7 @@ const App = () => {
             cardOverlayEnabled: true,
             ...preset,
             headerStyle: {
-              backgroundColor: 'white',
+              backgroundColor: theme.colors.background,
               elevation: 0, // remove shadow on Android
               shadowOpacity: 0, // remove shadow on iOS
             },
@@ -377,6 +395,7 @@ const App = () => {
 };
 
 function BottomStackNavigation() {
+  const theme = useTheme();
   const {user, loading, token, checkingForToken} = useSelector(
     (state) => state.authentication,
   );
@@ -386,9 +405,9 @@ function BottomStackNavigation() {
       //swipeEnabled={false}
       tabBarPosition="bottom"
       tabBarOptions={{
-        tabStyle: {backgroundColor: 'white'},
+        tabStyle: {backgroundColor: theme.colors.background},
         style: {
-          backgroundColor: 'white',
+          backgroundColor: theme.colors.background,
           //height: isKeyboardOpen ? 0 : null,
         },
         renderIndicator: () => null,
@@ -432,6 +451,8 @@ function BottomStackNavigation() {
 }
 
 function HomeStack() {
+  const theme = useTheme();
+
   const preset =
     Platform.OS == 'ios'
       ? TransitionPresets.ModalSlideFromBottomIOS
@@ -444,10 +465,10 @@ function HomeStack() {
       screenOptions={{
         gestureEnabled: true,
         cardOverlayEnabled: true,
-        cardStyle: {backgroundColor: 'white'},
+        cardStyle: {backgroundColor: theme.colors.background},
         ...TransitionPresets.ModalPresentationIOS,
         headerStyle: {
-          backgroundColor: 'white',
+          backgroundColor: theme.colors.background,
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
         },

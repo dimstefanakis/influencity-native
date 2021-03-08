@@ -50,7 +50,7 @@ function CoachHorizontalList({withTiers = false}) {
                   style={{
                     borderRadius: 200,
                     //borderColor: theme.colors.primary,
-                    backgroundColor: 'white',
+                    backgroundColor: theme.colors.background,
                     //borderWidth: 2,
                     overflow: 'hidden',
                     marginLeft: 0,

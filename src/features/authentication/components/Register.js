@@ -67,7 +67,7 @@ function Register() {
         justifyContent: 'center',
         height: '100%',
         flexDirection: 'column',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.background,
       }}>
       <TopLeft style={{position: 'absolute', top: 0, left: 0}} />
       <BottomRight style={{position: 'absolute', bottom: 0, right: 0}} />

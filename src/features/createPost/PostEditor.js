@@ -356,13 +356,17 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
         alignItems: 'center',
         width: '100%',
         minHeight: '100%',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.background,
       }}>
       <TextInput
         multiline
         mode="flat"
         label="Post your knowledge"
-        style={{backgroundColor: 'white', width: '100%', flex: 1}}
+        style={{
+          backgroundColor: theme.colors.background,
+          width: '100%',
+          flex: 1,
+        }}
         underlineColor="transparent"
         onChangeText={handleChangeText}
       />
@@ -409,7 +413,12 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
         })}
       </View>
       {attachedProject ? (
-        <View style={{width: '100%', padding: 10, backgroundColor: 'white'}}>
+        <View
+          style={{
+            width: '100%',
+            padding: 10,
+            backgroundColor: theme.colors.background,
+          }}>
           <Text style={{fontSize: 20, ...theme.fonts.medium}}>
             Attached project
           </Text>
@@ -442,7 +451,11 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
         </View>
       ) : null}
       <View
-        style={{flexDirection: 'row', height: 80, backgroundColor: 'white'}}>
+        style={{
+          flexDirection: 'row',
+          height: 80,
+          backgroundColor: theme.colors.background,
+        }}>
         <TouchableNativeFeedback onPress={handleSelectImages}>
           <View
             style={{
