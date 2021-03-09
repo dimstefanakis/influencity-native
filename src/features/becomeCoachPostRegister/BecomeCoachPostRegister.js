@@ -53,7 +53,7 @@ function BecomeCoachPostRegister() {
         <Text
           style={{
             fontSize: 16,
-            marginTop: 5,
+            marginTop: 15,
             color: '#6f6f6f',
           }}>
           Congrats! You are on your way to become a coach on Troosh. Before this

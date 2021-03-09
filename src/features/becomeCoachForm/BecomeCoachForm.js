@@ -10,7 +10,12 @@ function BecomeCoachForm({noBackground = false, text, setText}) {
         value={text}
         onChangeText={(_text) => setText(_text)}
         multiline
-        style={{backgroundColor: noBackground ? 'white' : null}}
+        numberOfLines={3}
+        style={{
+          backgroundColor: noBackground ? 'white' : null,
+          maxHeight: 300,
+          width: '100%',
+        }}
         placeholder="Tell us some quick stuff about yourself"
       />
     </View>

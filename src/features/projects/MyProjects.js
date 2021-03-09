@@ -65,16 +65,17 @@ function MyProjects({viewAs = 'sub'}) {
           My projects
         </Text>
       )}
-
       {myProjects.length == 0 ? (
         <View
           style={{
-            height: Dimensions.get('window').height * 0.6,
+            height: viewAs == 'my_profile'?null: Dimensions.get('window').height * 0.6,
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <AntDesign name="rocket1" size={200} color="#c7c7c7" />
+          {viewAs == 'my_profile' ? null : (
+            <AntDesign name="rocket1" size={200} color="#c7c7c7" />
+          )}
           <Text
             style={{
               marginLeft: 20,

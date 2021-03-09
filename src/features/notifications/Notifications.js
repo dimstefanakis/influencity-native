@@ -1,13 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import {ScrollView} from 'react-native';
+import {SafeAreaView, ScrollView} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import {getMyNotifications} from './notificationsSlice';
 import handleNotificationsWsEvents from './handleNotificationsWsEvents';
 import JustPosted from './JustPosted';
-import {ThemeProvider} from '@react-navigation/native';
 
 function Notifications() {
   const theme = useTheme();
@@ -23,15 +22,13 @@ function Notifications() {
   console.log(notifications, 'notifica');
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}>
-      {notifications.map((notification) => {
-        return <NotificationRender notification={notification} />;
-      })}
-    </ScrollView>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
+      <ScrollView>
+        {notifications.map((notification) => {
+          return <NotificationRender notification={notification} />;
+        })}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

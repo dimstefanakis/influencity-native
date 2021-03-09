@@ -71,23 +71,24 @@ const stripePromise = loadStripe(Config.STRIPE_PUBLISHABLE_KEY);
 const fontConfig = {
   default: {
     regular: {
-      fontFamily: 'Nunito-Regular',
+      fontFamily: Platform.OS == 'ios' ? 'sans-serif' : 'Nunito-Regular',
       fontWeight: 'normal',
     },
     medium: {
-      fontFamily: 'Nunito-Bold',
+      fontFamily: Platform.OS == 'ios' ? 'sans-serif-medium' : 'Nunito-Bold',
       fontWeight: 'normal',
     },
     extraBold: {
-      fontFamily: 'Nunito-ExtraBold',
+      fontFamily: Platform.OS == 'ios' ? 'sans-serif' : 'Nunito-ExtraBold',
       fontWeight: 'normal',
     },
     light: {
-      fontFamily: 'Nunito-Light',
+      fontFamily: Platform.OS == 'ios' ? 'sans-serif-light' : 'Nunito-Light',
       fontWeight: 'normal',
     },
     thin: {
-      fontFamily: 'Nunito-ExtraLight',
+      fontFamily:
+        Platform.OS == 'ios' ? 'sans-serif-thin' : 'Nunito-ExtraLight',
       fontWeight: 'normal',
     },
   },

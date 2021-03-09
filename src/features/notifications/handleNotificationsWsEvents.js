@@ -20,6 +20,7 @@ function handleNotificationsWsEvents() {
     ws.onopen = function () {};
 
     ws.onmessage = function (event) {
+      console.log("notdata", event);
       let data = JSON.parse(event.data);
       dispatch(addNotification(data.id));
     };

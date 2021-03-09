@@ -41,7 +41,6 @@ export const postsSlice = createSlice({
   reducers: {
     addAttachedPost(state, action) {
       const {id} = action.payload;
-      console.log(state.selectedForAttachment)
       state.selectedForAttachment = [...state.selectedForAttachment, id];
     },
     removeAttachedPost(state, action) {
