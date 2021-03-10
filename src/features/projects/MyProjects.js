@@ -68,7 +68,10 @@ function MyProjects({viewAs = 'sub'}) {
       {myProjects.length == 0 ? (
         <View
           style={{
-            height: viewAs == 'my_profile'?null: Dimensions.get('window').height * 0.6,
+            height:
+              viewAs == 'my_profile'
+                ? null
+                : Dimensions.get('window').height * 0.6,
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',

@@ -4,7 +4,7 @@ import React, {useState, useEffect, useLayoutEffect, useContext} from 'react';
 import {
   View,
   ScrollView,
-  Dimensions,
+  Platform,
   StyleSheet,
   Image,
   TouchableNativeFeedback,
@@ -26,7 +26,11 @@ import Config from 'react-native-config';
 import PushNotification from 'react-native-push-notification';
 import {useSelector, useDispatch} from 'react-redux';
 import {getChatRoomMessages} from '../chat/chatSlice';
+import {getMyProjects} from './projectsSlice';
+import {getMyTeams} from '../teams/teamsSlice';
 import WsContext from '../../context/wsContext';
+import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import axios from 'axios';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -57,8 +61,9 @@ function ProjectScreenDashboard({route}) {
   const {myProjects} = useSelector((state) => state.projects);
   const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated
-  const project =
+  let project =
     myProjects.find((p) => p.id == route.params.project.id) || myProjects[0];
+
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -70,7 +75,7 @@ function ProjectScreenDashboard({route}) {
               project: project,
             })
           }
-          style={{padding: 20}}>
+          style={{padding: Platform.OS=='ios'?0: 20, paddingRight:20}}>
           <Feather name="send" size={20} />
         </TouchableOpacity>
       ),
@@ -88,8 +93,15 @@ function ProjectScreenDashboard({route}) {
   useEffect(() => {
     LocalNotification();
   }, []);
+
+  // This handles the case where the user is not a member of the project
+  if (!project) {
+    return <ProjectAsNonMember project={route.params.project} />;
+  }
+
   return (
-    <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
+    <ScrollView
+      style={{height: '100%', backgroundColor: theme.colors.background}}>
       <Text
         style={{
           marginTop: 10,
@@ -103,6 +115,64 @@ function ProjectScreenDashboard({route}) {
       <Tasks project={project} />
       <Team project={project} />
       <Chat />
+    </ScrollView>
+  );
+}
+
+function ProjectAsNonMember({project}) {
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+
+  async function joinProject() {
+    try {
+      setLoading(true);
+      let response = await axios.post(
+        `${Config.API_URL}/v1/join_project/${project.id}`,
+      );
+      await dispatch(getMyProjects());
+      await dispatch(getMyTeams());
+      // navigation.navigate('Projects');
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      console.error(e);
+    }
+  }
+
+  return (
+    <ScrollView
+      style={{height: '100%', backgroundColor: theme.colors.background}}>
+      <Text
+        style={{
+          marginTop: 10,
+          marginLeft: 20,
+          fontSize: 24,
+          ...theme.fonts.medium,
+        }}>
+        {project.name}
+      </Text>
+      <Text style={{margin: 20, fontSize: 16}}>{project.description}</Text>
+      <Subheading
+        style={{...theme.fonts.medium, marginLeft: 20, marginRight: 20}}>
+        Difficulty: {project.difficulty}
+      </Subheading>
+      {project.prerequisites.length > 0 ? (
+        <PreviewPrerequisites project={project} />
+      ) : null}
+      <PreviewTasks project={project} />
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 50,
+        }}>
+        <ActionButton onPress={joinProject} loading={loading}>
+          Join this project
+        </ActionButton>
+      </View>
     </ScrollView>
   );
 }
@@ -181,6 +251,62 @@ function Tasks({project}) {
               onPress={(report) => handleTaskCompletion(milestone, report)}>
               {milestone.description}
             </Task>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function PreviewTasks({project}) {
+  const theme = useTheme();
+
+  return (
+    <View style={{...styles.spacing}}>
+      <Text
+        style={{
+          fontSize: 20,
+          marginTop: 20,
+          marginBottom: 10,
+          color: '#1d1d1d',
+          ...theme.fonts.medium,
+        }}>
+        Tasks
+      </Text>
+      <View>
+        {project.milestones.map((milestone) => {
+          return (
+            <PreviewTask milestone={milestone}>
+              {milestone.description}
+            </PreviewTask>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function PreviewPrerequisites({project}) {
+  const theme = useTheme();
+
+  return (
+    <View style={{...styles.spacing}}>
+      <Text
+        style={{
+          fontSize: 20,
+          marginTop: 20,
+          marginBottom: 10,
+          color: '#1d1d1d',
+          ...theme.fonts.medium,
+        }}>
+        Prerequisites
+      </Text>
+      <View>
+        {project.prerequisites.map((prerequisite) => {
+          return (
+            <PreviewPrerequisite prerequisite={prerequisite}>
+              {prerequisite.description}
+            </PreviewPrerequisite>
           );
         })}
       </View>
@@ -270,6 +396,42 @@ function Task({children, done = false, status, milestone, onPress}) {
   );
 }
 
+function PreviewTask({milestone}) {
+  const theme = useTheme();
+
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 5,
+        }}>
+        <BulletPoint />
+        <Text style={{marginLeft: 5, flex: 1}}>{milestone.description}</Text>
+        {/* <Icon name="checkbox-blank-circle-outline" size={14} color="black" /> */}
+      </View>
+    </View>
+  );
+}
+
+function PreviewPrerequisite({prerequisite}) {
+  return (
+    <View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 5,
+        }}>
+        <BulletPoint />
+        <Text style={{marginLeft: 5, flex: 1}}>{prerequisite.description}</Text>
+        {/* <Icon name="checkbox-blank-circle-outline" size={14} color="black" /> */}
+      </View>
+    </View>
+  );
+}
+
 function TeamMember({member}) {
   return (
     <View style={{margin: 2}}>
@@ -342,6 +504,7 @@ function Chat() {
     </TouchableOpacity>
   );
 }
+
 const styles = StyleSheet.create({
   spacing: {
     marginLeft: 20,
