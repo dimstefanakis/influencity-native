@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   ScrollView,
+  SafeAreaView,
   TouchableNativeFeedback,
   StyleSheet,
 } from 'react-native';
@@ -11,31 +12,34 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import SettingsStack from './SettingsStack';
 
 function Settings() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
 
   return (
-    <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
-      <View style={{...styles.spacing}}>
-        <Text
-          style={{
-            marginTop: 20,
-            fontSize: 24,
-            ...theme.fonts.medium,
-          }}>
-          Settings
-        </Text>
-        <ProfileSettings />
-        {user.is_coach ? (
-          <>
-            <Divider />
-            <MyTiersSettings />
-          </>
-        ) : null}
-      </View>
-    </ScrollView>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
+      <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
+        <View style={{...styles.spacing}}>
+          <Text
+            style={{
+              marginTop: 20,
+              fontSize: 24,
+              ...theme.fonts.medium,
+            }}>
+            Settings
+          </Text>
+          <ProfileSettings />
+          {user.is_coach ? (
+            <>
+              <Divider />
+              <MyTiersSettings />
+            </>
+          ) : null}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

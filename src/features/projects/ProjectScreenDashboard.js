@@ -75,7 +75,7 @@ function ProjectScreenDashboard({route}) {
               project: project,
             })
           }
-          style={{padding: Platform.OS=='ios'?0: 20, paddingRight:20}}>
+          style={{padding: Platform.OS == 'ios' ? 0 : 20, paddingRight: 20}}>
           <Feather name="send" size={20} />
         </TouchableOpacity>
       ),

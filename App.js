@@ -56,6 +56,10 @@ import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
 import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
 import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
+import Settings from './src/features/settings/Settings';
+import TierSettings from './src/features/settings/TierSettings';
+import ChangeTier from './src/features/tiers/ChangeTier';
+import EditProfile from './src/features/profile/EditProfile';
 import Gallery from './src/screens/GalleryScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import store from './src/store';
@@ -299,13 +303,13 @@ const App = () => {
               return {title: ''};
             }}
           />
-          <VanillaStack.Screen
+          {/* <VanillaStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
             options={({route}) => {
               return {title: ''};
             }}
-          />
+          /> */}
           <VanillaStack.Screen
             name="CreateProjectScreen"
             component={CreateProjectScreen}
@@ -387,6 +391,37 @@ const App = () => {
             options={{
               title: 'My posts',
               headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="SettingsScreen"
+            component={Settings}
+            options={{
+              title: '',
+            }}
+          />
+          <VanillaStack.Screen
+            name="TierSettings"
+            component={TierSettings}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="ChangeTierScreen"
+            component={ChangeTier}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="EditProfileScreen"
+            component={EditProfile}
+            options={({route}) => {
+              return {
+                title: 'Edit your profile',
+                ...TransitionPresets.ModalSlideFromBottomIOS,
+              };
             }}
           />
         </VanillaStack.Navigator>

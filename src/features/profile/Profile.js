@@ -273,12 +273,6 @@ function SetupStripeAccount() {
   );
 }
 
-const initialLayout = {
-  width: Dimensions.get('window').width,
-  height: 100,
-  backgroundColor: 'red',
-};
-
 function Profile() {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -324,7 +318,16 @@ function Profile() {
         height: '100%',
         borderRadius: 30,
       }}
-      style={{backgroundColor: 'white', width: 200, elevation: 0, margin: 10}}
+      style={{
+        backgroundColor: theme.colors.background,
+        width: 200,
+        elevation: 0,
+        margin: 10,
+        borderWidth: 0,
+        shadowOffset: {height: 0, width: 0},
+        shadowColor: 'transparent',
+        shadowOpacity: 0,
+      }}
     />
   );
 
@@ -342,7 +345,7 @@ function Profile() {
               name="settings"
               size={25}
               color="black"
-              onPress={() => navigation.push('SettingsScreen')}
+              onPress={() => navigation.navigate('SettingsScreen')}
             />
           </View>
         </TouchableOpacity>
@@ -352,6 +355,7 @@ function Profile() {
             justifyContent: 'center',
             alignItems: 'center',
             marginTop: 40,
+            marginBottom: 40,
           }}>
           <Avatar.Image source={{uri: _user.avatar}} size={130} />
           <Text style={{...theme.fonts.medium, fontSize: 24, marginTop: 5}}>
@@ -364,7 +368,6 @@ function Profile() {
             navigationState={{index, routes}}
             renderScene={renderScene}
             onIndexChange={setIndex}
-            initialLayout={initialLayout}
           />
         ) : (
           <StudentRoute />
