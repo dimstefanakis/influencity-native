@@ -5,7 +5,7 @@ import {Button, Chip, FAB, Portal, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import PostList from '../features/posts/PostList';
 import {getProjects} from '../features/projects/projectsSlice';
 
@@ -155,9 +155,12 @@ function Projects({coach}) {
 
 function CoachMainScreenWithPosts({route}) {
   const theme = useTheme();
+  const {myCoaches} = useSelector((state) => state.myCoaches);
   const coach = route.params.coach;
   const MainScreen = <CoachMainScreen2 route={route} />;
   const navigation = useNavigation();
+
+  let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
 
   //BecomeMemberScreen
   function handleBecomeMemberPress() {
@@ -176,12 +179,14 @@ function CoachMainScreenWithPosts({route}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <FAB
-          style={{backgroundColor:theme.colors.primary}}
-          label="Become member"
-          icon="plus-circle"
-          onPress={handleBecomeMemberPress}
-        />
+        {foundCoach ? null : (
+          <FAB
+            style={{backgroundColor: theme.colors.primary}}
+            label="Become member"
+            icon="plus-circle"
+            onPress={handleBecomeMemberPress}
+          />
+        )}
       </View>
     </View>
   );

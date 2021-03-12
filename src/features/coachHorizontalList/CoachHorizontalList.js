@@ -16,10 +16,25 @@ function CoachHorizontalList({withTiers = false}) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  function handleBecomeMemberPress(coach) {
+    navigation.navigate('BecomeMemberScreen', {coach: coach});
+  }
+
   function navigateToCoach(coach) {
     navigation.navigate('CoachMainScreen', {
       coach: coach,
     });
+  }
+
+  function handleCoachPress(coach) {
+    if (withTiers) {
+      // User is in his profile screen
+      // here we should navigate the user to change his subscription
+      // instead of viewing the coach's profile
+      handleBecomeMemberPress(coach);
+    } else {
+      navigateToCoach(coach);
+    }
   }
 
   useEffect(() => {
@@ -36,7 +51,7 @@ function CoachHorizontalList({withTiers = false}) {
         {myCoaches.map((c, i) => {
           return (
             <TouchableOpacity
-              onPress={() => navigateToCoach(c)}
+              onPress={() => handleCoachPress(c)}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',

@@ -11,11 +11,16 @@ import {
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import stripe from 'tipsi-stripe';
 import Config from 'react-native-config';
 import axios from 'axios';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import {getMyCoaches} from '../myCoaches/myCoachesSlice';
+import {getMyTeams} from '../teams/teamsSlice';
+import {getMyProjects} from '../projects/projectsSlice';
+import {getNewPosts} from '../posts/postsSlice';
 
 stripe.setOptions({
   publishableKey: Config.STRIPE_PUBLISHABLE_KEY,
@@ -24,6 +29,7 @@ stripe.setOptions({
 
 function SubscribePayment({route}) {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const coach = route.params.coach;
   const tier = route.params.tier;
@@ -33,7 +39,12 @@ function SubscribePayment({route}) {
   const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
   const [paymentMethodCreated, setPaymentMethodCreated] = useState(null);
-  console.log(tier);
+  const {myCoaches} = useSelector((state) => state.myCoaches);
+
+  // if this returns true that means the user has already subscribed to this tier
+  let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
+  let isSubscribedToThisTier = foundCoach?.tier_full?.id == tier.id;
+  console.log(isSubscribedToThisTier);
   function onChangePlan() {
     navigation.goBack();
   }
@@ -45,7 +56,20 @@ function SubscribePayment({route}) {
       let body = paymentMethodCreated
         ? JSON.stringify(paymentMethodCreated)
         : null;
-      let response = await axios.post(url, paymentMethodCreated);
+
+      if (isSubscribedToThisTier) {
+        let response = await axios.delete(url, paymentMethodCreated);
+      } else {
+        let response = await axios.post(url, paymentMethodCreated);
+      }
+
+      // updating the state tree so user has immidiate feedback
+      // I am not really sure if await has any effect here but I will leave it as is
+      await dispatch(getMyCoaches());
+      await dispatch(getMyProjects());
+      dispatch(getMyTeams());
+      dispatch(getNewPosts());
+
       setLoading(false);
       navigation.navigate('CoachMainScreen', {coach: coach});
     } catch (e) {
@@ -97,7 +121,13 @@ function SubscribePayment({route}) {
         minHeight: '100%',
       }}>
       <View style={{...styles.spacing}}>
-        <BigHeader title={`Complete your payment to ${coach.name}`} />
+        <BigHeader
+          title={
+            isSubscribedToThisTier
+              ? `Cancel your subscription to ${coach.name}`
+              : `Complete your payment to ${coach.name}`
+          }
+        />
         <Surface
           style={{
             elevation: 4,
@@ -130,7 +160,7 @@ function SubscribePayment({route}) {
             Change plan
           </Button>
         </Surface>
-        {tier.tier == 'FR' ? null : (
+        {tier.tier == 'FR' || foundCoach ? null : (
           <>
             <SmallHeader title="Payment details" />
             {paymentMethodCreated ? (
@@ -163,8 +193,11 @@ function SubscribePayment({route}) {
             alignItems: 'center',
             marginTop: 30,
           }}>
-          <ActionButton onPress={onSubmit} loading={loading}>
-            Subscribe
+          <ActionButton
+            onPress={onSubmit}
+            loading={loading}
+            mode={isSubscribedToThisTier ? 'danger' : 'info'}>
+            {isSubscribedToThisTier ? 'Cancel subscription' : 'Subscribe'}
           </ActionButton>
         </View>
       </View>

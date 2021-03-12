@@ -2,10 +2,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
 import {View, TouchableNativeFeedback} from 'react-native';
-import {Text, Subheading} from 'react-native-paper';
+import {Text, Subheading, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Tier({tier, onPress}) {
+function Tier({tier, selectedTier, onPress}) {
+  const theme = useTheme();
+  const selected = tier.label == selectedTier?.label;
+
   return (
     <View
       style={{
@@ -14,7 +17,8 @@ function Tier({tier, onPress}) {
         width: '80%',
         height: 100,
         borderColor: '#eee',
-        borderWidth: 1,
+        borderWidth: selected ? 0 : 1,
+        backgroundColor: selected ? theme.colors.primary : 'transparent',
         overflow: 'hidden',
       }}>
       <TouchableNativeFeedback useForeground onPress={onPress}>

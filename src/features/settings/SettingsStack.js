@@ -11,10 +11,6 @@ import EditProfile from '../profile/EditProfile';
 
 const Stack = createStackNavigator();
 
-function SettingsStack2(){
-
-}
-
 function SettingsStack() {
   const theme = useTheme();
 

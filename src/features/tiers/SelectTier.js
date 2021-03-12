@@ -95,7 +95,7 @@ function Tier({
         width: '80%',
         height: 100,
         borderColor: '#eee',
-        borderWidth: selected ? 0 : 1,
+        borderWidth: selected  ? 0 : 1,
         backgroundColor: selected ? theme.colors.primary : 'transparent',
         overflow: 'hidden',
       }}>
