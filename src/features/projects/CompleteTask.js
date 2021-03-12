@@ -167,6 +167,7 @@ function CompleteTask({route}) {
         />
         <SubmitButton
           task={task}
+          disabled={selectedMembers.length==0}
           handleCompleteTask={handleCompleteTask}
           loading={loading}
         />
@@ -364,7 +365,7 @@ function TeamMember({member, selectedMembers, onPress = () => {}}) {
   );
 }
 
-function SubmitButton({task, handleCompleteTask, loading}) {
+function SubmitButton({task, disabled=false, handleCompleteTask, loading}) {
   let text = 'Complete';
   if (task.status == 'pending') {
     text = 'Waiting for coach approval';
@@ -380,7 +381,7 @@ function SubmitButton({task, handleCompleteTask, loading}) {
       <Button
         loading={loading}
         mode="contained"
-        disabled={task.status == 'pending' ? true : false}
+        disabled={(task.status == 'pending' ? true : false) || disabled}
         labelStyle={{color: 'black'}}
         onPress={handleCompleteTask}>
         {text}
