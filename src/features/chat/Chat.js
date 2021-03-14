@@ -17,35 +17,38 @@ function Chat({route}) {
   const {user} = useSelector((state) => state.authentication);
   const room = myChatRooms.find((room) => room.id == route.params.room.id);
   const messages = room.messages.map((message) => {
+    // when adding messages through the handleWsEvents function
+    // we try to format the messages based on the giftedChat format
+    // when this is the case the || triggers and the left side is undefined
     return {
-      _id: message.id,
+      _id: message.id || message._id,
       createdAt: message.created,
       text: message.text,
       user: {
         name: message.user.name,
         avatar: message.user.avatar,
-        _id: message.user.id,
+        _id: message.user.id || message.user._id,
       },
     };
   });
-  const onSend = useCallback(
-    (messages = []) => {
-      //setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
-      try {
-        const ws = wsContext.data.find((d) => d.room.id == room.id).ws;
-        let message = {
-          text: messages[0].text,
-          user: messages[0].user._id,
-          room: room.id,
-        };
-        ws.send(JSON.stringify(message));
-        dispatch(addMessages({room: room, newMessages: messages}));
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    [dispatch, room, wsContext.data],
-  );
+  console.log(messages);
+  console.log(JSON.stringify(messages, null, 2));
+  const onSend = (messages = []) => {
+    //setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
+    try {
+      const ws = wsContext.data.find((d) => d.room.id == room.id).ws;
+      let message = {
+        text: messages[0].text,
+        user: messages[0].user._id,
+        room: room.id,
+      };
+      ws.send(JSON.stringify(message));
+      console.log(ws);
+      console.log(wsContext.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <View style={{backgroundColor: theme.colors.background, flex: 1}}>

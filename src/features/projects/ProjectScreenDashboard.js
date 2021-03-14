@@ -25,7 +25,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Config from 'react-native-config';
 import PushNotification from 'react-native-push-notification';
 import {useSelector, useDispatch} from 'react-redux';
-import {getChatRoomMessages} from '../chat/chatSlice';
+import {getChatRoomMessages, getMyChatRooms} from '../chat/chatSlice';
 import {getMyProjects} from './projectsSlice';
 import {getMyTeams} from '../teams/teamsSlice';
 import WsContext from '../../context/wsContext';
@@ -71,7 +71,9 @@ function ProjectScreenDashboard({route}) {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('TeamChatScreen', {
-              room: myChatRooms.find((room) => room.project == project.id),
+              room: myChatRooms.find(
+                (room) => room.project == project.id && room.type == 'TM',
+              ),
               project: project,
             })
           }
@@ -83,12 +85,19 @@ function ProjectScreenDashboard({route}) {
   }, [myChatRooms, navigation, project]);
 
   useEffect(() => {
-    console.log(myChatRooms, project);
-    let teamChatId = myChatRooms.find((room) => room.project == project.id);
+    let teamChatId = myChatRooms.find(
+      (room) => room.project == project.id && room.type == 'TM',
+    );
+    let teamChatWithCoachId = myChatRooms.find(
+      (room) => room.project == project.id && room.type == 'TC',
+    );
     if (teamChatId) {
       dispatch(getChatRoomMessages(teamChatId.id));
     }
-  }, [dispatch, project]);
+    if (teamChatWithCoachId) {
+      dispatch(getChatRoomMessages(teamChatWithCoachId.id));
+    }
+  }, [dispatch, project, myChatRooms.length]);
 
   useEffect(() => {
     LocalNotification();
@@ -114,7 +123,8 @@ function ProjectScreenDashboard({route}) {
       <Progress project={project} />
       <Tasks project={project} />
       <Team project={project} />
-      <Chat />
+      {/* <Chat /> */}
+      <ChatWithCoach project={project} />
     </ScrollView>
   );
 }
@@ -133,6 +143,7 @@ function ProjectAsNonMember({project}) {
       );
       await dispatch(getMyProjects());
       await dispatch(getMyTeams());
+      await dispatch(getMyChatRooms());
       // navigation.navigate('Projects');
       setLoading(false);
     } catch (e) {
@@ -502,6 +513,32 @@ function Chat() {
         </View>
       </View>
     </TouchableOpacity>
+  );
+}
+
+function ChatWithCoach({project}) {
+  const navigation = useNavigation();
+  const {myChatRooms} = useSelector((state) => state.chat);
+
+  function onPress() {
+    navigation.navigate('TeamChatScreen', {
+      room: myChatRooms.find(
+        (room) => room.project == project.id && room.type == 'TC',
+      ),
+      project: project,
+    });
+  }
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+      }}>
+      <ActionButton onPress={onPress}>Chat with mentor</ActionButton>
+    </View>
   );
 }
 

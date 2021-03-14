@@ -15,13 +15,29 @@ function handleWsEvents() {
 
   function connect(room, url) {
     let ws = new WebSocket(url);
-    wsContext.data.push({room: room, ws: ws});
-    ws.onopen = function () {};
+    let index = wsContext.data.findIndex((w) => w.room.id == room.id);
+    if (index == -1) {
+      wsContext.data.push({room: room, ws: ws});
+    }
+
+    console.log(wsContext.data);
+    ws.onopen = function () {
+      let index = wsContext.data.findIndex((w) => w.room.id == room.id);
+      wsContext.data[index] = {room: room, ws: ws};
+    };
 
     ws.onmessage = function (event) {
       let data = JSON.parse(event.data);
-      console.log('event.data', data);
       let room = myChatRooms.find((r) => r.id == data.room);
+      // let message = {
+      //   _id: data.message_id,
+      //   text: data.message,
+      //   user: {
+      //     _id: data.user_id,
+      //     avatar: data.user_avatar,
+      //     name: data.user_name,
+      //   },
+      // };
       let message = {
         _id: data.message_id,
         text: data.message,
@@ -31,6 +47,7 @@ function handleWsEvents() {
           name: data.user_name,
         },
       };
+      console.log(JSON.stringify(message, null, 2));
       dispatch(addMessages({room: room, newMessages: [message]}));
     };
 
@@ -63,7 +80,6 @@ function handleWsEvents() {
           myChatRooms[i],
           'ws://' + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/',
         );
-        console.log('ws://' + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/')
       }
     }
   }, [myChatRooms]);

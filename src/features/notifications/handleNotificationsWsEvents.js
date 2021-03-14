@@ -16,11 +16,16 @@ function handleNotificationsWsEvents() {
   function connect() {
     const url = `ws://${Config.HOST}/ws/notifications/`;
     let ws = new WebSocket(url, ['authorization', `Bearer:${token}`]);
-    wsContext.notificationData.push({ws: ws});
-    ws.onopen = function () {};
+    wsContext.notificationData.push({ws: ws, name: 'notifications'});
+    ws.onopen = function () {
+      let index = wsContext.notificationData.findIndex(
+        (w) => w.name == 'notifications',
+      );
+      wsContext.notificationData[index] = {name: 'notifications', ws: ws};
+    };
 
     ws.onmessage = function (event) {
-      console.log("notdata", event);
+      console.log('notdata', event);
       let data = JSON.parse(event.data);
       dispatch(addNotification(data.id));
     };
