@@ -48,7 +48,9 @@ function handleWsEvents() {
         },
       };
       console.log(JSON.stringify(message, null, 2));
-      dispatch(addMessages({room: room, newMessages: [message]}));
+      dispatch(
+        addMessages({room: room, newMessages: [message], pending: false}),
+      );
     };
 
     ws.onclose = function (e) {

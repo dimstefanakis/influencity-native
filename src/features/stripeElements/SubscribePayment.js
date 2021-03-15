@@ -160,7 +160,7 @@ function SubscribePayment({route}) {
             Change plan
           </Button>
         </Surface>
-        {tier.tier == 'FR' || foundCoach ? null : (
+        {tier.tier == 'FR' || isSubscribedToThisTier ? null : (
           <>
             <SmallHeader title="Payment details" />
             {paymentMethodCreated ? (
@@ -196,6 +196,7 @@ function SubscribePayment({route}) {
           <ActionButton
             onPress={onSubmit}
             loading={loading}
+            disabled={tier.tier != 'FR' && !paymentMethodCreated}
             mode={isSubscribedToThisTier ? 'danger' : 'info'}>
             {isSubscribedToThisTier ? 'Cancel subscription' : 'Subscribe'}
           </ActionButton>
