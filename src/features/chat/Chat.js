@@ -1,21 +1,27 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useCallback, useEffect, useContext} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
-import {GiftedChat, Bubble} from 'react-native-gifted-chat';
+import {GiftedChat, Bubble, Actions, Composer} from 'react-native-gifted-chat';
+import ImagePicker from 'react-native-image-crop-picker';
+import Material from 'react-native-vector-icons/dist/MaterialIcons';
 import Config from 'react-native-config';
+import RNFetchBlob from 'rn-fetch-blob';
 import {useSelector, useDispatch} from 'react-redux';
 import {addMessages} from './chatSlice';
 import {WsContext} from '../../context/wsContext';
 import {v4 as uuid} from 'uuid';
+import axios from 'axios';
 
 function Chat({route}) {
   const dispatch = useDispatch();
   const theme = useTheme();
   //const {room} = route.params;
 
+  const [loading, setLoading] = useState(false);
   const wsContext = useContext(WsContext);
   const {myChatRooms} = useSelector((state) => state.chat);
-  const {user} = useSelector((state) => state.authentication);
+  const {user, token} = useSelector((state) => state.authentication);
   const room = myChatRooms.find((room) => room.id == route.params.room.id);
   const messages = room.messages.map((message) => {
     // when adding messages through the handleWsEvents function
@@ -76,6 +82,66 @@ function Chat({route}) {
     );
   }
 
+  function onPressActionButton(message) {
+    ImagePicker.openPicker({}).then((result) => {
+      try {
+        // handle image upload here
+        console.log(result.mime.includes('image'), result.path);
+        if (result.mime.includes('image')) {
+          const path = result.path.split('/');
+          const image = {
+            name: 'images',
+            filename: path[path.length - 1],
+            type: result.mime,
+            data: RNFetchBlob.wrap(result.path),
+          };
+          const url = `${Config.API_URL}/v1/create_message/`;
+          RNFetchBlob.fetch(
+            'POST',
+            url,
+            {
+              'Content-Type': 'multipart/form-data',
+              Authorization: 'Bearer ' + token,
+            },
+            [
+              image,
+              {name: 'text', data: ''},
+              {name: 'chat_room', data: room.id},
+            ],
+          )
+            .then((r) => {
+              console.log(r, 'response');
+            })
+            .catch((e) => {
+              console.error(e);
+            });
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  }
+
+  function renderActions(props) {
+    console.log(props);
+    return (
+      <Actions
+        {...props}
+        onPressActionButton={() => onPressActionButton(props.currentMessage)}
+      />
+    );
+  }
+
+  function renderComposer(props) {
+    return (
+      <Composer
+        textInputStyle={{
+          paddingTop: 10,
+        }}
+        {...props}
+      />
+    );
+  }
   return (
     <View style={{backgroundColor: theme.colors.background, flex: 1}}>
       <GiftedChat
@@ -85,6 +151,8 @@ function Chat({route}) {
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{_id: user.subscriber.id}}
+        renderActions={renderActions}
+        renderComposer={renderComposer}
       />
     </View>
   );
