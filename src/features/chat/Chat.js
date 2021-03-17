@@ -27,8 +27,17 @@ function Chat({route}) {
     // when adding messages through the handleWsEvents function
     // we try to format the messages based on the giftedChat format
     // when this is the case the || triggers and the left side is undefined
+    let image = null;
+    // image might be already an object and not require parsing
+    // if that is the case an error will be thrown
+    try {
+      image = JSON.parse(message.images[0])?.image;
+    } catch (e) {
+      image = message.images[0]?.image;
+    }
     return {
       _id: message.id || message._id,
+      image: message.images ? image : null,
       createdAt: message.created,
       text: message.text,
       sent: message.sent === undefined || message.sent ? true : false,
