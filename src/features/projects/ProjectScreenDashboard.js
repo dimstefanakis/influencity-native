@@ -85,21 +85,6 @@ function ProjectScreenDashboard({route}) {
   }, [myChatRooms, navigation, project]);
 
   useEffect(() => {
-    let teamChatId = myChatRooms.find(
-      (room) => room.project == project.id && room.type == 'TM',
-    );
-    let teamChatWithCoachId = myChatRooms.find(
-      (room) => room.project == project.id && room.type == 'TC',
-    );
-    if (teamChatId) {
-      dispatch(getChatRoomMessages(teamChatId.id));
-    }
-    if (teamChatWithCoachId) {
-      dispatch(getChatRoomMessages(teamChatWithCoachId.id));
-    }
-  }, [dispatch, project, myChatRooms.length]);
-
-  useEffect(() => {
     LocalNotification();
   }, []);
 

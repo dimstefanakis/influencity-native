@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
@@ -7,6 +8,7 @@ import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import {
   useTheme,
+  Badge,
   configureFonts,
   DefaultTheme,
   DarkTheme,
@@ -435,7 +437,9 @@ function BottomStackNavigation() {
   const {user, loading, token, checkingForToken} = useSelector(
     (state) => state.authentication,
   );
+  const {unreadCount} = useSelector((state) => state.notifications);
 
+  console.log("unread", unreadCount)
   return (
     <BottomStack.Navigator
       //swipeEnabled={false}
@@ -459,7 +463,25 @@ function BottomStackNavigation() {
           }
 
           if (route.name === 'Notifications') {
-            return <AntDesign name="bells" size={24} color={color} />;
+            return (
+              <View style={{position: 'relative'}}>
+                <AntDesign name="bells" size={24} color={color} />
+                {unreadCount == 0 ? null : (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: -10,
+                      right: -10,
+                      borderWidth: 3,
+                      borderColor: theme.colors.background,
+                    }}>
+                    <Badge style={{backgroundColor: theme.colors.primary}}>
+                      {unreadCount}
+                    </Badge>
+                  </View>
+                )}
+              </View>
+            );
           }
           if (route.name === 'ProfileScreen') {
             return <AntDesign name={'user'} size={24} color={color} />;

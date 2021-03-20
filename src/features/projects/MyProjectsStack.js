@@ -1,16 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
 import {View, Platform, SafeAreaView} from 'react-native';
 import {TransitionPresets} from '@react-navigation/stack';
 import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-import ProjectDashboardScreen from '../../screens/ProjectDashboardScreen';
-import {MyProjectsScreen} from '../../screens/ProjectsScreen';
-import TeamChatScreen from '../../screens/TeamChatScreen';
+import {useSelector, useDispatch} from 'react-redux';
+import {getChatRoomMessages, getMyChatRooms} from '../chat/chatSlice';
 import MyProjects from './MyProjects';
 
 const Stack = createSharedElementStackNavigator();
 
 export default function MyProjectsStack() {
+  const dispatch = useDispatch();
+  const {myChatRooms} = useSelector((state) => state.chat);
+
+  // might as well get all the chat messages here
+  // they should be available in other screens as well
+  useEffect(() => {
+    myChatRooms.forEach((chatRoom) => {
+      dispatch(getChatRoomMessages(chatRoom.id));
+    });
+  }, [dispatch, myChatRooms.length]);
+
   const preset =
     Platform.OS == 'ios'
       ? TransitionPresets.ModalSlideFromBottomIOS

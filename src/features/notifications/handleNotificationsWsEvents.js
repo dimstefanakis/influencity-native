@@ -5,7 +5,7 @@ import React, {useEffect, useContext} from 'react';
 import Config from 'react-native-config';
 import {useDispatch, useSelector} from 'react-redux';
 import {WsContext} from '../../context/wsContext';
-import {addNotification} from './notificationsSlice';
+import {addNotification, incrementUnread} from './notificationsSlice';
 
 function handleNotificationsWsEvents() {
   const wsContext = useContext(WsContext);
@@ -28,6 +28,7 @@ function handleNotificationsWsEvents() {
       console.log('notdata', event);
       let data = JSON.parse(event.data);
       dispatch(addNotification(data.id));
+      dispatch(incrementUnread());
     };
 
     ws.onclose = function (e) {

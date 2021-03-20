@@ -29,10 +29,44 @@ export const addNotification = createAsyncThunk(
   },
 );
 
+export const getUnreadCount = createAsyncThunk(
+  'notifications/getUnreadCount',
+  async () => {
+    const url = `${Config.API_URL}/v1/unread_notifications_count/`;
+
+    try {
+      let response = await axios.get(url);
+      return response.data.unread_count;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
+export const markAllAsRead = createAsyncThunk(
+  'notifications/getUnreadCount',
+  async () => {
+    const url = `${Config.API_URL}/v1/mark_all_notifications_as_read/`;
+
+    try {
+      let response = await axios.post(url);
+      return response.data.unread_count;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
 export const notificationsSlice = createSlice({
   name: 'notifications',
   initialState: {
     notifications: [],
+    unreadCount: 0,
+  },
+  reducers: {
+    incrementUnread(state, action) {
+      state.unreadCount = state.unreadCount + 1;
+    },
   },
   extraReducers: {
     [getMyNotifications.fulfilled]: (state, action) => {
@@ -45,5 +79,17 @@ export const notificationsSlice = createSlice({
     },
     [addNotification.rejected]: (state, action) => {},
     [addNotification.pending]: (state, action) => {},
+    [getUnreadCount.fulfilled]: (state, action) => {
+      state.unreadCount = action.payload;
+    },
+    [getUnreadCount.rejected]: (state, action) => {},
+    [getUnreadCount.pending]: (state, action) => {},
+    [markAllAsRead.fulfilled]: (state, action) => {
+      state.unreadCount = action.payload;
+    },
+    [markAllAsRead.rejected]: (state, action) => {},
+    [markAllAsRead.pending]: (state, action) => {},
   },
 });
+
+export const {incrementUnread} = notificationsSlice.actions;
