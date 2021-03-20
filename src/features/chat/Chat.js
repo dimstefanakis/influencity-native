@@ -28,7 +28,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import ImagePicker from 'react-native-image-crop-picker';
-import Material from 'react-native-vector-icons/dist/MaterialIcons';
+import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Config from 'react-native-config';
 import RNFetchBlob from 'rn-fetch-blob';
 import {useSelector, useDispatch} from 'react-redux';
@@ -53,6 +53,7 @@ function Chat({route}) {
   const [userData, setUserData] = useState(room.members);
   const [userName, setUserName] = useState('');
   const msgInput = useRef();
+  const scrollViewRef = useRef();
   const messages = room.messages.map((message) => {
     // when adding messages through the handleWsEvents function
     // we try to format the messages based on the giftedChat format
@@ -63,7 +64,9 @@ function Chat({route}) {
     try {
       image = JSON.parse(message.images[0])?.image;
     } catch (e) {
-      image = message.images[0]?.image;
+      if (message.images && message.images.length > 0) {
+        image = message.images[0]?.image;
+      }
     }
     return {
       _id: message.id || message._id,
@@ -81,29 +84,65 @@ function Chat({route}) {
   // console.log(messages);
   // console.log(JSON.stringify(messages, null, 2));
   const onSend = (messages = []) => {
-    //setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
+    // find all mentioned users and replace them with their ids
+    const atPattern = /\B@[a-z0-9_-]+/gi;
+    const newTargetText = messages[0].text.replace(atPattern, (match, $1) => {
+      // remove @ from the start of the string
+      let attedUser = match.substring(1);
+
+      // find user by name, should change this later to uuid
+      let foundUser = room.members.find((m) => {
+        return m.name == attedUser;
+      });
+      if (foundUser) {
+        return `@${foundUser.id}`;
+      }
+      return match;
+    });
+
     try {
       const ws = wsContext.data.find((d) => d.room.id == room.id).ws;
       let message = {
-        text: messages[0].text,
+        text: newTargetText,
         user: {
           _id: messages[0].user._id,
         },
+        images: null,
         sent: false,
         room: room.id,
         _id: uuid(), // we also assign a random id for this message, it will be overriden later by the server generated one
       };
-      console.log(message);
+      console.log('kkkkk', message);
       ws.send(JSON.stringify(message));
       dispatch(
         addMessages({room: room, newMessages: [message], pending: true}),
       );
+      setMessage('');
     } catch (e) {
       console.error(e);
     }
   };
 
   function renderBubble(props) {
+    const atPattern = /\B@[a-z0-9_-]+/gi;
+    let text = props.currentMessage.text.replace(atPattern, (match, $1) => {
+      console.log('testf', match, $1);
+      // remove @ from the start of the string
+      let attedUser = match.substring(1);
+
+      // find user by id, should change this later to name
+      let foundUser = room.members.find((m) => {
+        return m.id == attedUser;
+      });
+      if (foundUser) {
+        return `@${foundUser.name}`;
+      }
+      return match;
+    });
+    let parsedMessage = {
+      ...props.currentMessage,
+      text: text,
+    };
     if (!props.currentMessage.sent) {
       // if current Message has not been sent, return other Bubble with backgroundColor red for example
       return (
@@ -112,12 +151,13 @@ function Chat({route}) {
             right: {opacity: 0.5},
           }}
           {...props}
+          currentMessage={parsedMessage}
         />
       );
     }
     return (
       // Return your normal Bubble component if message has been sent.
-      <Bubble {...props} />
+      <Bubble {...props} currentMessage={parsedMessage} />
     );
   }
 
@@ -134,10 +174,8 @@ function Chat({route}) {
       if (spaceCheck.test(lastChar) && currentChar != '@') {
         setModalVisible(false);
       } else {
-        console.log("innn")
         const checkSpecialChar = currentChar.match(/[^@A-Za-z_]/);
         if (checkSpecialChar === null || currentChar === '@') {
-          console.log("innn1")
           const pattern = new RegExp('\\B@[a-z0-9_-]+|\\B@', 'gi');
           const matches = value.match(pattern) || [];
           console.log(matches);
@@ -154,30 +192,29 @@ function Chat({route}) {
     }
   };
 
-  console.log(modalVisible)
   const getUserSuggestions = (keyword) => {
     setLoading(true);
     if (Array.isArray(room.members)) {
       if (keyword.slice(1) === '') {
-        setUserData(...room.members);
+        setUserData([...room.members]);
         setUserName(keyword);
         setLoading(false);
       } else {
         const userDataList = room.members.filter(
           (obj) => obj.name.indexOf(keyword.slice(1)) !== -1,
         );
-        setUserData(...userDataList);
+        setUserData([...userDataList]);
         setUserName(keyword);
         setLoading(false);
       }
     }
   };
 
-  // const handleScrollTo = point => {
-  //   if (this.scrollViewRef.current) {
-  //     this.scrollViewRef.current.scrollTo(point);
-  //   }
-  // };
+  const handleScrollTo = (point) => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo(point);
+    }
+  };
 
   const renderSuggestionsRow = ({item}) => {
     const dataObj = item;
@@ -241,7 +278,6 @@ function Chat({route}) {
   }
 
   function renderActions(props) {
-    console.log(props);
     return (
       <Actions
         {...props}
@@ -279,16 +315,16 @@ function Chat({route}) {
             multiline={true}
           />
         </View>
-        <Send {...props} containerStyle={styles.sendWrapperStyle}>
-          <View style={styles.sendContainer}>
-            <Text>asd</Text>
-          </View>
-        </Send>
+        <Send {...props} />
       </View>
     );
   }
 
-  console.log(modalVisible, "loaing")
+  function renderFooter(props) {
+    // this leaves a small space at the bottom of the chat
+    return <View {...props} style={{height: 10}} />;
+  }
+
   return (
     <View style={{backgroundColor: theme.colors.background, flex: 1}}>
       <Modal
@@ -297,15 +333,15 @@ function Chat({route}) {
         deviceHeight={400}
         // onBackdropPress={() => setModalVisible(false)}
         // backdropColor={'transparent'}
-        // scrollTo={this.handleScrollTo}
+        scrollTo={handleScrollTo}
         scrollOffset={scrollOffset}
         scrollOffsetMax={300 - 200}
         animationIn="fadeIn"
         animationInTiming={100}
         animationOut="fadeOut"
-        // onModalShow={() => {
-        //   this.msgInput.focus();
-        // }}
+        onModalShow={() => {
+          msgInput.focus();
+        }}
         style={styles.modalContainer}>
         <View style={styles.suggestionContainer}>
           {loading ? (
@@ -330,6 +366,7 @@ function Chat({route}) {
         user={{_id: user.subscriber.id}}
         renderActions={renderActions}
         renderComposer={renderComposer}
+        renderFooter={renderFooter}
         text={messageText}
       />
       <KeyboardAvoidingView
@@ -394,27 +431,26 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   composerContainer: {
-    width: '100%',
+    width: '90%',
     height: 55,
     flexDirection: 'row',
     paddingTop: 5,
   },
   inputContainer: {
     flexDirection: 'row',
-    backgroundColor: 'white',
-    width: '85%',
+    width: '80%',
   },
   textInput: {
     fontSize: 14,
     letterSpacing: 1,
     height: 50,
     minWidth: 250,
-    maxWidth: 250,
     borderWidth: 0,
-    paddingTop: 5,
+    paddingTop: 18,
     paddingBottom: 5,
     paddingLeft: 10,
     paddingRight: 10,
+    flex: 1,
   },
   sendWrapperStyle: {
     width: '15%',

@@ -12,9 +12,10 @@ function handleWsEvents() {
   const wsContext = useContext(WsContext);
   const dispatch = useDispatch();
   const {myChatRooms} = useSelector((state) => state.chat);
+  const {token} = useSelector((state) => state.authentication);
 
   function connect(room, url) {
-    let ws = new WebSocket(url);
+    let ws = new WebSocket(url, ['authorization', `Bearer:${token}`]);
     let index = wsContext.data.findIndex((w) => w.room.id == room.id);
     if (index == -1) {
       wsContext.data.push({room: room, ws: ws});
