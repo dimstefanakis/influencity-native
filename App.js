@@ -55,6 +55,7 @@ import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
 import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
+import ProjectLinkedPostsScreen from './src/screens/ProjectLinkedPostsScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
 import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
 import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
@@ -384,6 +385,14 @@ const App = () => {
             component={SelectablePostListScreen}
             options={{
               title: 'My posts',
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
+          />
+          <VanillaStack.Screen
+            name="ProjectLinkedPostsScreen"
+            component={ProjectLinkedPostsScreen}
+            options={{
+              title: 'Relevant posts',
               ...TransitionPresets.ModalPresentationIOS,
             }}
           />

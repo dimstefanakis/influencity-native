@@ -13,8 +13,6 @@ import {
   useTheme,
 } from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {getProjects} from '../projects/projectsSlice';
 
 function Project({
   project,
@@ -40,11 +38,14 @@ function Project({
       navigation.navigate('ProjectDashboardScreen', {project: project});
     }
 
+    // TODO
+    // remember why I commented the lines below
     if (viewAs == 'preview') {
-      navigation.navigate('ProjectListScreen', {
-        projects: [project],
-        viewAs: viewAs,
-      });
+      // navigation.navigate('ProjectListScreen', {
+      //   projects: [project],
+      //   viewAs: viewAs,
+      // });
+      navigation.navigate('ProjectDashboardScreen', {project: project});
     }
   }
 
@@ -53,7 +54,12 @@ function Project({
   }
   return (
     <TouchableNativeFeedback onPress={handleProjectClick}>
-      <Surface style={viewAs == 'preview' ? {} : {...styles.surface}}>
+      <Surface
+        style={
+          viewAs == 'preview'
+            ? {padding: 20, margin: 5, borderRadius: 5}
+            : {...styles.surface}
+        }>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Avatar.Icon size={30} icon="code-tags" color="white" />
           <Title

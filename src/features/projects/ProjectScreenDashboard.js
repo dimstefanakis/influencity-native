@@ -9,6 +9,7 @@ import {
   Image,
   TouchableNativeFeedback,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {
   Text,
@@ -28,9 +29,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {getChatRoomMessages, getMyChatRooms} from '../chat/chatSlice';
 import {getMyProjects} from './projectsSlice';
 import {getMyTeams} from '../teams/teamsSlice';
+import colorGenerator from '../../utils/colorGenerator';
 import WsContext from '../../context/wsContext';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import axios from 'axios';
+import getRandomColor from '../../utils/colorGenerator';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -109,6 +112,7 @@ function ProjectScreenDashboard({route}) {
       <Tasks project={project} />
       <Team project={project} />
       {/* <Chat /> */}
+      {project.linked_posts.length > 0 ? <Recourses project={project} /> : null}
       <ChatWithCoach project={project} />
     </ScrollView>
   );
@@ -158,6 +162,7 @@ function ProjectAsNonMember({project}) {
         <PreviewPrerequisites project={project} />
       ) : null}
       <PreviewTasks project={project} />
+      {project.linked_posts.length > 0 ? <Recourses project={project} /> : null}
       <View
         style={{
           width: '100%',
@@ -523,6 +528,52 @@ function ChatWithCoach({project}) {
         marginTop: 50,
       }}>
       <ActionButton onPress={onPress}>Chat with mentor</ActionButton>
+    </View>
+  );
+}
+
+function Recourses({project}) {
+  const theme = useTheme();
+  const navigation = useNavigation();
+  let posts = project.linked_posts;
+  const [colors, setColors] = useState(posts.map((p, i) => getRandomColor()));
+
+  function handlePostPress() {
+    navigation.navigate('ProjectLinkedPostsScreen', {project: project});
+  }
+
+  return (
+    <View style={{...styles.spacing}}>
+      <Text
+        style={{
+          fontSize: 20,
+          marginTop: 20,
+          marginBottom: 10,
+          color: '#1d1d1d',
+          ...theme.fonts.medium,
+        }}>
+        {posts.length} linked posts
+      </Text>
+      <View style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
+        {posts.map((p, i) => (
+          <TouchableOpacity onPress={handlePostPress}>
+            <View
+              style={{
+                // what I wanted to do here is make a gallery of posts instagram-style
+                // I would normally do justify-content: space-between or something similar
+                // to not have unequal bezels on the left and right side but I want the boxes to be
+                // aligned at the start, so I tested some numbers out and the 3.45 seems to be a good fit
+                // for all screens with this specific margin and parent spacing
+                // also I need them to be squares, otherwise I would do width: '32%'
+                width: Dimensions.get('screen').width / 3.45,
+                height: Dimensions.get('screen').width / 3.45,
+                backgroundColor: colors[i],
+                margin: 2,
+              }}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 }
