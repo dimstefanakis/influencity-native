@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, SafeAreaView} from 'react-native';
 import {Button, Chip, FAB, Portal, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
@@ -167,7 +167,7 @@ function CoachMainScreenWithPosts({route}) {
     navigation.navigate('BecomeMemberScreen', {coach: coach});
   }
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
       <PostList ListHeaderComponent={MainScreen} coach={coach} />
       <View
         style={{
@@ -188,7 +188,7 @@ function CoachMainScreenWithPosts({route}) {
           />
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 export default CoachMainScreenWithPosts;

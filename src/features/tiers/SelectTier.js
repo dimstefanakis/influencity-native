@@ -19,6 +19,7 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
+import Tier from '../tiers/Tier';
 
 function SelectTier({route}) {
   const {handleCreateItems} = route.params;
@@ -34,11 +35,13 @@ function SelectTier({route}) {
     await handleCreateItems(tierValues, setLoading);
   }
 
+  function onPress(tier) {
+    setSelectedTier(tier);
+  }
+
   return (
     <ScrollView
       contentContainerStyle={{
-        height: '100%',
-        width: '100%',
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: 'white',
@@ -50,6 +53,7 @@ function SelectTier({route}) {
             label={t.label}
             subheading={t.subheading}
             selectedTier={selectedTier}
+            onPress={() => onPress(t)}
             setSelectedTiers={setSelectedTiers}
             setSelectedTier={setSelectedTier}
           />
@@ -68,13 +72,7 @@ function SelectTier({route}) {
   );
 }
 
-function Tier({
-  tier,
-  selectedTier,
-  setSelectedTiers,
-  setSelectedTier,
-  style = {},
-}) {
+function Tier2({tier, selectedTier, setSelectedTier}) {
   const theme = useTheme();
   const selected = tier.label == selectedTier?.label;
 
@@ -95,7 +93,7 @@ function Tier({
         width: '80%',
         height: 100,
         borderColor: '#eee',
-        borderWidth: selected  ? 0 : 1,
+        borderWidth: selected ? 0 : 1,
         backgroundColor: selected ? theme.colors.primary : 'transparent',
         overflow: 'hidden',
       }}>
@@ -118,6 +116,7 @@ function Tier({
             {tier.subheading ? (
               <Subheading>{tier.subheading}</Subheading>
             ) : null}
+            <Benefits tier={tier} />
           </View>
           <View style={{position: 'absolute', right: 30}}>
             {selected ? (
@@ -132,6 +131,22 @@ function Tier({
           </View>
         </View>
       </TouchableNativeFeedback>
+    </View>
+  );
+}
+
+function Benefits({tier}) {
+  const benefits = tier.benefits;
+
+  return (
+    <View>
+      {benefits.map((b) => {
+        return (
+          <View key={b.id}>
+            <Text>{b.description}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 }

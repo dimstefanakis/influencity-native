@@ -17,6 +17,7 @@ import {SmallHeader} from '../../flat/Headers/Headers';
 import {getMyTiers} from './tiersSlice';
 
 function ChangeTier({route}) {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [tier, setTier] = useState(route.params.tier);
@@ -30,6 +31,7 @@ function ChangeTier({route}) {
     setCredit(tier.credit);
     setBenefits(tier.benefits);
   }, [tier]);
+
   async function handleChangeTier() {
     let formData = new FormData();
     formData.append('label', label);
@@ -49,7 +51,7 @@ function ChangeTier({route}) {
     } catch (e) {}
   }
   return (
-    <ScrollView>
+    <ScrollView style={{flex:1, backgroundColor:theme.colors.background}}>
       <View style={styles.spacing}>
         <SmallHeader title="Tier name" />
         <TextInput

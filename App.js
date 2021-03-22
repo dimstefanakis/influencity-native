@@ -415,14 +415,14 @@ const App = () => {
             name="TierSettings"
             component={TierSettings}
             options={{
-              headerShown: false,
+              title: '',
             }}
           />
           <VanillaStack.Screen
             name="ChangeTierScreen"
             component={ChangeTier}
             options={{
-              headerShown: false,
+              title: '',
             }}
           />
           <VanillaStack.Screen
