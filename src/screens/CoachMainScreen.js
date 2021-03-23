@@ -118,6 +118,7 @@ function Projects({coach}) {
   // doing this for testing purposes
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const {user} = useSelector((state) => state.authentication);
 
   useEffect(() => {
     dispatch(getProjects());
@@ -141,6 +142,7 @@ function Projects({coach}) {
               onPress={() =>
                 navigation.navigate('ProjectListScreen', {
                   projects: [project],
+                  viewAs: coach.id == user.coach.id ? 'coach' : 'sub',
                 })
               }
               style={{alignSelf: 'flex-start', margin: 2}}>

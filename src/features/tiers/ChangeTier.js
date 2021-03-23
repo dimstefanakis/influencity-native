@@ -51,7 +51,7 @@ function ChangeTier({route}) {
     } catch (e) {}
   }
   return (
-    <ScrollView style={{flex:1, backgroundColor:theme.colors.background}}>
+    <ScrollView style={{flex: 1, backgroundColor: theme.colors.background}}>
       <View style={styles.spacing}>
         <SmallHeader title="Tier name" />
         <TextInput
