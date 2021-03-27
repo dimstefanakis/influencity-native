@@ -34,9 +34,10 @@ function Project({
       handleSelectProject(project);
       navigation.goBack();
     }
-    if(viewAs == 'coach'){
-      navigation.navigate('ProjectCoachScreenDashboardScreen', {project: project});
-
+    if (viewAs == 'coach') {
+      navigation.navigate('ProjectCoachScreenDashboardScreen', {
+        project: project,
+      });
     }
     if (viewAs == 'sub' || viewAs == 'my_profile') {
       navigation.navigate('ProjectDashboardScreen', {project: project});

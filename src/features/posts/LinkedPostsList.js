@@ -5,7 +5,7 @@ import {useTheme} from 'react-native-paper';
 import PostItem from './PostItem';
 
 function LinkedPostsList({route}) {
-  const posts = route.params.project.linked_posts;
+  const posts = route.params.posts;
   const theme = useTheme();
   const renderItem = ({item}) => <PostItem post={item} />;
 

@@ -142,7 +142,8 @@ function Projects({coach}) {
               onPress={() =>
                 navigation.navigate('ProjectListScreen', {
                   projects: [project],
-                  viewAs: coach.id == user.coach.id ? 'coach' : 'sub',
+                  viewAs:
+                    coach.id == user.coach && user.coach?.id ? 'coach' : 'sub',
                 })
               }
               style={{alignSelf: 'flex-start', margin: 2}}>

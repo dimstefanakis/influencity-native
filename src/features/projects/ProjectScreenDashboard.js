@@ -34,6 +34,7 @@ import WsContext from '../../context/wsContext';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import axios from 'axios';
 import getRandomColor from '../../utils/colorGenerator';
+import {set} from 'react-native-reanimated';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -112,7 +113,7 @@ function ProjectScreenDashboard({route}) {
       <Tasks project={project} />
       <Team project={project} />
       {/* <Chat /> */}
-      {project.linked_posts.length > 0 ? <Recourses project={project} /> : null}
+      {project.linked_posts_count > 0 ? <Recourses project={project} /> : null}
       <ChatWithCoach project={project} />
     </ScrollView>
   );
@@ -123,6 +124,8 @@ function ProjectAsNonMember({project}) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const {myCoaches} = useSelector((state) => state.myCoaches);
+  let foundCoach = myCoaches.find((c) => c.surrogate == project.coach_data.id);
 
   async function joinProject() {
     try {
@@ -141,6 +144,16 @@ function ProjectAsNonMember({project}) {
     }
   }
 
+  function isDisabled() {
+    // users are not able to join projects if they are not subscribed or
+    // they have already subscribed with the free subscription or
+    // they have already subscribed with the tier 1 subscription and have already joined 1 project
+    return (
+      foundCoach?.tier_full.tier == 'FR' ||
+      (foundCoach?.tier_full.tier == 'T1' &&
+        project.coach_data.number_of_projects_joined == 1)
+    );
+  }
   return (
     <ScrollView
       style={{height: '100%', backgroundColor: theme.colors.background}}>
@@ -162,7 +175,7 @@ function ProjectAsNonMember({project}) {
         <PreviewPrerequisites project={project} />
       ) : null}
       <PreviewTasks project={project} />
-      {project.linked_posts.length > 0 ? <Recourses project={project} /> : null}
+      {project.linked_posts_count > 0 ? <Recourses project={project} /> : null}
       <View
         style={{
           width: '100%',
@@ -170,7 +183,10 @@ function ProjectAsNonMember({project}) {
           alignItems: 'center',
           marginTop: 50,
         }}>
-        <ActionButton onPress={joinProject} loading={loading}>
+        <ActionButton
+          onPress={joinProject}
+          loading={loading}
+          disabled={isDisabled()}>
           Join this project
         </ActionButton>
       </View>
@@ -535,11 +551,35 @@ function ChatWithCoach({project}) {
 function Recourses({project}) {
   const theme = useTheme();
   const navigation = useNavigation();
-  let posts = project.linked_posts;
-  const [colors, setColors] = useState(posts.map((p, i) => getRandomColor()));
+  const [linkedPosts, setLinkedPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [colors, setColors] = useState(
+    linkedPosts.map((p, i) => getRandomColor()),
+  );
+
+  async function getLinkedPosts() {
+    try {
+      setLoading(true);
+      let response = await axios.get(
+        `${Config.API_URL}/v1/projects/${project.id}/posts/`,
+      );
+      setLoading(false);
+      setLinkedPosts(response.data);
+    } catch (e) {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getLinkedPosts();
+  }, []);
+
+  useEffect(() => {
+    setColors(linkedPosts.map((p, i) => getRandomColor()));
+  }, [linkedPosts]);
 
   function handlePostPress() {
-    navigation.navigate('ProjectLinkedPostsScreen', {project: project});
+    navigation.navigate('ProjectLinkedPostsScreen', {posts: linkedPosts});
   }
 
   return (
@@ -552,10 +592,10 @@ function Recourses({project}) {
           color: '#1d1d1d',
           ...theme.fonts.medium,
         }}>
-        {posts.length} linked posts
+        {linkedPosts.length} linked posts
       </Text>
       <View style={{width: '100%', flexDirection: 'row', flexWrap: 'wrap'}}>
-        {posts.map((p, i) => (
+        {linkedPosts.map((p, i) => (
           <TouchableOpacity onPress={handlePostPress}>
             <View
               style={{
