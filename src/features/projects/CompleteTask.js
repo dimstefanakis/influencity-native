@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   ScrollView,
   View,
@@ -24,6 +24,8 @@ import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {getMyProjects} from './projectsSlice';
+import MediaGalleryFullScreen from '../mediaGallery/MediaGalleryFullScreen';
+import MediaGallery from '../mediaGallery/MediaGallery';
 
 let stockImage =
   'https://cdn.discordapp.com/attachments/410170840747868161/767792148824588369/Screenshot_1053.png';
@@ -34,12 +36,15 @@ function CompleteTask({route}) {
   const {token} = useSelector((state) => state.authentication);
   const dispatch = useDispatch();
   const {task, project, report} = route.params;
+  const selectedPostItem = useRef(0);
+  const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedMembers, setSelectedMembers] = useState(report?.members || []);
   const [message, setSelectedMessage] = useState(report?.message || '');
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
 
+  console.log(report);
   async function handleCreateVideo(milestoneReport) {
     try {
       // const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
@@ -134,6 +139,11 @@ function CompleteTask({route}) {
     }
   }
 
+  function handleMediaPress(image, itemIndex) {
+    selectedPostItem.current = itemIndex;
+    setModalVisible(true);
+  }
+
   return (
     <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
       <View style={{...styles.spacing}}>
@@ -159,6 +169,20 @@ function CompleteTask({route}) {
           message={message}
           setSelectedMessage={setSelectedMessage}
         />
+        <View style={{marginTop: 10}}>
+          <MediaGallery
+            images={report.images}
+            videos={report.videos}
+            onPress={handleMediaPress}
+          />
+        </View>
+        <MediaGalleryFullScreen
+          images={report.images}
+          videos={report.videos}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          firstItem={selectedPostItem.current}
+        />
         <AddMedia
           images={images}
           setImages={setImages}
@@ -167,7 +191,7 @@ function CompleteTask({route}) {
         />
         <SubmitButton
           task={task}
-          disabled={selectedMembers.length==0}
+          disabled={selectedMembers.length == 0}
           handleCompleteTask={handleCompleteTask}
           loading={loading}
         />
@@ -365,7 +389,7 @@ function TeamMember({member, selectedMembers, onPress = () => {}}) {
   );
 }
 
-function SubmitButton({task, disabled=false, handleCompleteTask, loading}) {
+function SubmitButton({task, disabled = false, handleCompleteTask, loading}) {
   let text = 'Complete';
   if (task.status == 'pending') {
     text = 'Waiting for coach approval';

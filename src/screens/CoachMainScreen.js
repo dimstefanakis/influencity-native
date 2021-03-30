@@ -124,6 +124,28 @@ function Projects({coach}) {
     dispatch(getProjects());
   }, [dispatch]);
 
+  function isDisplayedCoach() {
+    if (user.coach) {
+      return coach.id == user.coach.id;
+    }
+  }
+
+  function handleProjectPress(project) {
+    if (isDisplayedCoach()) {
+      navigation.navigate('ProjectCoachScreenDashboardScreen', {
+        project: project,
+      });
+    } else {
+      navigation.navigate('ProjectDashboardScreen', {project: project});
+    }
+  }
+
+  function viewAllProjects(project) {
+    navigation.navigate('ProjectListScreen', {
+      projects: [project],
+      viewAs: isDisplayedCoach() ? 'coach' : 'sub',
+    });
+  }
   return (
     <View style={{width: 'auto', alignSelf: 'flex-start'}}>
       <Text
@@ -135,20 +157,16 @@ function Projects({coach}) {
         {coach.projects.length} projects
       </Text>
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        {coach.projects.map((project) => {
+        {coach.projects.map((project, i) => {
           return (
-            <Chip
-              mode="outlined"
-              onPress={() =>
-                navigation.navigate('ProjectListScreen', {
-                  projects: [project],
-                  viewAs:
-                    coach.id == user.coach && user.coach?.id ? 'coach' : 'sub',
-                })
-              }
-              style={{alignSelf: 'flex-start', margin: 2}}>
-              {project.name}
-            </Chip>
+            <React.Fragment key={i}>
+              <Chip
+                mode="outlined"
+                onPress={() => handleProjectPress(project)}
+                style={{alignSelf: 'flex-start', margin: 2}}>
+                {project.name}
+              </Chip>
+            </React.Fragment>
           );
         })}
       </View>

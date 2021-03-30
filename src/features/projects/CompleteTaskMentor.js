@@ -1,12 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {View, ScrollView, StyleSheet, Image} from 'react-native';
 import {Text, TextInput, Chip, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
 import {BigHeader, SmallHeader} from '../../flat/Headers/Headers';
+import MediaGalleryFullScreen from '../mediaGallery/MediaGalleryFullScreen';
+import MediaGallery from '../mediaGallery/MediaGallery';
 
 function CompleteTaskMentor({route}) {
   const {project, task} = route.params;
+  const selectedPostItem = useRef(0);
+  const [modalVisible, setModalVisible] = useState(false);
   // get the latest report
   // reports are ordered by creation date so we just get the last report of the array
   const report =
@@ -14,6 +18,10 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
+  function handleMediaPress(image, itemIndex) {
+    selectedPostItem.current = itemIndex;
+    setModalVisible(true);
+  }
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{...styles.spacing}}>
@@ -22,10 +30,7 @@ function CompleteTaskMentor({route}) {
           {report.members.map((member) => {
             return (
               <View style={{margin: 2}}>
-                <Chip
-                  avatar={
-                    <Image source={{uri: member.avatar}} />
-                  }>
+                <Chip avatar={<Image source={{uri: member.avatar}} />}>
                   {member.name}
                 </Chip>
               </View>
@@ -36,6 +41,21 @@ function CompleteTaskMentor({route}) {
           <SmallHeader title="Team feedback" />
           <Text>{report.message}</Text>
         </View>
+        <View>
+          <SmallHeader title="Attached media" />
+          <MediaGallery
+            images={report.images}
+            videos={report.videos}
+            onPress={handleMediaPress}
+          />
+        </View>
+        <MediaGalleryFullScreen
+          images={report.images}
+          videos={report.videos}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          firstItem={selectedPostItem.current}
+        />
       </View>
     </ScrollView>
   );
