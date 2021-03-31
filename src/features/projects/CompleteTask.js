@@ -169,20 +169,25 @@ function CompleteTask({route}) {
           message={message}
           setSelectedMessage={setSelectedMessage}
         />
-        <View style={{marginTop: 10}}>
-          <MediaGallery
-            images={report.images}
-            videos={report.videos}
-            onPress={handleMediaPress}
-          />
-        </View>
-        <MediaGalleryFullScreen
-          images={report.images}
-          videos={report.videos}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          firstItem={selectedPostItem.current}
-        />
+        {report ? (
+          <>
+            <View style={{marginTop: 10}}>
+              <MediaGallery
+                images={report?.images}
+                videos={report?.videos}
+                onPress={handleMediaPress}
+              />
+            </View>
+            <MediaGalleryFullScreen
+              images={report?.images}
+              videos={report?.videos}
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+              firstItem={selectedPostItem.current}
+            />
+          </>
+        ) : null}
+
         <AddMedia
           images={images}
           setImages={setImages}

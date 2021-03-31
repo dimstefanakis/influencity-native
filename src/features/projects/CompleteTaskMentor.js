@@ -44,14 +44,14 @@ function CompleteTaskMentor({route}) {
         <View>
           <SmallHeader title="Attached media" />
           <MediaGallery
-            images={report.images}
-            videos={report.videos}
+            images={report?.images}
+            videos={report?.videos}
             onPress={handleMediaPress}
           />
         </View>
         <MediaGalleryFullScreen
-          images={report.images}
-          videos={report.videos}
+          images={report?.images}
+          videos={report?.videos}
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           firstItem={selectedPostItem.current}

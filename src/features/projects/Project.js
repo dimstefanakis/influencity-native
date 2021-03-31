@@ -85,7 +85,7 @@ function Project({
         {viewAs == 'coach' ? (
           <>
             <TasksCompleted project={project} />
-            <ReviewedTasksProgressBar />
+            <ReviewedTasksProgressBar project={project} />
             <TaskButtonsWrapper project={project} />
           </>
         ) : viewAs == 'preview' ? null : (
@@ -154,12 +154,13 @@ function ProgressBar({project}) {
   );
 }
 
-function TasksCompleted() {
+function TasksCompleted({project}) {
   const theme = useTheme();
   return (
     <View style={{marginTop: 20}}>
       <Text style={{...theme.fonts.medium}}>
-        Teams have completed 80/100 tasks{' '}
+        Teams have completed {project.team_data.number_of_tasks_completed}/
+        {project.team_data.team_count * project.milestones.length} tasks{' '}
       </Text>
     </View>
   );
@@ -238,7 +239,7 @@ function Team({project}) {
   );
 }
 
-function ReviewedTasksProgressBar() {
+function ReviewedTasksProgressBar({project}) {
   return (
     <View
       style={{
@@ -266,11 +267,20 @@ function ReviewedTasksProgressBar() {
             top: 0,
             height: '100%',
             backgroundColor: '#03a9f4',
-            width: '10%',
+            width: `${
+              (project.team_data.number_of_tasks_reviewed /
+                project.milestones.length) *
+              project.team_data.number_of_tasks_completed *
+              100
+            }%`,
           }}
         />
       </View>
-      <Text>10/80</Text>
+      <Text>
+        {project.team_data.number_of_tasks_reviewed}/
+        {project.milestones.length *
+          project.team_data.number_of_tasks_completed}
+      </Text>
     </View>
   );
 }
@@ -293,8 +303,11 @@ function TaskButtonsWrapper({project}) {
         justifyContent: 'space-around',
         marginTop: 20,
       }}>
-      <TaskButton title={10} subHeading="tasks" />
-      <TaskButton title={10} subHeading={`Teams of ${project.team_size}`} />
+      <TaskButton title={project.milestones.length} subHeading="tasks" />
+      <TaskButton
+        title={project.team_data.team_count}
+        subHeading={`Teams of ${project.team_size}`}
+      />
     </View>
   );
 }
