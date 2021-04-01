@@ -23,7 +23,7 @@ export function IconWrapper({children, onPress}) {
   );
 }
 
-export function LikeButton({text, url, hasReacted}) {
+export function LikeButton({text, url, setReactCount = () => {}, hasReacted}) {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [reacted, setReacted] = useState(hasReacted);
@@ -46,6 +46,7 @@ export function LikeButton({text, url, hasReacted}) {
     try {
       setLoading(true);
       let response = await axios(config);
+      setReactCount(response.data.react_count);
       setLoading(false);
     } catch (e) {
       setReacted(!reacted);

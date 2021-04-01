@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,7 +14,8 @@ function CommentToolbar({
   squeezeReplies,
 }) {
   const navigation = useNavigation();
-  const url = `${Config.API_URL}/v1/posts/${comment.id}/change_react/`;
+  const [reactCount, setReactCount] = useState(comment.reacts);
+  const url = `${Config.API_URL}/v1/comment/${comment.id}/change_react/`;
 
   function handleReplyClick() {
     //navigation.navigate('PostEditor', {isComment: true, currentPost: post});
@@ -37,7 +38,9 @@ function CommentToolbar({
       }}>
       <LikeButton
         url={url}
-        text={comment.reacts != 0 ? comment.reacts : null}
+        setReactCount={setReactCount}
+        hasReacted={comment.reacted}
+        text={reactCount != 0 ? reactCount : null}
       />
       <IconWrapper onPress={handleReplyClick}>
         <Icon name="reply-outline" size={25} color="#212121" />

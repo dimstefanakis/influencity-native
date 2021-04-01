@@ -10,6 +10,7 @@ import axios from 'axios';
 
 function PostToolbar({post}) {
   const navigation = useNavigation();
+  const [reactCount, setReactCount] = useState(post.reacts);
 
   function handleCommentClick() {
     //navigation.navigate('PostEditor', {isComment: true, currentPost: post});
@@ -34,7 +35,11 @@ function PostToolbar({post}) {
         marginLeft: 10,
         marginRight: 10,
       }}>
-      <LikeButton post={post} text={post.reacts != 0 ? post.reacts : null} />
+      <LikeButton
+        post={post}
+        setReactCount={setReactCount}
+        text={reactCount != 0 ? reactCount : null}
+      />
       <IconWrapper onPress={handleCommentClick}>
         <Icon name="comment-text-outline" size={25} color="#212121" />
       </IconWrapper>
@@ -65,7 +70,7 @@ function IconWrapper({children, onPress, style = {}}) {
   );
 }
 
-function LikeButton({post, text}) {
+function LikeButton({post, setReactCount = () => {}, text}) {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
   const [reacted, setReacted] = useState(post.reacted);
@@ -89,6 +94,7 @@ function LikeButton({post, text}) {
     try {
       setLoading(true);
       let response = await axios(config);
+      setReactCount(response.data.react_count);
       setLoading(false);
     } catch (e) {
       setReacted(!reacted);
