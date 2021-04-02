@@ -9,6 +9,7 @@ import SubscriberActionsList from '../features/homeActionsList/SubscriberActions
 import CoachActionsList from '../features/homeActionsList/CoachActionsList';
 import PostList from '../features/posts/PostList';
 import EmptyHome from '../features/emptyHome/EmptyHome';
+import FeedSkeleton from '../features/posts/FeedSkeleton';
 
 let url =
   'https://d3u9nsvugag1ev.cloudfront.net/media/images/group_images/profile/no.jpg';
@@ -80,6 +81,8 @@ function FeedHeaderComponent() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
+  const {feedLoading, newPosts} = useSelector((state) => state.posts);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View>
@@ -91,7 +94,9 @@ function FeedHeaderComponent() {
         </Text>
         {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
-      {myCoaches.length == 0 ? (
+      {feedLoading ? (
+        <FeedSkeleton />
+      ) : newPosts.length == 0 ? (
         <EmptyHome />
       ) : (
         <>

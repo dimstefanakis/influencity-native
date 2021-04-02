@@ -7921,7 +7921,7 @@ react-native-shared-element@^0.7.0:
   resolved "https://registry.yarnpkg.com/react-native-shared-element/-/react-native-shared-element-0.7.0.tgz#c5e02eb372f6e38e48eb1030fd59be8f3d8c7a1f"
   integrity sha512-TJTGwQceABYete+vH3ahNSgzVzXz7X2SPv3thT91gdcFCrm7ht7IKXBXJiYjOA+4TfdqnGEAWkspCy80oEnOgw==
 
-react-native-skeleton-placeholder@^3.0.2:
+react-native-skeleton-placeholder@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-native-skeleton-placeholder/-/react-native-skeleton-placeholder-3.0.4.tgz#13d25e8742a6261e772f23afaa18b864225da15b"
   integrity sha512-NCIA6+whQF+jFdhLT2YdIkhNRsu4mGMHTRQP+kwcq5LVvB/UCDqUfrXlPjkFf9cvdx+Q+ca4JqlZvAp0Yv0sug==

@@ -37,6 +37,7 @@ export const postsSlice = createSlice({
     newPosts: [],
     selectedForAttachment: [],
     loading: false,
+    feedLoading: false,
   },
   reducers: {
     addAttachedPost(state, action) {
@@ -63,9 +64,14 @@ export const postsSlice = createSlice({
     },
     [getNewPosts.fulfilled]: (state, action) => {
       state.newPosts = action.payload;
+      state.feedLoading = false;
     },
-    [getNewPosts.pending]: (state, action) => {},
-    [getNewPosts.rejected]: (state, action) => {},
+    [getNewPosts.pending]: (state, action) => {
+      state.feedLoading = true;
+    },
+    [getNewPosts.rejected]: (state, action) => {
+      state.feedLoading = false;
+    },
   },
 });
 

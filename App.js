@@ -448,7 +448,6 @@ function BottomStackNavigation() {
   );
   const {unreadCount} = useSelector((state) => state.notifications);
 
-  console.log("unread", unreadCount)
   return (
     <BottomStack.Navigator
       //swipeEnabled={false}
