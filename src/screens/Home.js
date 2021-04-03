@@ -96,7 +96,7 @@ function FeedHeaderComponent() {
       </View>
       {feedLoading ? (
         <FeedSkeleton />
-      ) : newPosts.length == 0 ? (
+      ) : myCoaches.length == 0 ? (
         <EmptyHome />
       ) : (
         <>

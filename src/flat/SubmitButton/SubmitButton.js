@@ -7,6 +7,8 @@ function SubmitButton({
   disabled = false,
   icon = null,
   circular = false,
+  style = {},
+  contentStyle = {},
   mode = 'info',
   onPress = () => {},
   children,
@@ -15,12 +17,12 @@ function SubmitButton({
     <Button
       icon={icon}
       mode="contained"
-      style={styles.submitButton}
+      style={{...styles.submitButton, ...style}}
       loading={loading}
       color={mode == 'danger' ? '#ffd29b' : null}
       onPress={onPress}
       disabled={disabled}
-      contentStyle={{width: circular ? 40 : 230, height: 40}}>
+      contentStyle={{width: circular ? 40 : 230, height: 40, ...contentStyle}}>
       {children}
     </Button>
   );
@@ -32,7 +34,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 230,
     height: 40,
     marginTop: 30,
     borderRadius: 50,
@@ -49,6 +50,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  fixedWidth: {
+    width: 230,
+  }
 });
 
 export default SubmitButton;
