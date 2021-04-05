@@ -19,10 +19,12 @@ function TeamMentorDashboard({route}) {
   const {team, project} = route.params;
 
   function handleTaskPress(task) {
-    navigation.navigate('CompleteTaskMentorScreen', {
-      project: project,
-      task: task,
-    });
+    if (task.reports.length > 0) {
+      navigation.navigate('CompleteTaskMentorScreen', {
+        project: project,
+        task: task,
+      });
+    }
   }
 
   return (
@@ -42,7 +44,7 @@ function TeamMentorDashboard({route}) {
           {team.milestones.map((milestone) => {
             return (
               <Task
-                done={milestone.completed}
+                done={milestone.status == 'accepted'}
                 status={milestone.status}
                 milestone={milestone}
                 onPress={(report) => handleTaskPress(milestone)}>

@@ -4,14 +4,20 @@ import {View, ScrollView, StyleSheet, Image} from 'react-native';
 import {Text, TextInput, Chip, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
 import {BigHeader, SmallHeader} from '../../flat/Headers/Headers';
+import {useSelector, useDispatch} from 'react-redux';
 import MediaGalleryFullScreen from '../mediaGallery/MediaGalleryFullScreen';
 import MediaGallery from '../mediaGallery/MediaGallery';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import {getMyProjects, getMyCreatedProjects} from './projectsSlice';
+import axios from 'axios';
 
 function CompleteTaskMentor({route}) {
+  const dispatch = useDispatch();
   const {project, task} = route.params;
   const selectedPostItem = useRef(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [redoLoading, setRedoLoading] = useState(false);
   const [text, setText] = useState('');
   // get the latest report
   // reports are ordered by creation date so we just get the last report of the array
@@ -20,10 +26,44 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
+  console.log(report);
   function handleMediaPress(image, itemIndex) {
     selectedPostItem.current = itemIndex;
     setModalVisible(true);
   }
+
+  async function handleReview(type = 'accept') {
+    const url = `${Config.API_URL}/v1/milestone_report/${report.surrogate}/update/`;
+
+    let formData = new FormData();
+    formData.append('coach_feedback', text);
+    formData.append('status', type == 'accept' ? 'AC' : 'RJ');
+
+    try {
+      if (type == 'accept') {
+        setAcceptLoading(true);
+      } else {
+        setRedoLoading(true);
+      }
+
+      const response = await axios.patch(url, formData);
+      dispatch(getMyCreatedProjects());
+      dispatch(getMyProjects());
+      if (type == 'accept') {
+        setAcceptLoading(false);
+      } else {
+        setRedoLoading(false);
+      }
+    } catch (e) {
+      console.error(e);
+      if (type == 'accept') {
+        setAcceptLoading(false);
+      } else {
+        setRedoLoading(false);
+      }
+    }
+  }
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={{...styles.spacing}}>
@@ -80,12 +120,16 @@ function CompleteTaskMentor({route}) {
           />
           <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
             <ActionButton
+              onPress={() => handleReview('accept')}
+              loading={acceptLoading}
               style={{width: 'auto'}}
               contentStyle={{width: 'auto'}}
               icon="check">
               Accept
             </ActionButton>
             <ActionButton
+              onPress={() => handleReview('reject')}
+              loading={redoLoading}
               style={{width: 'auto'}}
               contentStyle={{width: 'auto'}}
               icon="refresh"

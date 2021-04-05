@@ -131,7 +131,7 @@ function ProjectAsSub({project}) {
 function ProgressBar({project}) {
   const [completedTasks] = useState(
     project.milestones.reduce(
-      (total, x) => (x.completed ? total + 1 : total),
+      (total, x) => (x.status == 'accepted' ? total + 1 : total),
       0,
     ),
   );
@@ -175,7 +175,9 @@ function Tasks({project}) {
       <View>
         {project.milestones.map((milestone) => {
           return (
-            <Task done={milestone.completed}>{milestone.description}</Task>
+            <Task done={milestone.status == 'accepted'}>
+              {milestone.description}
+            </Task>
           );
         })}
       </View>

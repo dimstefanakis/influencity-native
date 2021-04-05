@@ -22,10 +22,7 @@ function ProjectCoachScreenDashboard({route}) {
   const navigation = useNavigation();
   const [teams, setTeams] = useState([]);
 
-  console.log(teams);
-
   async function getTeams() {
-    console.log(project);
     try {
       let response = await axios.get(
         `${Config.API_URL}/v1/projects/${project.id}/teams/`,
@@ -82,7 +79,7 @@ function ProjectCoachScreenDashboard({route}) {
       </View>
       {teams.map((team) => {
         let completedTasks = team.milestones.reduce(
-          (total, x) => (x.completed ? total + 1 : total),
+          (total, x) => (x.status == 'accepted' ? total + 1 : total),
           0,
         );
         return (
@@ -104,7 +101,7 @@ function ProjectCoachScreenDashboard({route}) {
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginRight: 10,
+                  marginRight: 30,
                 }}>
                 <Text style={{...theme.fonts.medium, fontSize: 20}}>
                   {completedTasks} / {project.milestones.length}
@@ -147,7 +144,7 @@ const styles = {
     borderRadius: 33,
     height: 66,
     width: 66,
-    marginLeft: -15,
+    marginLeft: -5,
     borderStyle: 'solid',
     borderWidth: 3,
     borderColor: 'white',

@@ -197,7 +197,7 @@ function Progress({project}) {
   const theme = useTheme();
   const [completedTasks] = useState(
     project.milestones.reduce(
-      (total, x) => (x.completed ? total + 1 : total),
+      (total, x) => (x.status == 'accepted' ? total + 1 : total),
       0,
     ),
   );
@@ -261,7 +261,7 @@ function Tasks({project}) {
         {project.milestones.map((milestone) => {
           return (
             <Task
-              done={milestone.completed}
+              done={milestone.status == 'accepted'}
               status={milestone.status}
               milestone={milestone}
               onPress={(report) => handleTaskCompletion(milestone, report)}>
