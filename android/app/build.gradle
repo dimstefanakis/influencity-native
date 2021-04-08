@@ -135,7 +135,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         vectorDrawables.useSupportLibrary = true
-        multiDexEnabled = true
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
     }
@@ -194,7 +194,7 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation project(':rn-fetch-blob') 
     implementation project(':react-native-push-notification')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"

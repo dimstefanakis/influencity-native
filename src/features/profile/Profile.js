@@ -9,7 +9,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {Button, Avatar, Text, useTheme} from 'react-native-paper';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/Feather';
