@@ -56,7 +56,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.0.5",
     "rn-fetch-blob": "^0.12.0",
-    "tipsi-stripe": "^9.0.0"
+    "tipsi-stripe": "^8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
