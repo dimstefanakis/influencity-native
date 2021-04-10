@@ -14,7 +14,8 @@ function handleNotificationsWsEvents() {
   const {token} = useSelector((state) => state.authentication);
 
   function connect() {
-    const url = `ws://${Config.HOST}/ws/notifications/`;
+    const protocol = Config.MODE == 'development' ? 'ws://' : 'wss://';
+    const url = `${protocol}${Config.HOST}/ws/notifications/`;
     let ws = new WebSocket(url, ['authorization', `Bearer:${token}`]);
     wsContext.notificationData.push({ws: ws, name: 'notifications'});
     ws.onopen = function () {
