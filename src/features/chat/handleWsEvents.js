@@ -77,11 +77,12 @@ function handleWsEvents() {
   useEffect(() => {
     // connect to server websocket to listen to messages
     // also check if we have already connected
+    const protocol = Config.MODE == 'development' ? 'ws://' : 'wss://';
     for (let i = 0; i < myChatRooms.length; i++) {
       if (!wsContext.data.find((w) => w.room.id == myChatRooms[i].id)) {
         connect(
           myChatRooms[i],
-          'ws://' + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/',
+          protocol + Config.HOST + '/ws/chat/' + myChatRooms[i].id + '/',
         );
       }
     }

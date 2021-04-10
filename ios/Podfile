@@ -6,7 +6,7 @@ platform :ios, '10.0'
 workspace 'influencity'
 
 target 'influencity' do
-  pod 'Stripe', '~> 19.4.0'
+  pod 'Stripe', '~> 19.0.1'
   # Install additional dependencies
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
