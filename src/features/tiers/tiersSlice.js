@@ -1,8 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import Config from 'react-native-config';
 import axios from 'axios';
-import {get} from 'react-native/Libraries/Utilities/PixelRatio';
-import {act} from 'react-test-renderer';
 
 export const getMyTiers = createAsyncThunk('tiers/getMyTiers', async () => {
   const url = Config.API_URL + '/v1/my_tiers/';

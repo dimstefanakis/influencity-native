@@ -16,6 +16,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {TextInput, Button, Text, useTheme} from 'react-native-paper';
 import {login, getUserData} from '../authenticationSlices';
+import {getMyTiers} from '../../tiers/tiersSlice';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
 import SubmitButton from '../../../flat/SubmitButton/SubmitButton';
@@ -46,6 +47,7 @@ function Login() {
           newErrors = [...newErrors, 'Your email or password is incorrect.'];
         } else {
           await dispatch(getUserData());
+          await dispatch(getMyTiers());
           navigation.navigate('BottomStackNavigation');
         }
         console.log('Rer', result);

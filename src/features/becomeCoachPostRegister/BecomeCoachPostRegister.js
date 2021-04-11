@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text, Button, useTheme} from 'react-native-paper';
+import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import BecomeCoachForm from '../becomeCoachForm/BecomeCoachForm';
@@ -24,6 +25,7 @@ function BecomeCoachPostRegister() {
         `${Config.API_URL}/v1/coach_application/`,
         formData,
       );
+
       setLoading(false);
       navigation.navigate('CoachSubmissionSentScreen');
       console.log(response.data);
