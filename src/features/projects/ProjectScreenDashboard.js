@@ -144,9 +144,14 @@ function ProjectAsNonMember({project}) {
   }
 
   function isDisabled() {
+    // if user is not subscribed at all return true
+    if (!foundCoach) {
+      return true;
+    }
     // users are not able to join projects if they are not subscribed or
     // they have already subscribed with the free subscription or
     // they have already subscribed with the tier 1 subscription and have already joined 1 project
+
     return (
       foundCoach?.tier_full.tier == 'FR' ||
       (foundCoach?.tier_full.tier == 'T1' &&

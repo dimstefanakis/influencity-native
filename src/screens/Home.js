@@ -81,7 +81,7 @@ function FeedHeaderComponent() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
-  const {feedLoading, newPosts} = useSelector((state) => state.posts);
+  const {feedLoading, hasLoadedInitial, posts} = useSelector((state) => state.posts);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -94,9 +94,9 @@ function FeedHeaderComponent() {
         </Text>
         {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
-      {feedLoading ? (
+      {!hasLoadedInitial ? (
         <FeedSkeleton />
-      ) : myCoaches.length == 0 ? (
+      ) : myCoaches.length == 0 && posts.length == 0 ? (
         <EmptyHome />
       ) : (
         <>

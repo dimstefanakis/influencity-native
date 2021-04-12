@@ -5,15 +5,31 @@ import axios from 'axios';
 
 export const getPosts = createAsyncThunk(
   'posts/getPosts',
-  async (arg, thunkApi) => {
-    const {user} = thunkApi.getState().authentication;
-    const url = Config.API_URL + '/v1/posts/';
+  async (config, thunkApi) => {
+    const {endpoint, type} = config;
+    const {next, hasMore, posts} = thunkApi.getState().posts;
+    let _next = next;
+    let _posts = posts;
+    let _hasMore = hasMore;
     try {
+      let url = next ? next : endpoint;
       let response = await axios.get(url);
-      return response.data;
-    } catch (e) {
-      console.error(e);
-    }
+      _next = response.data.next;
+      if (!response.data.next) {
+        hasMore.current = false;
+      }
+      if (!response.data.previous) {
+        _posts = response.data.results;
+      } else {
+        _posts = [...posts, ...response.data.results];
+      }
+      return {
+        next: _next,
+        posts: _posts,
+        hasMore: _hasMore,
+        type: type,
+      };
+    } catch (e) {}
   },
 );
 
@@ -34,10 +50,13 @@ export const postsSlice = createSlice({
   name: 'posts',
   initialState: {
     posts: [],
+    next: null,
+    hasMore: true,
     newPosts: [],
     selectedForAttachment: [],
     loading: false,
-    feedLoading: false,
+    hasLoadedInitial: false,
+    feedLoading: true,
   },
   reducers: {
     addAttachedPost(state, action) {
@@ -53,14 +72,25 @@ export const postsSlice = createSlice({
   },
   extraReducers: {
     [getPosts.fulfilled]: (state, action) => {
-      state.posts = action.payload;
+      const {posts, next, hasMore} = action.payload;
+      state.posts = posts;
+      state.next = next;
+      state.hasMore = hasMore;
       state.loading = false;
+
+      if (!state.hasLoadedInitial) {
+        state.hasLoadedInitial = true;
+      }
     },
     [getPosts.pending]: (state, action) => {
       state.loading = true;
     },
     [getPosts.rejected]: (state, action) => {
       state.loading = false;
+
+      if (!state.hasLoadedInitial) {
+        state.hasLoadedInitial = true;
+      }
     },
     [getNewPosts.fulfilled]: (state, action) => {
       state.newPosts = action.payload;

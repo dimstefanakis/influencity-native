@@ -4,7 +4,7 @@ import {View, FlatList, Platform} from 'react-native';
 import {Divider} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import Config from 'react-native-config';
-//import {getPosts} from '../posts/postsSlice';
+import {getPosts} from '../posts/postsSlice';
 import PostItem from './PostItem';
 import useGetPosts from './hooks/useGetPosts';
 import axios from 'axios';
@@ -20,10 +20,21 @@ function PostList({ListHeaderComponent = null, showProfile = true, coach}) {
 }
 
 function HomePostList({ListHeaderComponent}) {
-  const [posts, next, hasMore, getPosts] = useGetPosts(
-    `${Config.API_URL}/v1/new_posts/`,
-  );
+  const dispatch = useDispatch();
+  // const [posts, next, hasMore, getPosts] = useGetPosts(
+  //   `${Config.API_URL}/v1/new_posts/`,
+  // );
+  const {posts, next, hasMore} = useSelector((state) => state.posts);
 
+  function loadMore(type = 'next') {
+    dispatch(
+      getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`, type: type}),
+    );
+  }
+
+  useEffect(() => {
+    loadMore('initial');
+  }, []);
   const renderItem = ({item}) => <PostItem post={item} />;
 
   return (
@@ -32,7 +43,7 @@ function HomePostList({ListHeaderComponent}) {
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={ListHeaderComponent}
-      onEndReached={getPosts}
+      onEndReached={loadMore}
     />
   );
 }

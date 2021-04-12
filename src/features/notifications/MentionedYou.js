@@ -3,19 +3,28 @@ import React from 'react';
 import {View, TouchableNativeFeedback} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Avatar, Text, useTheme} from 'react-native-paper';
+import {useSelector} from 'react-redux';
 import timeSince from '../../utils/timeSince';
 
 function MentionedYou({notification}) {
   const theme = useTheme();
   const navigation = useNavigation();
+  const {myChatRooms} = useSelector((state) => state.chat);
 
   let timeSinceText = timeSince(new Date(notification.timestamp));
 
   function handlePress() {
-    navigation.navigate('TeamChatScreen', {
-      room: notification.action_object,
-    })
+    const room = myChatRooms.find(
+      (room) => room.id == notification.action_object.id,
+    );
 
+    // room might not exist if the project is old or deleted,
+    // that would lead to an error in the TeamChatScreen
+    if (room) {
+      navigation.navigate('TeamChatScreen', {
+        room: notification.action_object,
+      });
+    }
   }
   return (
     <TouchableNativeFeedback onPress={handlePress}>

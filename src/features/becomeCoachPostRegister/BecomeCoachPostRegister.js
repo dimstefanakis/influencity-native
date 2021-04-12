@@ -47,9 +47,8 @@ function BecomeCoachPostRegister() {
         style={{
           height: '40%',
           justifyContent: 'center',
-          alignItems: 'center',
-          marginLeft: 30,
-          marginRight: 10,
+          marginLeft: 40,
+          marginRight: 40,
         }}>
         <BigHeader title="We would love to learn more about you" />
         <Text
