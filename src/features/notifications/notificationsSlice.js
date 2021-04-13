@@ -62,6 +62,7 @@ export const notificationsSlice = createSlice({
   initialState: {
     notifications: [],
     unreadCount: 0,
+    hasLoadedInitial: false,
   },
   reducers: {
     incrementUnread(state, action) {
@@ -71,6 +72,9 @@ export const notificationsSlice = createSlice({
   extraReducers: {
     [getMyNotifications.fulfilled]: (state, action) => {
       state.notifications = action.payload;
+      if (!state.hasLoadedInitial) {
+        state.hasLoadedInitial = true;
+      }
     },
     [getMyNotifications.rejected]: (state, action) => {},
     [getMyNotifications.pending]: (state, action) => {},

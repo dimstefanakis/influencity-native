@@ -5,15 +5,19 @@ import {View, TouchableNativeFeedback} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {SharedElement} from 'react-navigation-shared-element';
-import Config from 'react-native-config';
+import {useSelector, useDispatch} from 'react-redux';
+import SearchSkeleton from './SearchSkeleton';
 import ExpertiseFieldButton from './ExpertiseFieldButton';
 import CoachResult from './CoachResult';
+import {getResults} from './searchSlice';
 import axios from 'axios';
 
 function SearchFocus({route, navigation}) {
+  const dispatch = useDispatch();
   const {selectedExpertise, setSelectedExpertise, focus} = route.params;
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState([]);
+  //const [results, setResults] = useState([]);
+  const {results, loading} = useSelector((state) => state.search);
   const onChangeSearch = (query) => setSearchQuery(query);
 
   function handleDismissPress() {
@@ -21,19 +25,20 @@ function SearchFocus({route, navigation}) {
     navigation.goBack();
   }
 
-  async function getResults() {
-    try {
-      let url = `${Config.API_URL}/v1/coaches?expertise=${selectedExpertise.name}&name=${searchQuery}`;
-      let response = await axios.get(url);
-      setResults(response.data);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   useEffect(() => {
     if (selectedExpertise) {
-      getResults();
+      dispatch(
+        getResults({
+          expertise: selectedExpertise.name,
+          searchQuery: searchQuery,
+        }),
+      );
+    } else {
+      dispatch(
+        getResults({
+          searchQuery: searchQuery,
+        }),
+      );
     }
   }, [selectedExpertise, searchQuery]);
 
@@ -64,7 +69,7 @@ function SearchFocus({route, navigation}) {
               style={{
                 flexDirection: 'row',
                 borderRadius: 50,
-                height: 30,
+                height: 40,
                 width: 'auto',
                 alignSelf: 'center',
                 justifyContent: 'center',
@@ -80,15 +85,15 @@ function SearchFocus({route, navigation}) {
           </SharedElement>
         ) : null}
       </View>
-      <Results results={results} />
+      <Results results={results} loading={loading} />
     </View>
   );
 }
 
-function Results({results}) {
+function Results({results, loading}) {
   const theme = useTheme();
   return (
-    <View style={{margin:20}}>
+    <View style={{margin: 20}}>
       <Text
         style={{
           fontSize: 20,
@@ -98,9 +103,13 @@ function Results({results}) {
         Search results
       </Text>
       <View style={{marginTop: 20}}>
-        {results.map((coach) => {
-          return <CoachResult coach={coach} />;
-        })}
+        {loading ? (
+          <SearchSkeleton />
+        ) : (
+          results.map((coach) => {
+            return <CoachResult coach={coach} />;
+          })
+        )}
       </View>
     </View>
   );

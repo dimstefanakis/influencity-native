@@ -23,7 +23,7 @@ function ExpertiseFieldButton({
   contentContainerStyle = {},
   iconSize = 40,
   dismissable = false,
-  handleDismissPress = ()=>{},
+  handleDismissPress = () => {},
   showIcon = true,
 }) {
   const theme = useTheme();

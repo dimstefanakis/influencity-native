@@ -140,7 +140,10 @@ function MyBalance() {
           labelStyle={{color: 'black'}}
           loading={stripeLoginLoading}
           onPress={() =>
-            navigation.navigate('StripeWebViewScreen', {url: stripeLoginLink})
+            navigation.navigate('StripeWebViewScreen', {
+              url: stripeLoginLink,
+              type: 'checkout',
+            })
           }>
           Get paid
         </Button>
@@ -242,6 +245,7 @@ function SetupStripeAccount() {
   const theme = useTheme();
   const navigation = useNavigation();
   const {user} = useSelector((state) => state.authentication);
+  const {settingUpConnectAccount} = useSelector((state) => state.stripe);
   const [loading, setLoading] = useState(false);
 
   async function handleCreateStripeAccount() {
@@ -250,7 +254,10 @@ function SetupStripeAccount() {
       setLoading(true);
       let response = await axios.get(url);
       setLoading(false);
-      navigation.navigate('StripeWebViewScreen', {url: response.data.url});
+      navigation.navigate('StripeWebViewScreen', {
+        url: response.data.url,
+        type: 'setup',
+      });
     } catch (e) {
       setLoading(false);
       console.error(e);

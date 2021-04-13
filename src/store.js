@@ -8,6 +8,8 @@ import {teamsSlice} from './features/teams/teamsSlice';
 import {myCoachesSlice} from './features/myCoaches/myCoachesSlice';
 import {chatSlice} from './features/chat/chatSlice';
 import {notificationsSlice} from './features/notifications/notificationsSlice';
+import {searchSlice} from './features/search/searchSlice';
+import {stripeSlice} from './features/stripeElements/stripeSlice';
 
 export default configureStore({
   reducer: {
@@ -20,5 +22,7 @@ export default configureStore({
     myCoaches: myCoachesSlice.reducer,
     chat: chatSlice.reducer,
     notifications: notificationsSlice.reducer,
+    search: searchSlice.reducer,
+    stripe: stripeSlice.reducer,
   },
 });

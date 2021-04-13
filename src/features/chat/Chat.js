@@ -50,7 +50,6 @@ function Chat({route}) {
   const {myChatRooms} = useSelector((state) => state.chat);
   const {user, token} = useSelector((state) => state.authentication);
   const room = myChatRooms.find((room) => room.id == route.params.room.id);
-  console.log(room, route.params.room);
   const [userData, setUserData] = useState(room.members);
   const [userName, setUserName] = useState('');
   const msgInput = useRef();

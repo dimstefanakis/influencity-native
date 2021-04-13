@@ -13,12 +13,16 @@ import {
 import handleNotificationsWsEvents from './handleNotificationsWsEvents';
 import JustPosted from './JustPosted';
 import MentionedYou from './MentionedYou';
+import NotificationsSkeleton from './NotificationsSkeleton';
+import EmptyNotifications from './EmptyNotifications';
 
 function Notifications() {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {notifications} = useSelector((state) => state.notifications);
+  const {notifications, hasLoadedInitial} = useSelector(
+    (state) => state.notifications,
+  );
 
   useEffect(() => {
     dispatch(getMyNotifications());
@@ -37,11 +41,19 @@ function Notifications() {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
-      <ScrollView>
-        {notifications.map((notification) => {
-          return <NotificationRender notification={notification} />;
-        })}
-      </ScrollView>
+      {hasLoadedInitial ? (
+        notifications.length == 0 ? (
+          <EmptyNotifications />
+        ) : (
+          <ScrollView>
+            {notifications.map((notification) => {
+              return <NotificationRender notification={notification} />;
+            })}
+          </ScrollView>
+        )
+      ) : (
+        <NotificationsSkeleton />
+      )}
     </SafeAreaView>
   );
 }
