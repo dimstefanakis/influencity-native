@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {
   Text,
+  Avatar,
   Chip,
   TextInput,
   Subheading,
@@ -385,7 +386,13 @@ function TeamMember({member, selectedMembers, onPress = () => {}}) {
   return (
     <View style={{margin: 2}}>
       <Chip
-        avatar={<Image source={{uri: member.avatar}} />}
+        avatar={
+          member.avatar ? (
+            <Image source={{uri: member.avatar}} />
+          ) : (
+            <Avatar.Icon icon="face" />
+          )
+        }
         onPress={handlePress}
         selected={selected}>
         {member.name}

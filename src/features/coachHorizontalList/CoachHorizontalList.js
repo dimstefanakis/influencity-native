@@ -59,18 +59,22 @@ function CoachHorizontalList({withTiers = false}) {
                 marginTop: 10,
               }}>
               <SharedElement id={`coach.${c.name}.avatar`}>
-                <Avatar.Image
-                  source={{uri: c.avatar}}
-                  size={60}
-                  style={{
-                    borderRadius: 200,
-                    //borderColor: theme.colors.primary,
-                    backgroundColor: theme.colors.background,
-                    //borderWidth: 2,
-                    overflow: 'hidden',
-                    marginLeft: 0,
-                  }}
-                />
+                {c.avatar ? (
+                  <Avatar.Image
+                    source={{uri: c.avatar}}
+                    size={60}
+                    style={{
+                      borderRadius: 200,
+                      //borderColor: theme.colors.primary,
+                      backgroundColor: theme.colors.background,
+                      //borderWidth: 2,
+                      overflow: 'hidden',
+                      marginLeft: 0,
+                    }}
+                  />
+                ) : (
+                  <Avatar.Icon size={60} icon="face" />
+                )}
               </SharedElement>
               {withTiers ? (
                 <Text style={{...theme.fonts.medium}}>{c.tier}</Text>

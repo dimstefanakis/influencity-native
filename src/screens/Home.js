@@ -81,7 +81,9 @@ function FeedHeaderComponent() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
-  const {feedLoading, hasLoadedInitial, posts} = useSelector((state) => state.posts);
+  const {feedLoading, hasLoadedInitial, posts} = useSelector(
+    (state) => state.posts,
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>

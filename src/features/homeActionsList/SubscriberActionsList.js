@@ -31,19 +31,35 @@ function SubscriberActionsList() {
         horizontal
         showsHorizontalScrollIndicator={false}>
         <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
-          <Avatar.Image
-            size={60}
-            source={{uri: user.subscriber.avatar}}
-            style={{
-              borderRadius: 200,
-              //backgroundColor: 'white',
-              //borderWidth: 2,
-              overflow: 'hidden',
-              marginTop: 10,
-              marginBottom: 10,
-              marginRight: 10,
-            }}
-          />
+          {user.subscriber.avatar ? (
+            <Avatar.Image
+              size={60}
+              source={{uri: user.subscriber.avatar}}
+              style={{
+                borderRadius: 200,
+                //backgroundColor: 'white',
+                //borderWidth: 2,
+                overflow: 'hidden',
+                marginTop: 10,
+                marginBottom: 10,
+                marginRight: 10,
+              }}
+            />
+          ) : (
+            <Avatar.Icon
+              size={60}
+              icon="face"
+              style={{
+                borderRadius: 200,
+                //backgroundColor: 'white',
+                //borderWidth: 2,
+                overflow: 'hidden',
+                marginTop: 10,
+                marginBottom: 10,
+                marginRight: 10,
+              }}
+            />
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>

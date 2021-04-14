@@ -72,7 +72,14 @@ function CompleteTaskMentor({route}) {
           {report.members.map((member) => {
             return (
               <View style={{margin: 2}}>
-                <Chip avatar={<Image source={{uri: member.avatar}} />}>
+                <Chip
+                  avatar={
+                    member.avatar ? (
+                      <Image source={{uri: member.avatar}} />
+                    ) : (
+                      <Avatar.Icon icon="face" />
+                    )
+                  }>
                   {member.name}
                 </Chip>
               </View>

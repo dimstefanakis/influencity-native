@@ -89,10 +89,14 @@ function ProjectCoachScreenDashboard({route}) {
                 {team.members.map((member) => {
                   return (
                     <View style={avatarContainer}>
-                      <Image
-                        style={avatar}
-                        source={{uri: `${Config.MEDIA}${member.avatar}`}}
-                      />
+                      {member.avatar ? (
+                        <Image
+                          style={avatar}
+                          source={{uri: `${Config.MEDIA}${member.avatar}`}}
+                        />
+                      ) : (
+                        <Avatar.Icon style={avatar} icon="face" />
+                      )}
                     </View>
                   );
                 })}

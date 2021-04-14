@@ -162,7 +162,11 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         <TouchableOpacity
           style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={handleCoachPress}>
-          <Avatar.Image size={40} source={{uri: post.coach.avatar}} />
+          {post.coach.avatar ? (
+            <Avatar.Image size={40} source={{uri: post.coach.avatar}} />
+          ) : (
+            <Avatar.Icon size={40} icon="face" />
+          )}
           <Subheading style={{marginLeft: 10, fontWeight: 'bold'}}>
             {post.coach.name}
           </Subheading>

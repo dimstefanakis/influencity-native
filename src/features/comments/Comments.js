@@ -68,7 +68,12 @@ const Item = ({comment, post, setComments}) => {
           marginBottom: 10,
           flexDirection: 'row',
         }}>
-        <Avatar.Image source={{uri: poster.avatar}} size={50} />
+        {poster.avatar ? (
+          <Avatar.Image source={{uri: poster.avatar}} size={50} />
+        ) : (
+          <Avatar.Icon size={50} icon="face" />
+        )}
+
         <View style={{marginLeft: 10, marginRight: 10, flexShrink: 1}}>
           <Text style={{...theme.fonts.medium, fontSize: 18}}>
             {poster.name}

@@ -13,7 +13,11 @@ function CoachResult({coach}) {
       onPress={() => navigation.navigate('CoachMainScreen', {coach: coach})}>
       <View style={{paddingTop: 10, paddingBottom: 10, flexDirection: 'row'}}>
         <View style={{flexBasis: '20%'}}>
-          <Avatar.Image source={{uri: coach.avatar}} size={50} />
+          {coach.avatar ? (
+            <Avatar.Image source={{uri: coach.avatar}} size={50} />
+          ) : (
+            <Avatar.Icon size={50} icon="face" />
+          )}
         </View>
         <View style={{flexBasis: '80%'}}>
           <Title>{coach.name}</Title>

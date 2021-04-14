@@ -54,19 +54,35 @@ function CoachActionsList() {
           onPress={() =>
             navigation.navigate('CoachMainScreen', {coach: user.coach})
           }>
-          <Avatar.Image
-            size={60}
-            source={{uri: user.coach.avatar}}
-            style={{
-              borderRadius: 200,
-              //backgroundColor: 'white',
-              //borderWidth: 2,
-              overflow: 'hidden',
-              marginTop: 10,
-              marginBottom: 10,
-              marginRight: 10,
-            }}
-          />
+          {user.coach.avatar ? (
+            <Avatar.Image
+              size={60}
+              source={{uri: user.coach.avatar}}
+              style={{
+                borderRadius: 200,
+                //backgroundColor: 'white',
+                //borderWidth: 2,
+                overflow: 'hidden',
+                marginTop: 10,
+                marginBottom: 10,
+                marginRight: 10,
+              }}
+            />
+          ) : (
+            <Avatar.Icon
+              size={60}
+              icon="face"
+              style={{
+                borderRadius: 200,
+                //backgroundColor: 'white',
+                //borderWidth: 2,
+                overflow: 'hidden',
+                marginTop: 10,
+                marginBottom: 10,
+                marginRight: 10,
+              }}
+            />
+          )}
         </TouchableOpacity>
 
         <Button

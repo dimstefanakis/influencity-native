@@ -70,20 +70,21 @@ function ProjectScreenDashboard({route}) {
   const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('TeamChatScreen', {
-              room: myChatRooms.find(
-                (room) => room.project == project.id && room.type == 'TM',
-              ),
-              project: project,
-            })
-          }
-          style={{padding: Platform.OS == 'ios' ? 0 : 20, paddingRight: 20}}>
-          <Feather name="send" size={20} />
-        </TouchableOpacity>
-      ),
+      headerRight: () =>
+        project ? (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('TeamChatScreen', {
+                room: myChatRooms.find(
+                  (room) => room.project == project.id && room.type == 'TM',
+                ),
+                project: project,
+              })
+            }
+            style={{padding: Platform.OS == 'ios' ? 0 : 20, paddingRight: 20}}>
+            <Feather name="send" size={20} />
+          </TouchableOpacity>
+        ) : null,
     });
   }, [myChatRooms, navigation, project]);
 
@@ -158,6 +159,18 @@ function ProjectAsNonMember({project}) {
         project.coach_data.number_of_projects_joined == 1)
     );
   }
+
+  function getDisabledText() {
+    if (foundCoach?.tier_full.tier == 'FR') {
+      return 'Upgrade to Tier 1 or higher to join projects!';
+    } else if (
+      foundCoach?.tier_full.tier == 'T1' &&
+      project.coach_data.number_of_projects_joined == 1
+    ) {
+      return 'You can only join 1 project with Tier 1 subscription. Upgrade to Tier 2 to get access to all projects!';
+    }
+  }
+
   return (
     <ScrollView
       style={{height: '100%', backgroundColor: theme.colors.background}}>
@@ -194,7 +207,28 @@ function ProjectAsNonMember({project}) {
           Join this project
         </ActionButton>
       </View>
+      {isDisabled() ? (
+        <View
+          style={{
+            marginTop: 40,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{maxWidth: 300}}>
+            <InfoText text={getDisabledText()} />
+          </View>
+        </View>
+      ) : null}
     </ScrollView>
+  );
+}
+
+function InfoText({text}) {
+  return (
+    <Text style={{color: 'gray', fontSize: 14, fontStyle: 'italic'}}>
+      {text}
+    </Text>
   );
 }
 
@@ -456,7 +490,14 @@ function PreviewPrerequisite({prerequisite}) {
 function TeamMember({member}) {
   return (
     <View style={{margin: 2}}>
-      <Chip avatar={<Image source={{uri: member.avatar}} />}>
+      <Chip
+        avatar={
+          member.avatar ? (
+            <Image source={{uri: member.avatar}} />
+          ) : (
+            <Avatar.Icon icon="face" />
+          )
+        }>
         {member.name}
       </Chip>
     </View>

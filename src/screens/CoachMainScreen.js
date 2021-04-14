@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect} from 'react';
 import {Image, View, SafeAreaView} from 'react-native';
-import {Button, Chip, FAB, Portal, Text, useTheme} from 'react-native-paper';
+import {Button, Chip, FAB, Avatar, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
 import {useNavigation} from '@react-navigation/native';
@@ -65,15 +65,27 @@ function CoachTopHeader({coach}) {
             //margin: 10,
           }}>
           <SharedElement id={`coach.${coach.name}.avatar`}>
-            <Image
-              source={{uri: coach.avatar}}
-              style={{
-                backgroundColor: 'white',
-                height: 90,
-                width: 90,
-                borderRadius: 100,
-              }}
-            />
+            {coach.avatar ? (
+              <Image
+                source={{uri: coach.avatar}}
+                style={{
+                  backgroundColor: 'white',
+                  height: 90,
+                  width: 90,
+                  borderRadius: 100,
+                }}
+              />
+            ) : (
+              <Avatar.Icon
+                style={{
+                  backgroundColor: 'white',
+                  height: 90,
+                  width: 90,
+                  borderRadius: 100,
+                }}
+                icon="face"
+              />
+            )}
           </SharedElement>
         </View>
       </View>

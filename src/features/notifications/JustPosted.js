@@ -24,15 +24,28 @@ function JustPosted({notification}) {
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <Avatar.Image
-          size={60}
-          source={{uri: notification.actor.avatar}}
-          style={{
-            borderRadius: 200,
-            overflow: 'hidden',
-            margin: 10,
-          }}
-        />
+        {notification.actor.avatar ? (
+          <Avatar.Image
+            size={60}
+            source={{uri: notification.actor.avatar}}
+            style={{
+              borderRadius: 200,
+              overflow: 'hidden',
+              margin: 10,
+            }}
+          />
+        ) : (
+          <Avatar.Icon
+            size={60}
+            icon="face"
+            style={{
+              borderRadius: 200,
+              overflow: 'hidden',
+              margin: 10,
+            }}
+          />
+        )}
+
         <View style={{flexDirection: 'column'}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={{...theme.fonts.medium}}>

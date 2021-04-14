@@ -237,6 +237,17 @@ const SecondRoute = () => {
       ) : (
         <SetupStripeAccount />
       )}
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          marginTop: 50,
+        }}>
+        <View style={{maxWidth: 300}}>
+          <SupportMessage />
+        </View>
+      </View>
     </View>
   );
 };
@@ -268,13 +279,12 @@ function SetupStripeAccount() {
     <View style={{margin: 20, justifyContent: 'center', alignItems: 'center'}}>
       <Text style={{...theme.fonts.medium, fontSize: 24}}>Payout status</Text>
       <Text style={{marginTop: 20, fontSize: 16, textAlign: 'center'}}>
-        Troosh uses Stripe to get you paid quickly and keep your personal and
-        payment information secure. Thousands of companies around the world
-        trust Stripe to process payments for their users. Set up a Stripe
-        account to get paid with Troosh.
+        {settingUpConnectAccount
+          ? 'Your account is currently being processed by stripe and will be shortly available. In the meanwhile you can review your application in case you missed required information.'
+          : 'Troosh uses Stripe to get you paid quickly and keep your personal and payment information secure. Thousands of companies around the world trust Stripe to process payments for their users. Set up a Stripe account to get paid with Troosh.'}
       </Text>
       <ActionButton loading={loading} onPress={handleCreateStripeAccount}>
-        Setup account
+        {settingUpConnectAccount ? 'Review application' : 'Setup account'}
       </ActionButton>
     </View>
   );
@@ -364,7 +374,11 @@ function Profile() {
             marginTop: 40,
             marginBottom: 40,
           }}>
-          <Avatar.Image source={{uri: _user.avatar}} size={130} />
+          {_user.avatar ? (
+            <Avatar.Image source={{uri: _user.avatar}} size={130} />
+          ) : (
+            <Avatar.Icon size={130} icon="face" />
+          )}
           <Text style={{...theme.fonts.medium, fontSize: 24, marginTop: 5}}>
             {_user.name}
           </Text>
@@ -381,6 +395,21 @@ function Profile() {
         )}
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function SupportMessage() {
+  return (
+    <Text
+      style={{
+        color: 'gray',
+        textAlign: 'center',
+        fontStyle: 'italic',
+        fontSize: 14,
+      }}>
+      For any questions regarding stripe, payments or your account you can
+      contact us via email at contact@troosh.app
+    </Text>
   );
 }
 
