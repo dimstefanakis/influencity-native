@@ -8,10 +8,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import Config from 'react-native-config';
 import {getMyCoaches} from '../myCoaches/myCoachesSlice';
+import SkeletonCoachHorizontalList from './SkeletonCoachHorizontalList';
+//<SkeletonCoachHorizontalList/>
 
 function CoachHorizontalList({withTiers = false}) {
   //const [coaches, setCoaches] = useState([]);
-  const {myCoaches} = useSelector((state) => state.myCoaches);
+  const {myCoaches, loading} = useSelector((state) => state.myCoaches);
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -42,7 +44,9 @@ function CoachHorizontalList({withTiers = false}) {
     dispatch(getMyCoaches());
   }, [dispatch]);
 
-  return (
+  return loading ? (
+    <SkeletonCoachHorizontalList />
+  ) : (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}

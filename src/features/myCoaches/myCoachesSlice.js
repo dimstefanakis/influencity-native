@@ -18,12 +18,18 @@ export const myCoachesSlice = createSlice({
   name: 'myCoaches',
   initialState: {
     myCoaches: [],
+    loading: false,
   },
   extraReducers: {
     [getMyCoaches.fulfilled]: (state, action) => {
       state.myCoaches = action.payload;
+      state.loading = false;
     },
-    [getMyCoaches.pending]: () => {},
-    [getMyCoaches.rejected]: () => {},
+    [getMyCoaches.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [getMyCoaches.rejected]: (state, action) => {
+      state.loading = false;
+    },
   },
 });

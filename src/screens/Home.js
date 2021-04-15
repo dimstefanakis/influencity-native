@@ -10,6 +10,7 @@ import CoachActionsList from '../features/homeActionsList/CoachActionsList';
 import PostList from '../features/posts/PostList';
 import EmptyHome from '../features/emptyHome/EmptyHome';
 import FeedSkeleton from '../features/posts/FeedSkeleton';
+import SkeletonCoachHorizontalList from '../features/coachHorizontalList/SkeletonCoachHorizontalList';
 
 let url =
   'https://d3u9nsvugag1ev.cloudfront.net/media/images/group_images/profile/no.jpg';
