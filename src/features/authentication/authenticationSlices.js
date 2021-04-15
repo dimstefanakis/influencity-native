@@ -40,6 +40,19 @@ export const login = createAsyncThunk(
   },
 );
 
+export const forgotPassword = createAsyncThunk(
+  'authentication/forgotPassword',
+  async (email) => {
+    const url = Config.DOMAIN + '/rest-auth/password/reset/';
+
+    try {
+      let formData = new FormData();
+      formData.append('email', email);
+      let response = await axios.post(url, formData);
+    } catch (e) {}
+  },
+);
+
 export const register = createAsyncThunk(
   'authentication/register',
   async (credentials) => {
@@ -202,6 +215,15 @@ export const authenticationSlice = createSlice({
     [updateUserData.rejected]: (state, action) => {
       state.updatingUserData = false;
       state.user = null;
+    },
+    [forgotPassword.fulfilled]: (state, action) => {
+      state.loading = false;
+    },
+    [forgotPassword.pending]: (state, action) => {
+      state.loading = true;
+    },
+    [forgotPassword.rejected]: (state, action) => {
+      state.loading = false;
     },
   },
 });

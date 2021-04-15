@@ -59,6 +59,10 @@ function Login() {
     navigation.navigate('Register');
   }
 
+  function handleForgotPasswordPress() {
+    navigation.navigate('ForgotPassword');
+  }
+
   if (token && user) {
     navigation.navigate('BottomStackNavigation');
   }
@@ -116,7 +120,7 @@ function Login() {
         </Text>
         <Text style={{color: '#4b9be0', fontSize: 16}}>{''} Sign up</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleForgotPasswordPress}>
         <Text style={{color: '#4b9be0', fontSize: 16}}>Forgot password?</Text>
       </TouchableOpacity>
     </View>

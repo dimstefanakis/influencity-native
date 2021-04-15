@@ -60,6 +60,10 @@ function Register() {
     navigation.navigate('Login');
   }
 
+  function handleForgotPasswordPress() {
+    navigation.navigate('ForgotPassword');
+  }
+
   return (
     <View
       style={{
@@ -132,7 +136,7 @@ function Register() {
         </Text>
         <Text style={{color: '#4b9be0', fontSize: 16}}>{''} Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleForgotPasswordPress}>
         <Text style={{color: '#4b9be0', fontSize: 16}}>Forgot password?</Text>
       </TouchableOpacity>
     </View>

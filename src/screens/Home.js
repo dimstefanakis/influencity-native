@@ -89,7 +89,7 @@ function FeedHeaderComponent() {
     <SafeAreaView style={{flex: 1}}>
       <View>
         <Subheading style={{marginTop: 30, ...styles.spacing}}>
-          Good afternoon!
+          Welcome back!
         </Subheading>
         <Text style={{fontSize: 24, ...theme.fonts.medium, ...styles.spacing}}>
           {user.subscriber.name}

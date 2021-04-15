@@ -26,6 +26,7 @@ enableScreens();
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
+import ForgotPassword from './src/screens/ForgotPassword';
 import PostRegisterUpdateProfileScreen from './src/screens/PostRegisterUpdateProfileScreen';
 import BecomeCoachPostRegisterScreen from './src/screens/BecomeCoachPostRegisterScreen';
 import ChooseAccountTypeScreen from './src/screens/ChooseAccountTypeScreen';
@@ -205,6 +206,14 @@ const App = () => {
           <VanillaStack.Screen
             name="Register"
             component={Register}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
             options={{
               title: '',
               headerShown: false,
