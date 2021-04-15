@@ -5,7 +5,7 @@ import axios from 'axios';
 export const getProjects = createAsyncThunk(
   'projects/getProjects',
   async (arg, thunkApi) => {
-    const url = Config.API_URL + '/v1/projects/';
+    const url = Config.API_URL + '/v1/my_projects/';
     try {
       let response = await axios.get(url);
       return response.data;

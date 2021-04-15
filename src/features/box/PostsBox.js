@@ -16,7 +16,7 @@ function PostBox() {
 
   useEffect(() => {
     dispatch(getNewPosts());
-  }, [dispatch]);
+  }, []);
 
   return newPosts && newPosts.length > 0 ? (
     <View style={{marginTop: 10}}>

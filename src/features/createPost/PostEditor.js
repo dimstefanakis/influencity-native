@@ -326,7 +326,7 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
   }
 
   function handleAttachProjectPress() {
-    navigation.push('MyCreatedProjectsScreen', {
+    navigation.navigate('MyCreatedProjectsScreen', {
       handleSelectProject: (project) => {
         setAttachedProject(project);
       },

@@ -210,8 +210,8 @@ const StudentRoute = () => {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
   async function handleClick() {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('refresh');
+    await AsyncStorage.removeItem('@token');
+    await AsyncStorage.removeItem('@refresh');
   }
 
   let _user = user.coach ? user.coach : user.subscriber;

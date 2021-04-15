@@ -33,8 +33,8 @@ export const login = createAsyncThunk(
   async (credentials) => {
     let data = await getTokens(credentials);
     try {
-      await AsyncStorage.setItem('token', data.access);
-      await AsyncStorage.setItem('refresh', data.refresh);
+      await AsyncStorage.setItem('@token', data.access);
+      await AsyncStorage.setItem('@refresh', data.refresh);
     } catch (e) {}
     return data;
   },
@@ -79,8 +79,8 @@ export const register = createAsyncThunk(
           password: credentials.password1,
         });
         try {
-          await AsyncStorage.setItem('token', tokens.access);
-          await AsyncStorage.setItem('refresh', tokens.refresh);
+          await AsyncStorage.setItem('@token', tokens.access);
+          await AsyncStorage.setItem('@refresh', tokens.refresh);
           try {
             axios.defaults.withCredentials = true;
             axios.interceptors.request.use(function (config) {
@@ -111,7 +111,7 @@ export const getUserData = createAsyncThunk(
     let userToken;
 
     try {
-      userToken = await AsyncStorage.getItem('token');
+      userToken = await AsyncStorage.getItem('@token');
       userData.token = userToken;
       axios.defaults.withCredentials = true;
       axios.interceptors.request.use(function (config) {

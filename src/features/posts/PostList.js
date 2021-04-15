@@ -25,6 +25,7 @@ function HomePostList({ListHeaderComponent}) {
   //   `${Config.API_URL}/v1/new_posts/`,
   // );
   const {posts, next, hasMore} = useSelector((state) => state.posts);
+  const onEndReachedCalledDuringMomentum = useRef(null);
 
   function loadMore(type = 'next') {
     dispatch(
@@ -43,7 +44,15 @@ function HomePostList({ListHeaderComponent}) {
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={ListHeaderComponent}
-      onEndReached={loadMore}
+      onMomentumScrollBegin={() => {
+        onEndReachedCalledDuringMomentum.current = false;
+      }}
+      onEndReached={() => {
+        if (!onEndReachedCalledDuringMomentum.current) {
+          loadMore(); // LOAD MORE DATA
+          onEndReachedCalledDuringMomentum.current = true;
+        }
+      }}
     />
   );
 }

@@ -32,7 +32,8 @@ function Project({
     // used for custom click events, for example select which project was selected
     if (handleSelectProject) {
       handleSelectProject(project);
-      navigation.goBack();
+      //navigation.goBack();
+      return;
     }
     if (viewAs == 'coach') {
       navigation.navigate('ProjectCoachScreenDashboardScreen', {
