@@ -115,6 +115,7 @@ const theme = {
     primary: '#aaf0d1', //'#00BBF9',
     accent: '#5CD6FF',
     textPrimary: '#141414',
+    brandOrange: '#ffd29b',
     background: 'white',
   },
 };
@@ -128,6 +129,7 @@ const darkTheme = {
     primary: '#aaf0d1', //'#00BBF9',
     accent: '#5CD6FF',
     textPrimary: '#141414',
+    brandOrange: '#ffd29b',
     background: 'black',
   },
 };

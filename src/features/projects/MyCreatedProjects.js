@@ -21,7 +21,7 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
   const {createdProjects} = useSelector((state) => state.projects);
 
   function handleProjectPress(project) {
-    if (route.params.handleSelectProject) {
+    if (route?.params?.handleSelectProject) {
       route.params.handleSelectProject(project);
       navigation.goBack();
     } else {

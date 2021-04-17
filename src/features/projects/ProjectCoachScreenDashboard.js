@@ -21,6 +21,8 @@ function ProjectCoachScreenDashboard({route}) {
   const theme = useTheme();
   const navigation = useNavigation();
   const [teams, setTeams] = useState([]);
+  const [tierOneTeams, setTierOneTeams] = useState([]);
+  const [tierTwoTeams, setTierTwoTeams] = useState([]);
 
   async function getTeams() {
     try {
@@ -28,6 +30,8 @@ function ProjectCoachScreenDashboard({route}) {
         `${Config.API_URL}/v1/projects/${project.id}/teams/`,
       );
       setTeams(response.data);
+      setTierOneTeams(response.data.filter((team) => team.team_tier == 1));
+      setTierTwoTeams(response.data.filter((team) => team.team_tier == 2));
     } catch (e) {
       console.error(e);
     }
@@ -75,63 +79,100 @@ function ProjectCoachScreenDashboard({route}) {
           </Text>
           <Subheading>Teams</Subheading>
         </View>
-        <SmallHeader title="Teams" />
       </View>
-      {teams.map((team) => {
-        let completedTasks = team.milestones.reduce(
-          (total, x) => (x.status == 'accepted' ? total + 1 : total),
-          0,
-        );
-        return (
-          <TouchableNativeFeedback onPress={() => handleTeamPress(team)}>
-            <View style={{position: 'relative', flexDirection: 'row'}}>
-              <View style={overlapContainer}>
-                {team.members.map((member) => {
-                  return (
-                    <View style={avatarContainer}>
-                      {member.avatar ? (
-                        <Image
-                          style={avatar}
-                          source={{uri: `${Config.MEDIA}${member.avatar}`}}
-                        />
-                      ) : (
-                        <Avatar.Icon style={avatar} icon="face" />
-                      )}
-                    </View>
-                  );
-                })}
-              </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 30,
-                }}>
-                <Text style={{...theme.fonts.medium, fontSize: 20}}>
-                  {completedTasks} / {project.milestones.length}
-                </Text>
-                <Text>Tasks completed</Text>
-              </View>
-              <View
-                style={{
-                  zIndex: -1,
-                  width: `${
-                    (completedTasks / project.milestones.length) * 100
-                  }%`,
-                  height: '100%',
-                  maxWidth: '98%', // leave some spacing at the end
-                  backgroundColor: theme.colors.primary,
-                  position: 'absolute',
-                  borderBottomRightRadius: 100,
-                  borderTopRightRadius: 100,
-                  top: 0,
-                }}
+      {tierTwoTeams.length > 0 ? (
+        <>
+          <View style={styles.spacing}>
+            <SmallHeader title="Tier 2 teams" />
+          </View>
+          {tierTwoTeams.map((team) => {
+            return (
+              <Team
+                team={team}
+                tier={2}
+                project={project}
+                handleTeamPress={handleTeamPress}
               />
-            </View>
-          </TouchableNativeFeedback>
-        );
-      })}
+            );
+          })}
+        </>
+      ) : null}
+
+      {tierOneTeams.length > 0 ? (
+        <>
+          <View style={styles.spacing}>
+            <SmallHeader title="Tier 1 teams" />
+          </View>
+          {tierOneTeams.map((team) => {
+            return (
+              <Team
+                team={team}
+                tier={1}
+                project={project}
+                handleTeamPress={handleTeamPress}
+              />
+            );
+          })}
+        </>
+      ) : null}
     </ScrollView>
+  );
+}
+
+function Team({team, tier, project, handleTeamPress}) {
+  const {overlapContainer, avatarContainer, avatar} = styles;
+
+  const theme = useTheme();
+  let completedTasks = team.milestones.reduce(
+    (total, x) => (x.status == 'accepted' ? total + 1 : total),
+    0,
+  );
+  return (
+    <TouchableNativeFeedback onPress={() => handleTeamPress(team)}>
+      <View style={{position: 'relative', flexDirection: 'row'}}>
+        <View style={overlapContainer}>
+          {team.members.map((member) => {
+            return (
+              <View style={avatarContainer}>
+                {member.avatar ? (
+                  <Image
+                    style={avatar}
+                    source={{uri: `${Config.MEDIA}${member.avatar}`}}
+                  />
+                ) : (
+                  <Avatar.Icon style={avatar} icon="face" />
+                )}
+              </View>
+            );
+          })}
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 30,
+          }}>
+          <Text style={{...theme.fonts.medium, fontSize: 20}}>
+            {completedTasks} / {project.milestones.length}
+          </Text>
+          <Text>Tasks completed</Text>
+        </View>
+        <View
+          style={{
+            zIndex: -1,
+            width: `${(completedTasks / project.milestones.length) * 100}%`,
+            height: '100%',
+            maxWidth: '98%', // leave some spacing at the end
+            backgroundColor:
+              tier == 1 ? theme.colors.primary : theme.colors.brandOrange,
+            position: 'absolute',
+            borderBottomRightRadius: 100,
+            borderTopRightRadius: 100,
+            top: 0,
+          }}
+        />
+      </View>
+    </TouchableNativeFeedback>
   );
 }
 

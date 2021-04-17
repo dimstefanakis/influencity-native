@@ -495,7 +495,7 @@ function TeamMember({member}) {
           member.avatar ? (
             <Image source={{uri: member.avatar}} />
           ) : (
-            <Avatar.Icon icon="face" />
+            <Avatar.Icon icon="face" size={36} />
           )
         }>
         {member.name}

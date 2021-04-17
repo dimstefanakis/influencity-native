@@ -390,7 +390,7 @@ function TeamMember({member, selectedMembers, onPress = () => {}}) {
           member.avatar ? (
             <Image source={{uri: member.avatar}} />
           ) : (
-            <Avatar.Icon icon="face" />
+            <Avatar.Icon icon="face" size={36} />
           )
         }
         onPress={handlePress}
