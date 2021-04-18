@@ -44,6 +44,7 @@ function TeamMentorDashboard({route}) {
           {team.milestones.map((milestone) => {
             return (
               <Task
+                project={project}
                 done={milestone.status == 'accepted'}
                 status={milestone.status}
                 milestone={milestone}

@@ -127,6 +127,11 @@ function Team({team, tier, project, handleTeamPress}) {
     (total, x) => (x.status == 'accepted' ? total + 1 : total),
     0,
   );
+
+  const reviewsPending = team.milestones.some(
+    (milestone) => milestone.status == 'pending',
+  );
+
   return (
     <TouchableNativeFeedback onPress={() => handleTeamPress(team)}>
       <View style={{position: 'relative', flexDirection: 'row'}}>
@@ -156,6 +161,19 @@ function Team({team, tier, project, handleTeamPress}) {
             {completedTasks} / {project.milestones.length}
           </Text>
           <Text>Tasks completed</Text>
+          {reviewsPending ? (
+            <Text
+              style={{
+                position: 'absolute',
+                top: 10,
+                width: 130,
+                textAlign: 'center',
+                fontSize: 12,
+                ...theme.fonts.medium,
+              }}>
+              *Reviews pending
+            </Text>
+          ) : null}
         </View>
         <View
           style={{

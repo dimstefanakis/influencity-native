@@ -70,6 +70,7 @@ import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
+import {getPaymentMethod} from './src/features/stripeElements/stripeSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 
@@ -167,12 +168,12 @@ const App = () => {
     //setNavigationBarColor();
     dispatch(getMyTiers());
     dispatch(getMyTeams());
+    dispatch(getPaymentMethod());
   }, [dispatch, token]);
 
   useEffect(() => {
     dispatch(getUserData());
   }, [dispatch]);
-  console.log(user);
 
   if (checkingForToken) {
     return <SplashScreen />;

@@ -26,7 +26,7 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
-  console.log(report);
+  console.log(report.status, 'sdssddsds');
   function handleMediaPress(image, itemIndex) {
     selectedPostItem.current = itemIndex;
     setModalVisible(true);
@@ -130,19 +130,23 @@ function CompleteTaskMentor({route}) {
               onPress={() => handleReview('accept')}
               loading={acceptLoading}
               style={{width: 'auto'}}
+              disabled={report.status == 'AC'}
               contentStyle={{width: 'auto'}}
               icon="check">
-              Accept
+              {report.status == 'AC' ? 'Accepted' : 'Accept'}
             </ActionButton>
-            <ActionButton
-              onPress={() => handleReview('reject')}
-              loading={redoLoading}
-              style={{width: 'auto'}}
-              contentStyle={{width: 'auto'}}
-              icon="refresh"
-              mode="danger">
-              Ask for re-do
-            </ActionButton>
+            {report.status != 'AC' ? (
+              <ActionButton
+                onPress={() => handleReview('reject')}
+                loading={redoLoading}
+                style={{width: 'auto'}}
+                contentStyle={{width: 'auto'}}
+                icon="refresh"
+                disabled={report.status == 'RJ'}
+                mode="danger">
+                Ask for re-do
+              </ActionButton>
+            ) : null}
           </View>
         </View>
       </View>

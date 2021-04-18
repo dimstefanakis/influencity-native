@@ -5,7 +5,7 @@ import {View, TouchableNativeFeedback} from 'react-native';
 import {Text, Avatar, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Task({children, done = false, status, milestone, onPress}) {
+function Task({children, project, done = false, status, milestone, onPress}) {
   const theme = useTheme();
   const [isDone, setDone] = useState(done);
   const report = milestone.reports.find((r) => r.milestone == milestone.id);
@@ -41,7 +41,7 @@ function Task({children, done = false, status, milestone, onPress}) {
             />
           )}
         </View>
-        {isDone ? (
+        {isDone && report.coach_feedback ? (
           <View
             style={{
               marginLeft: 20,
@@ -49,8 +49,12 @@ function Task({children, done = false, status, milestone, onPress}) {
               marginTop: 10,
             }}>
             <Text style={{marginBottom: 2, color: 'gray'}}>Feedback</Text>
-            {/* <View style={{flexDirection: 'row', width: '100%'}}>
-              <Avatar.Image size={30} source={{uri: coachStockImage}} />
+            <View style={{flexDirection: 'row', width: '100%'}}>
+              {project.coach.avatar ? (
+                <Avatar.Image size={30} source={{uri: project.coach.avatar}} />
+              ) : (
+                <Avatar.Icon size={30} icon="face" />
+              )}
               <View style={{paddingLeft: 10}}>
                 <Text
                   style={{
@@ -59,14 +63,12 @@ function Task({children, done = false, status, milestone, onPress}) {
                     marginRight: 10,
                     flexGrow: 1,
                   }}>
-                  Your coach
+                  {project.coach.name}
                 </Text>
-                <Text>
-                  Awesome job, I really like your implementation on this one!
-                </Text>
+                <Text>{report.coach_feedback}</Text>
               </View>
               <View />
-            </View> */}
+            </View>
           </View>
         ) : null}
       </View>

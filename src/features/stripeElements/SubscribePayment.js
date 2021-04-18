@@ -21,6 +21,7 @@ import {getMyCoaches} from '../myCoaches/myCoachesSlice';
 import {getMyTeams} from '../teams/teamsSlice';
 import {getMyProjects} from '../projects/projectsSlice';
 import {getNewPosts} from '../posts/postsSlice';
+import {getPaymentMethod} from '../stripeElements/stripeSlice';
 
 stripe.setOptions({
   publishableKey: Config.STRIPE_PUBLISHABLE_KEY,
@@ -31,6 +32,8 @@ function SubscribePayment({route}) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const {myCoaches} = useSelector((state) => state.myCoaches);
+  const {paymentMethod} = useSelector((state) => state.stripe);
   const coach = route.params.coach;
   const tier = route.params.tier;
   const [cardholderName, setCardholderName] = useState('');
@@ -38,8 +41,9 @@ function SubscribePayment({route}) {
   const [date, setDate] = useState('');
   const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
-  const [paymentMethodCreated, setPaymentMethodCreated] = useState(null);
-  const {myCoaches} = useSelector((state) => state.myCoaches);
+  const [paymentMethodCreated, setPaymentMethodCreated] = useState(
+    paymentMethod,
+  );
 
   // if this returns true that means the user has already subscribed to this tier
   let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
@@ -101,6 +105,7 @@ function SubscribePayment({route}) {
     try {
       const url = `${Config.API_URL}/v1/attach_payment_method/`;
       let response = await axios.post(url, paymentMethodWithCard);
+      await dispatch(getPaymentMethod());
     } catch (e) {
       console.error(e);
     }

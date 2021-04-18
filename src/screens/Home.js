@@ -81,7 +81,7 @@ function Home() {
 function FeedHeaderComponent() {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
-  const {myCoaches} = useSelector((state) => state.myCoaches);
+  const {myCoaches, loading} = useSelector((state) => state.myCoaches);
   const {feedLoading, hasLoadedInitial, posts} = useSelector(
     (state) => state.posts,
   );
@@ -103,18 +103,23 @@ function FeedHeaderComponent() {
         <EmptyHome />
       ) : (
         <>
-          <Text
-            style={{
-              fontSize: 20,
-              ...styles.spacing,
-              marginTop: 10,
-              marginBottom: 10,
-              color: '#1d1d1d',
-              ...theme.fonts.medium,
-            }}>
-            Your coaches
-          </Text>
-          <CoachHorizontalList />
+          {loading || myCoaches.length > 0 ? (
+            <>
+              <Text
+                style={{
+                  fontSize: 20,
+                  ...styles.spacing,
+                  marginTop: 10,
+                  marginBottom: 10,
+                  color: '#1d1d1d',
+                  ...theme.fonts.medium,
+                }}>
+                Your coaches
+              </Text>
+              <CoachHorizontalList />
+            </>
+          ) : null}
+
           <Text
             style={{
               fontSize: 20,
