@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useState} from 'react';
 import {View, ScrollView, StyleSheet, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Text, TextInput, Chip, Avatar} from 'react-native-paper';
 import Config from 'react-native-config';
 import {BigHeader, SmallHeader} from '../../flat/Headers/Headers';
@@ -13,6 +14,7 @@ import axios from 'axios';
 
 function CompleteTaskMentor({route}) {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const {project, task} = route.params;
   const selectedPostItem = useRef(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -26,7 +28,6 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
-  console.log(report.status, 'sdssddsds');
   function handleMediaPress(image, itemIndex) {
     selectedPostItem.current = itemIndex;
     setModalVisible(true);
@@ -41,6 +42,12 @@ function CompleteTaskMentor({route}) {
 
     try {
       if (type == 'accept') {
+        navigation.navigate('AwardsScreen', {
+          report: report,
+          project: project,
+          text: text,
+        });
+        return;
         setAcceptLoading(true);
       } else {
         setRedoLoading(true);

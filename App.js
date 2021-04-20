@@ -17,7 +17,6 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {changeNavigationBarColor} from 'react-native-navigation-bar-color';
 import {Provider, useDispatch, useSelector} from 'react-redux';
-import {Elements} from '@stripe/react-stripe-js';
 import {loadStripe} from '@stripe/stripe-js';
 import Config from 'react-native-config';
 import {enableScreens} from 'react-native-screens';
@@ -60,6 +59,7 @@ import ProjectLinkedPostsScreen from './src/screens/ProjectLinkedPostsScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
 import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
 import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
+import AwardsScreen from './src/screens/AwardsScreen';
 import Settings from './src/features/settings/Settings';
 import TierSettings from './src/features/settings/TierSettings';
 import ChangeTier from './src/features/tiers/ChangeTier';
@@ -435,6 +435,14 @@ const App = () => {
             component={ChangeTier}
             options={{
               title: '',
+            }}
+          />
+          <VanillaStack.Screen
+            name="AwardsScreen"
+            component={AwardsScreen}
+            options={{
+              title: 'Give award',
+              ...TransitionPresets.ModalPresentationIOS,
             }}
           />
           <VanillaStack.Screen

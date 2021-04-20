@@ -19,7 +19,7 @@ function SubmitButton({
       mode="contained"
       style={{...styles.submitButton, ...style}}
       loading={loading}
-      color={mode == 'danger' ? '#ffd29b' : null}
+      color={mode == 'danger' ? '#ffd29b' : mode == 'cancel' ? '#dcdcdc' : null}
       onPress={onPress}
       disabled={disabled}
       contentStyle={{width: circular ? 40 : 230, height: 40, ...contentStyle}}>
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   fixedWidth: {
     width: 230,
-  }
+  },
 });
 
 export default SubmitButton;
