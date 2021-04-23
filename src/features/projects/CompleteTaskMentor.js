@@ -42,12 +42,6 @@ function CompleteTaskMentor({route}) {
 
     try {
       if (type == 'accept') {
-        navigation.navigate('AwardsScreen', {
-          report: report,
-          project: project,
-          text: text,
-        });
-        return;
         setAcceptLoading(true);
       } else {
         setRedoLoading(true);
@@ -58,6 +52,11 @@ function CompleteTaskMentor({route}) {
       dispatch(getMyProjects());
       if (type == 'accept') {
         setAcceptLoading(false);
+        navigation.navigate('AwardsScreen', {
+          report: report,
+          project: project,
+          text: text,
+        });
       } else {
         setRedoLoading(false);
       }

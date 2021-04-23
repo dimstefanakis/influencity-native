@@ -71,6 +71,7 @@ import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
 import {getPaymentMethod} from './src/features/stripeElements/stripeSlice';
+import {getMyAwards} from './src/features/awards/awardsSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 
@@ -169,6 +170,7 @@ const App = () => {
     dispatch(getMyTiers());
     dispatch(getMyTeams());
     dispatch(getPaymentMethod());
+    dispatch(getMyAwards());
   }, [dispatch, token]);
 
   useEffect(() => {

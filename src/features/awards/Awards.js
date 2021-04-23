@@ -3,30 +3,38 @@
 import React, {useEffect, useState} from 'react';
 import {View, ScrollView, Image, TouchableOpacity} from 'react-native';
 import {Icon, Text, useTheme} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import {useSelector, useDispatch} from 'react-redux';
 import {getAwards} from '../awards/awardsSlice';
+import {getMyCreatedProjects} from '../projects/projectsSlice';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import axios from 'axios';
 
 function Awards({route}) {
   const {report, project, text} = route.params;
+  const navigation = useNavigation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const {awards} = useSelector((state) => state.awards);
   const [loading, setLoading] = useState(false);
 
-  console.log("report", report);
-
-  async function sendAward(){
-    try{
+  async function sendAward(award) {
+    try {
       const url = `${Config.API_URL}/v1/awards/create/`;
       let formData = new FormData();
-      report.members.forEach(member=>{
-        formData.append('subscribers', member.id)
-      })
-      formData.append('report', report.id);
-    }catch(e){
+      report.members.forEach((member) => {
+        formData.append('subscribers', member.id);
+      });
+      formData.append('report', report.surrogate);
+      formData.append('award', award.id);
+      setLoading(true);
+      let response = await axios.post(url, formData);
+      dispatch(getMyCreatedProjects());
+      setLoading(false);
+      navigation.goBack();
+    } catch (e) {
+      setLoading(false);
       console.error(e);
     }
   }
@@ -48,6 +56,7 @@ function Awards({route}) {
         {awards.map((award) => {
           return (
             <TouchableOpacity
+              onPress={() => sendAward(award)}
               style={{width: '33%', height: 150, position: 'relative'}}>
               <View
                 style={{
@@ -63,7 +72,6 @@ function Awards({route}) {
                 <Text
                   style={{
                     marginTop: 10,
-                    maxWidth: 100,
                     position: 'absolute',
                     bottom: 0,
                   }}>
@@ -81,7 +89,9 @@ function Awards({route}) {
           width: '100%',
           marginTop: 50,
         }}>
-        <ActionButton mode="cancel">I'll pass</ActionButton>
+        <ActionButton loading={loading} mode="cancel">
+          I'll pass
+        </ActionButton>
       </View>
     </ScrollView>
   );

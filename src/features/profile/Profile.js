@@ -2,6 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
+  Image,
   StyleSheet,
   Dimensions,
   ScrollView,
@@ -37,8 +38,11 @@ function Header({title}) {
     </Text>
   );
 }
+
 function AwardList() {
   const theme = useTheme();
+  const {myAwards} = useSelector((state) => state.awards);
+
   return (
     <View>
       <Header title="My awards" />
@@ -46,16 +50,18 @@ function AwardList() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}>
-        {[...Array(5)].map((i) => {
+        {myAwards.map((award) => {
           return (
             <View
               style={{
-                padding: 10,
-                margin: 5,
-                backgroundColor: theme.colors.primary,
+                marginRight: 20,
                 borderRadius: 100,
               }}>
-              <Icon name="award" size={20} color="white" />
+              <Image
+                source={{uri: award.award.icon}}
+                style={{height: 60, width: 60}}
+              />
+              {/* <Icon name="award" size={20} color="white" /> */}
             </View>
           );
         })}
