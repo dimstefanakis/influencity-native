@@ -165,13 +165,13 @@ const App = () => {
       console.log(e); // {success: false}
     }
   };
-  useEffect(() => {
-    //setNavigationBarColor();
-    dispatch(getMyTiers());
-    dispatch(getMyTeams());
-    dispatch(getPaymentMethod());
-    dispatch(getMyAwards());
-  }, [dispatch, token]);
+  // useEffect(() => {
+  //   //setNavigationBarColor();
+  //   dispatch(getMyTiers());
+  //   dispatch(getMyTeams());
+  //   dispatch(getPaymentMethod());
+  //   dispatch(getMyAwards());
+  // }, [dispatch, token]);
 
   useEffect(() => {
     dispatch(getUserData());

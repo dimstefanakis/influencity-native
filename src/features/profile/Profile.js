@@ -44,28 +44,40 @@ function AwardList() {
   const {myAwards} = useSelector((state) => state.awards);
 
   return (
-    <View>
+    <View style={{marginBottom: 20}}>
       <Header title="My awards" />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}>
-        {myAwards.map((award) => {
-          return (
-            <View
-              style={{
-                marginRight: 20,
-                borderRadius: 100,
-              }}>
-              <Image
-                source={{uri: award.award.icon}}
-                style={{height: 60, width: 60}}
-              />
-              {/* <Icon name="award" size={20} color="white" /> */}
-            </View>
-          );
-        })}
-      </ScrollView>
+      {myAwards.length == 0 ? (
+        <Text
+          style={{
+            margin: 20,
+            fontSize: 20,
+            textAlign: 'center',
+            color: 'gray',
+          }}>
+          Join projects and get awarded on your progress!
+        </Text>
+      ) : (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{paddingLeft: 20, paddingRight: 20}}>
+          {myAwards.map((award) => {
+            return (
+              <View
+                style={{
+                  marginRight: 20,
+                  borderRadius: 100,
+                }}>
+                <Image
+                  source={{uri: award.award.icon}}
+                  style={{height: 60, width: 60}}
+                />
+                {/* <Icon name="award" size={20} color="white" /> */}
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </View>
   );
 }

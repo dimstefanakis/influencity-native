@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, ScrollView, Image, SafeAreaView, StyleSheet} from 'react-native';
 import {useTheme, Text, Subheading, Title} from 'react-native-paper';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Box from '../features/box/Box';
 import CoachHorizontalList from '../features/coachHorizontalList/CoachHorizontalList';
 import SubscriberActionsList from '../features/homeActionsList/SubscriberActionsList';
@@ -11,6 +11,10 @@ import PostList from '../features/posts/PostList';
 import EmptyHome from '../features/emptyHome/EmptyHome';
 import FeedSkeleton from '../features/posts/FeedSkeleton';
 import SkeletonCoachHorizontalList from '../features/coachHorizontalList/SkeletonCoachHorizontalList';
+import {getMyTiers} from '../features/tiers/tiersSlice';
+import {getMyTeams} from '../features/teams/teamsSlice';
+import {getPaymentMethod} from '../features/stripeElements/stripeSlice';
+import {getMyAwards} from '../features/awards/awardsSlice';
 
 let url =
   'https://d3u9nsvugag1ev.cloudfront.net/media/images/group_images/profile/no.jpg';
@@ -35,7 +39,18 @@ let colTwoItems = [
 
 function Home() {
   const theme = useTheme();
-  const {user} = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
+  const {user, loading, token, checkingForToken} = useSelector(
+    (state) => state.authentication,
+  );
+
+  useEffect(() => {
+    //setNavigationBarColor();
+    dispatch(getMyTiers());
+    dispatch(getMyTeams());
+    dispatch(getPaymentMethod());
+    dispatch(getMyAwards());
+  }, [dispatch, token]);
 
   return (
     /*<ScrollView style={{height: '100%'}}>
