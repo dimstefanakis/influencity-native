@@ -6,21 +6,23 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 function SkeletonCoachHorizontalList({count = 5}) {
   return (
     <View>
-      <SkeletonPlaceholder>
-        <View style={{flexDirection: 'row'}}>
-          {[...Array(count)].map((_, i) => {
-            return (
-              <View style={{marginLeft: 20, marginTop: 10}}>
-                <SkeletonPlaceholder.Item
-                  width={60}
-                  height={60}
-                  borderRadius={50}
-                />
-              </View>
-            );
-          })}
-        </View>
-      </SkeletonPlaceholder>
+      <View style={{flexDirection: 'row'}}>
+        {[...Array(count)].map((_, i) => {
+          return (
+            <React.Fragment key={i}>
+              <SkeletonPlaceholder>
+                <View style={{marginLeft: 20, marginTop: 10}}>
+                  <SkeletonPlaceholder.Item
+                    width={60}
+                    height={60}
+                    borderRadius={50}
+                  />
+                </View>
+              </SkeletonPlaceholder>
+            </React.Fragment>
+          );
+        })}
+      </View>
     </View>
   );
 }

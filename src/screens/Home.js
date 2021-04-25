@@ -113,7 +113,7 @@ function FeedHeaderComponent() {
         {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
       {!hasLoadedInitial ? (
-        <FeedSkeleton />
+        <FeedSkeleton count={4} />
       ) : myCoaches.length == 0 && posts.length == 0 ? (
         <EmptyHome />
       ) : (

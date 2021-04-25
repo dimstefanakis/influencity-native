@@ -5,10 +5,10 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 function SearchSkeleton({count = 8}) {
   return (
-    <SkeletonPlaceholder>
-      <View>
-        {[...Array(count)].map((_, i) => {
-          return (
+    <View>
+      {[...Array(count)].map((_, i) => {
+        return (
+          <SkeletonPlaceholder>
             <View style={{marginTop: 40}}>
               <SkeletonPlaceholder.Item flexDirection="row">
                 <SkeletonPlaceholder.Item
@@ -32,10 +32,10 @@ function SearchSkeleton({count = 8}) {
                 </SkeletonPlaceholder.Item>
               </SkeletonPlaceholder.Item>
             </View>
-          );
-        })}
-      </View>
-    </SkeletonPlaceholder>
+          </SkeletonPlaceholder>
+        );
+      })}
+    </View>
   );
 }
 

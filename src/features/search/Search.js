@@ -83,12 +83,14 @@ function Search() {
           flexWrap: 'wrap',
           justifyContent: 'space-around',
         }}>
-        {expertiseFields.map((expertise) => {
+        {expertiseFields.map((expertise, i) => {
           return (
-            <SearchBox
-              expertise={expertise}
-              setSelectedExpertise={setSelectedExpertise}
-            />
+            <React.Fragment key={i}>
+              <SearchBox
+                expertise={expertise}
+                setSelectedExpertise={setSelectedExpertise}
+              />
+            </React.Fragment>
           );
         })}
       </View>
