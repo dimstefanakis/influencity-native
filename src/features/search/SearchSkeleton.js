@@ -3,7 +3,7 @@ import React from 'react';
 import {View, ScrollView, Dimensions} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-function SearchSkeleton({count = 8}) {
+function SearchSkeleton({count = 3}) {
   return (
     <View>
       {[...Array(count)].map((_, i) => {

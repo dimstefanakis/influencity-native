@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect} from 'react';
-import {View, ScrollView, Image, SafeAreaView, StyleSheet} from 'react-native';
+import {
+  View,
+  Dimensions,
+  ScrollView,
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native';
 import {useTheme, Text, Subheading, Title} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import Box from '../features/box/Box';
@@ -113,8 +120,16 @@ function FeedHeaderComponent() {
         {user.is_coach ? <CoachActionsList /> : <SubscriberActionsList />}
       </View>
       {!hasLoadedInitial ? (
-        <FeedSkeleton count={4} />
-      ) : myCoaches.length == 0 && posts.length == 0 ? (
+        <View
+          style={{
+            height: Dimensions.get('window').height / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      ) : /*<FeedSkeleton />*/
+      myCoaches.length == 0 && posts.length == 0 ? (
         <EmptyHome />
       ) : (
         <>

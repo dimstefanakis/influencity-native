@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {View, TouchableNativeFeedback} from 'react-native';
+import {View, ActivityIndicator, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {SharedElement} from 'react-navigation-shared-element';
@@ -104,7 +104,16 @@ function Results({results, loading}) {
       </Text>
       <View style={{marginTop: 20}}>
         {loading ? (
-          <SearchSkeleton />
+          /*<SearchSkeleton />*/
+          <View
+            style={{
+              height: 200,
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
         ) : (
           results.map((coach) => {
             return <CoachResult coach={coach} />;
