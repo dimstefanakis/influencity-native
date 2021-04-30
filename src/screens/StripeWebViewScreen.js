@@ -11,10 +11,10 @@ function StripeWebViewScreen({route}) {
   const navigation = useNavigation();
 
   function onWebViewStateChange(navState) {
-    // navigation.goBack();
-    // if (navState && navState.url.includes('?code=')) {
-    //   navigation.goBack();
-    // }
+    //navigation.goBack();
+    if (navState && navState.url.includes('?code=')) {
+      navigation.goBack();
+    }
   }
 
   function handleOnError(e) {

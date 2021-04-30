@@ -138,7 +138,7 @@ function Projects({coach}) {
 
   function isDisplayedCoach() {
     if (user.coach) {
-      return coach.id == user.coach.id;
+      return coach.surrogate == user.coach.surrogate;
     }
   }
 

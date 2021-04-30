@@ -76,7 +76,7 @@ function ProjectScreenDashboard({route}) {
             onPress={() =>
               navigation.navigate('TeamChatScreen', {
                 room: myChatRooms.find(
-                  (room) => room.project == project.id && room.type == 'TM',
+                  (room) => room.project == project.id && room.team_type == 'TM',
                 ),
                 project: project,
               })
@@ -573,11 +573,12 @@ function Chat() {
 function ChatWithCoach({project}) {
   const navigation = useNavigation();
   const {myChatRooms} = useSelector((state) => state.chat);
+  console.log("room.project", myChatRooms);
 
   function onPress() {
     navigation.navigate('TeamChatScreen', {
       room: myChatRooms.find(
-        (room) => room.project == project.id && room.type == 'TC',
+        (room) => room.project == project.id && room.team_type == 'TC',
       ),
       project: project,
     });
