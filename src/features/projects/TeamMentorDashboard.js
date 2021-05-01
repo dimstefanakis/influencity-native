@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Text, Avatar, Surface, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
 import Task from './Task';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 
@@ -16,13 +17,20 @@ import ActionButton from '../../flat/SubmitButton/SubmitButton';
 function TeamMentorDashboard({route}) {
   const theme = useTheme();
   const navigation = useNavigation();
-  const {team, project} = route.params;
+  const {selectedProjectTeams, createdProjects} = useSelector(
+    (state) => state.projects,
+  );
+  let {team, project} = route.params;
+  team = selectedProjectTeams.find((t) => t.surrogate == team.surrogate);
+  project = createdProjects.find((p) => p.id == project.id);
 
+  console.log('team', JSON.stringify(team, null, 2));
   function handleTaskPress(task) {
     if (task.reports.length > 0) {
       navigation.navigate('CompleteTaskMentorScreen', {
         project: project,
         task: task,
+        team: team,
       });
     }
   }
@@ -42,10 +50,13 @@ function TeamMentorDashboard({route}) {
         </Text>
         <View>
           {team.milestones.map((milestone) => {
+            console.log("team", milestone.status)
             return (
               <Task
                 project={project}
-                done={milestone.status == 'accepted'}
+                done={
+                  milestone.status == 'accepted' || milestone.status == 'AC'
+                }
                 status={milestone.status}
                 milestone={milestone}
                 onPress={(report) => handleTaskPress(milestone)}>

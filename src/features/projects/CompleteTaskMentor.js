@@ -15,7 +15,11 @@ import axios from 'axios';
 function CompleteTaskMentor({route}) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {project, task} = route.params;
+  let {project, task, team} = route.params;
+  const {selectedProjectTeams} = useSelector((state) => state.projects);
+  team = selectedProjectTeams.find((t) => t.surrogate == team.surrogate);
+  task = team.milestones.find((t) => t.id == task.id);
+
   const selectedPostItem = useRef(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [acceptLoading, setAcceptLoading] = useState(false);
@@ -28,7 +32,6 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
-  console.log("report", report);
   function handleMediaPress(image, itemIndex) {
     selectedPostItem.current = itemIndex;
     setModalVisible(true);

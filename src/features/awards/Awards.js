@@ -30,7 +30,7 @@ function Awards({route}) {
       formData.append('award', award.id);
       setLoading(true);
       let response = await axios.post(url, formData);
-      dispatch(getMyCreatedProjects());
+      await dispatch(getMyCreatedProjects());
       setLoading(false);
       navigation.goBack();
     } catch (e) {

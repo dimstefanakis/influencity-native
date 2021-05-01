@@ -7,10 +7,10 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function Task({children, project, done = false, status, milestone, onPress}) {
   const theme = useTheme();
-  const [isDone, setDone] = useState(done);
+  //const [isDone, setDone] = useState(done);
   const report = milestone.reports.find((r) => r.milestone == milestone.id);
   let doneStyle =
-    isDone || status == 'pending'
+    done || status == 'pending' || status == 'PD'
       ? {
           textDecorationLine: 'line-through',
           textDecorationStyle: 'solid',
@@ -27,11 +27,15 @@ function Task({children, project, done = false, status, milestone, onPress}) {
           }}>
           <BulletPoint />
           <Text style={{...doneStyle, marginLeft: 5, flex: 1}}>{children}</Text>
-          {isDone || status == 'pending' ? (
+          {done || status == 'pending' || status == 'PD' ? (
             <Icon
               name="check-circle"
               size={14}
-              color={status == 'pending' ? '#e6db0e' : theme.colors.primary}
+              color={
+                status == 'pending' || status == 'PD'
+                  ? '#e6db0e'
+                  : theme.colors.primary
+              }
             />
           ) : (
             <Icon
@@ -41,7 +45,7 @@ function Task({children, project, done = false, status, milestone, onPress}) {
             />
           )}
         </View>
-        {isDone && report.coach_feedback ? (
+        {done && report.coach_feedback ? (
           <View
             style={{
               marginLeft: 20,

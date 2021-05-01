@@ -48,7 +48,13 @@ export const projectsSlice = createSlice({
     projects: [],
     myProjects: [],
     createdProjects: [],
+    selectedProjectTeams: [],
     loading: false,
+  },
+  reducers: {
+    setSelectedProjectTeams(state, action) {
+      state.selectedProjectTeams = action.payload;
+    },
   },
   extraReducers: {
     [getProjects.fulfilled]: (state, action) => {
@@ -73,3 +79,5 @@ export const projectsSlice = createSlice({
     [getMyCreatedProjects.rejected]: (state, action) => {},
   },
 });
+
+export const {setSelectedProjectTeams} = projectsSlice.actions;

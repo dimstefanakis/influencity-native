@@ -8,15 +8,22 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
 } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {Avatar, Text, Subheading, useTheme} from 'react-native-paper';
 import {Config} from 'react-native-config';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
+import {setSelectedProjectTeams} from './projectsSlice';
 import axios from 'axios';
 
 function ProjectCoachScreenDashboard({route}) {
-  const {project} = route.params;
+  const dispatch = useDispatch();
+  const {createdProjects} = useSelector((state) => state.projects);
+  let {project} = route.params;
+
+  // get project from redux to not have stale data
+  project = createdProjects.find((p) => p.id == project.id);
   const {overlapContainer, avatarContainer, avatar} = styles;
   const theme = useTheme();
   const navigation = useNavigation();
@@ -30,6 +37,7 @@ function ProjectCoachScreenDashboard({route}) {
         `${Config.API_URL}/v1/projects/${project.id}/teams/`,
       );
       setTeams(response.data);
+      dispatch(setSelectedProjectTeams(response.data));
       setTierOneTeams(response.data.filter((team) => team.team_tier == 1));
       setTierTwoTeams(response.data.filter((team) => team.team_tier == 2));
     } catch (e) {
@@ -46,7 +54,7 @@ function ProjectCoachScreenDashboard({route}) {
 
   useEffect(() => {
     getTeams();
-  }, []);
+  }, [project]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
