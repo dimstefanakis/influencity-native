@@ -12,7 +12,13 @@ function StripeWebViewScreen({route}) {
 
   function onWebViewStateChange(navState) {
     //navigation.goBack();
-    if (navState && navState.url.includes('?code=')) {
+    if (
+      (navState && navState.url.includes('?code=')) ||
+      (navState && navState.url.includes('reauth'))
+    ) {
+      if (type == 'setup') {
+        dispatch(setConnectAccountStatus(true));
+      }
       navigation.goBack();
     }
   }

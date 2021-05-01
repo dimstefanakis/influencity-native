@@ -11,6 +11,8 @@ function getExpertisePreferences(value) {
     return {colors: ['#00bcf2', '#326dff'], icon: 'google-controller'};
   } else if (value.toLowerCase() === 'programming') {
     return {colors: ['#f25500', '#ff3232'], icon: 'code-braces'};
+  } else if (value.toLowerCase() === 'fitness') {
+    return {colors: ['#e3526e', '#e91c4c'], icon: 'dumbbell'};
   }
 
   return {colors: ['#f25500', '#ff3232'], icon: 'code-braces'};

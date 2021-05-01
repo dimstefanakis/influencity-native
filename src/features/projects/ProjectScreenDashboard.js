@@ -573,7 +573,6 @@ function Chat() {
 function ChatWithCoach({project}) {
   const navigation = useNavigation();
   const {myChatRooms} = useSelector((state) => state.chat);
-  console.log("room.project", myChatRooms);
 
   function onPress() {
     navigation.navigate('TeamChatScreen', {

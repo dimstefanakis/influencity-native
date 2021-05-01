@@ -37,7 +37,7 @@ export function SearchBox({expertise, setSelectedExpertise}) {
       style={{
         height: 130,
         width: '45%',
-        marginTop: 5,
+        marginTop: 15,
         borderRadius: 5,
         overflow: 'hidden',
       }}>

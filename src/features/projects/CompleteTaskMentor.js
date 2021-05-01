@@ -28,6 +28,7 @@ function CompleteTaskMentor({route}) {
       ? task.reports[task.reports.length - 1]
       : null;
 
+  console.log("report", report);
   function handleMediaPress(image, itemIndex) {
     selectedPostItem.current = itemIndex;
     setModalVisible(true);
@@ -107,13 +108,24 @@ function CompleteTaskMentor({route}) {
           </View>
         ) : null}
 
-        <MediaGalleryFullScreen
-          images={report?.images}
-          videos={report?.videos}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          firstItem={selectedPostItem.current}
-        />
+        {report ? (
+          <>
+            <View style={{marginTop: 10}}>
+              <MediaGallery
+                images={report?.images}
+                videos={report?.videos}
+                onPress={handleMediaPress}
+              />
+            </View>
+            <MediaGalleryFullScreen
+              images={report?.images}
+              videos={report?.videos}
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+              firstItem={selectedPostItem.current}
+            />
+          </>
+        ) : null}
         <View>
           <SmallHeader title="Review milestone" />
           <TextInput

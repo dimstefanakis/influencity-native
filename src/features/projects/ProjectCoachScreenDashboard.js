@@ -140,10 +140,7 @@ function Team({team, tier, project, handleTeamPress}) {
             return (
               <View style={avatarContainer}>
                 {member.avatar ? (
-                  <Image
-                    style={avatar}
-                    source={{uri: `${Config.MEDIA}${member.avatar}`}}
-                  />
+                  <Image style={avatar} source={{uri: `${member.avatar}`}} />
                 ) : (
                   <Avatar.Icon style={avatar} icon="face" />
                 )}

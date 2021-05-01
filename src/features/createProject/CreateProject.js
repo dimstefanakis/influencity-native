@@ -83,7 +83,6 @@ function CreateProject({editMode = false, project = project}) {
     }
   }
 
-  console.log(tasks);
   useEffect(() => {
     if (
       !(title && description && teamSize > 0 && difficulty && tasks.length > 0)
@@ -171,7 +170,7 @@ function CreateProject({editMode = false, project = project}) {
             disabled={disabled}
             loading={loading}
             onPress={handleSubmit}>
-            Create project
+            {editMode ? 'Update project' : 'Create project'}
           </ActionButton>
         </View>
       </View>
