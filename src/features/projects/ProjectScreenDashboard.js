@@ -66,6 +66,7 @@ function ProjectScreenDashboard({route}) {
   const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated
   let project = myProjects.find((p) => p.id == route.params.project.id); //|| myProjects[0];
+  console.log("team",project)
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -76,7 +77,8 @@ function ProjectScreenDashboard({route}) {
             onPress={() =>
               navigation.navigate('TeamChatScreen', {
                 room: myChatRooms.find(
-                  (room) => room.project == project.id && room.team_type == 'TM',
+                  (room) =>
+                    room.project == project.id && room.team_type == 'TM',
                 ),
                 project: project,
               })
