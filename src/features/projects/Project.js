@@ -161,7 +161,7 @@ function TasksCompleted({project}) {
     <View style={{marginTop: 20}}>
       <Text style={{...theme.fonts.medium}}>
         Teams have completed {project.team_data.number_of_tasks_completed}/
-        {project.team_data.team_count * project.milestones.length} tasks{' '}
+        {project.milestones.length * project.team_data.team_count} tasks
       </Text>
     </View>
   );
@@ -272,8 +272,7 @@ function ReviewedTasksProgressBar({project}) {
             backgroundColor: '#03a9f4',
             width: `${
               (project.team_data.number_of_tasks_reviewed /
-                project.milestones.length) *
-              project.team_data.number_of_tasks_completed *
+                project.team_data.number_of_tasks_completed) *
               100
             }%`,
           }}
@@ -281,8 +280,7 @@ function ReviewedTasksProgressBar({project}) {
       </View>
       <Text>
         {project.team_data.number_of_tasks_reviewed}/
-        {project.milestones.length *
-          project.team_data.number_of_tasks_completed}
+        {project.team_data.number_of_tasks_completed}
       </Text>
     </View>
   );
