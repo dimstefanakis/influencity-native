@@ -194,12 +194,12 @@ function SubscriberData() {
           </SubscriberBubble>
           <SubscriberBubble>
             <Text style={{fontSize: 18}}>
-              Free: {user.subscriber_data.tier1_subscribers_count}
+              Tier 1: {user.subscriber_data.tier1_subscribers_count}
             </Text>
           </SubscriberBubble>
           <SubscriberBubble>
             <Text style={{fontSize: 18}}>
-              Free: {user.subscriber_data.tier2_subscribers_count}
+              Tier 2: {user.subscriber_data.tier2_subscribers_count}
             </Text>
           </SubscriberBubble>
         </View>
@@ -318,8 +318,8 @@ function Profile() {
   const [routes] = React.useState(
     isCoach
       ? [
-          {key: 'first', title: 'Student'},
-          {key: 'second', title: 'Coach'},
+          {key: 'first', title: 'Me'},
+          {key: 'second', title: 'Dashboard'},
         ]
       : [],
   );
@@ -349,13 +349,15 @@ function Profile() {
       )}
       indicatorStyle={{
         backgroundColor: '#f3f3f3',
-        width: 100,
+        width: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
         height: '100%',
         borderRadius: 30,
       }}
       style={{
         backgroundColor: theme.colors.background,
-        width: 200,
+        width: 300,
         elevation: 0,
         margin: 10,
         borderWidth: 0,
