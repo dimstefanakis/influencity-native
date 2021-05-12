@@ -192,12 +192,12 @@ function CommentEditor({route}) {
         })}
       </View>
 
-      <View
+      {/* <View
         style={{
           flexDirection: 'row',
           height: 80,
           position: 'absolute',
-          bottom: 50,
+          bottom: 100,
           justifyContent: 'center',
         }}>
         <TouchableNativeFeedback onPress={handleSelectImages}>
@@ -212,7 +212,7 @@ function CommentEditor({route}) {
             <Subheading>Add media</Subheading>
           </View>
         </TouchableNativeFeedback>
-      </View>
+      </View> */}
     </View>
   );
 }
