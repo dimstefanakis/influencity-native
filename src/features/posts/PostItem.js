@@ -91,6 +91,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
             ...styles.item,
             minHeight: ratio * screenWidth,
             maxHeight: item.height,
+            width: screenWidth,
           }}>
           <Image
             source={{uri: item.image}}
