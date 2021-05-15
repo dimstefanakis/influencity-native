@@ -22,6 +22,7 @@ function CreateProject({editMode = false, project = project}) {
     editMode ? project.description : '',
   );
   const [teamSize, setTeamSize] = useState(editMode ? project.team_size : 0);
+  const [credit, setCredit] = useState(editMode ? project.credit : 5);
   const [difficulty, setDifficulty] = useState('EA');
   const [prerequisites, setPrerequisites] = useState(
     editMode
@@ -47,6 +48,7 @@ function CreateProject({editMode = false, project = project}) {
       formData.append('description', description);
       formData.append('difficulty', difficulty);
       formData.append('team_size', teamSize);
+      formData.append('credit', credit.toString());
       prerequisites.forEach((p) => {
         formData.append('prerequisites', p.description);
       });
@@ -159,6 +161,28 @@ function CreateProject({editMode = false, project = project}) {
         />
         <Tasks tasks={tasks} setTasks={setTasks} />
         <AttachPosts />
+        <View style={{marginTop: 30, marginLeft: -4}}>
+          <Text style={{marginLeft: 15, fontSize: 20, ...theme.fonts.medium}}>
+            Pricing
+          </Text>
+          <Text style={{marginLeft: 15, marginRight: 15, marginTop: 5}}>
+            Mentees will pay for this project once. First time subscribers can
+            purchase one of their choice project for free. Add the amount in
+            dollars ($).
+          </Text>
+          <TextInput
+            label="Price (USD)"
+            defaultValue={credit.toString()}
+            onChangeText={(text) => setCredit(text)}
+            style={{
+              backgroundColor: 'transparent',
+              fontSize: 26,
+              marginLeft: 5,
+            }}
+            keyboardType="numeric"
+            underlineColor="transparent"
+          />
+        </View>
         <View
           style={{
             width: '100%',

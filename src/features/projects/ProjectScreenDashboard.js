@@ -66,7 +66,7 @@ function ProjectScreenDashboard({route}) {
   const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated
   let project = myProjects.find((p) => p.id == route.params.project.id); //|| myProjects[0];
-  console.log("team",project)
+  console.log('team', project);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -129,21 +129,27 @@ function ProjectAsNonMember({project}) {
   const {myCoaches} = useSelector((state) => state.myCoaches);
   let foundCoach = myCoaches.find((c) => c.surrogate == project.coach_data.id);
 
+  console.log('coach', JSON.stringify(foundCoach, null, 2));
+  console.log('coach', foundCoach);
   async function joinProject() {
-    try {
-      setLoading(true);
-      let response = await axios.post(
-        `${Config.API_URL}/v1/join_project/${project.id}`,
-      );
-      await dispatch(getMyProjects());
-      await dispatch(getMyTeams());
-      await dispatch(getMyChatRooms());
-      // navigation.navigate('Projects');
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.error(e);
-    }
+    navigation.navigate('ProjectPaymentScreen', {
+      coach: foundCoach,
+      project: project,
+    });
+    // try {
+    //   setLoading(true);
+    //   let response = await axios.post(
+    //     `${Config.API_URL}/v1/join_project/${project.id}`,
+    //   );
+    //   await dispatch(getMyProjects());
+    //   await dispatch(getMyTeams());
+    //   await dispatch(getMyChatRooms());
+    //   // navigation.navigate('Projects');
+    //   setLoading(false);
+    // } catch (e) {
+    //   setLoading(false);
+    //   console.error(e);
+    // }
   }
 
   function isDisabled() {
@@ -156,15 +162,15 @@ function ProjectAsNonMember({project}) {
     // they have already subscribed with the tier 1 subscription and have already joined 1 project
 
     return (
-      foundCoach?.tier_full.tier == 'FR' ||
-      (foundCoach?.tier_full.tier == 'T1' &&
-        project.coach_data.number_of_projects_joined == 1)
+      foundCoach?.tier_full.tier == 'FR'
+      // || (foundCoach?.tier_full.tier == 'T1' &&
+      //   project.coach_data.number_of_projects_joined == 1)
     );
   }
 
   function getDisabledText() {
     if (foundCoach?.tier_full.tier == 'FR') {
-      return 'Upgrade to Tier 1 or higher to join projects!';
+      return 'Upgrade to Tier 1 join projects!';
     } else if (
       foundCoach?.tier_full.tier == 'T1' &&
       project.coach_data.number_of_projects_joined == 1
@@ -203,10 +209,14 @@ function ProjectAsNonMember({project}) {
           marginTop: 50,
         }}>
         <ActionButton
+          style={{width: 'auto'}}
+          contentStyle={{width: 'auto'}}
           onPress={joinProject}
           loading={loading}
           disabled={isDisabled()}>
-          Join this project
+          {foundCoach.coupon?.valid
+            ? 'Join this project for free'
+            : `Join this project for $${project.credit}`}
         </ActionButton>
       </View>
       {isDisabled() ? (

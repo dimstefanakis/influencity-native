@@ -53,6 +53,7 @@ import CreateProjectScreen from './src/screens/CreateProjectScreen';
 import EditProjectScreen from './src/screens/EditProjectScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
+import ProjectPaymentScreen from './src/screens/ProjectPaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
 import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import ProjectLinkedPostsScreen from './src/screens/ProjectLinkedPostsScreen';
@@ -344,6 +345,13 @@ const App = () => {
           <VanillaStack.Screen
             name="SubscribePaymentScreen"
             component={SubscribePaymentScreen}
+            options={({route}) => {
+              return {title: '', ...TransitionPresets.ModalPresentationIOS};
+            }}
+          />
+          <VanillaStack.Screen
+            name="ProjectPaymentScreen"
+            component={ProjectPaymentScreen}
             options={({route}) => {
               return {title: '', ...TransitionPresets.ModalPresentationIOS};
             }}

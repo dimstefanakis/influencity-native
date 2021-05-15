@@ -64,7 +64,7 @@ const Item = ({comment, post, setComments}) => {
         style={{
           marginLeft: 20,
           marginRight: 20,
-          marginTop: 10,
+          marginTop: comment.level == 0 ? 50 : 10,
           marginBottom: 10,
           flexDirection: 'row',
         }}>
@@ -136,9 +136,9 @@ function Comments({route}) {
         keyExtractor={(item) => item.id}
       />
       <FAB
-        style={styles.fab}
+        style={{...styles.fab, backgroundColor: theme.colors.primary}}
         icon="reply"
-        color="white"
+        color="black"
         onPress={() =>
           navigation.navigate('CommentsEditor', {
             post: post,
