@@ -1,7 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {View, TouchableNativeFeedback, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableNativeFeedback,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {Text, Subheading, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -15,11 +20,13 @@ function Tier({tier, selectedTier, onPress}) {
         margin: 10,
         borderRadius: 30,
         width: '80%',
-        minHeight: 100,
+        minHeight: Dimensions.get('window').height / 2.8, //100,
         borderColor: '#eee',
         borderWidth: selected ? 0 : 1,
         backgroundColor: selected ? theme.colors.primary : 'transparent',
         overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}>
       <TouchableNativeFeedback useForeground onPress={onPress}>
         <View

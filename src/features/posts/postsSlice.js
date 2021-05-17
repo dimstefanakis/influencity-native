@@ -51,6 +51,7 @@ export const postsSlice = createSlice({
   initialState: {
     posts: [],
     next: null,
+    coachPostCount: 0,
     hasMore: true,
     newPosts: [],
     selectedForAttachment: [],
@@ -68,6 +69,9 @@ export const postsSlice = createSlice({
       state.selectedForAttachment = state.selectedForAttachment.filter(
         (selected) => selected != id,
       );
+    },
+    setCoachPostCount(state, action) {
+      state.coachPostCount = action.payload;
     },
   },
   extraReducers: {
@@ -105,4 +109,8 @@ export const postsSlice = createSlice({
   },
 });
 
-export const {addAttachedPost, removeAttachedPost} = postsSlice.actions;
+export const {
+  addAttachedPost,
+  removeAttachedPost,
+  setCoachPostCount,
+} = postsSlice.actions;

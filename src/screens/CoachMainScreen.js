@@ -11,6 +11,7 @@ import {getProjects} from '../features/projects/projectsSlice';
 
 function CoachMainScreen2({route}) {
   const coach = route.params.coach;
+  const {coachPostCount} = useSelector((state) => state.posts);
   return (
     <View>
       <View style={{width: '100%'}}>
@@ -30,7 +31,7 @@ function CoachMainScreen2({route}) {
             fontSize: 16,
             marginLeft: 20,
           }}>
-          3 pieces of knowdlege
+          {coachPostCount} pieces of knowdlege
         </Text>
       </View>
     </View>
