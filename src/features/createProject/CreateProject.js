@@ -11,6 +11,19 @@ import axios from 'axios';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import {getMyCreatedProjects} from '../projects/projectsSlice';
 
+function getDifficulty(difficulty) {
+  if (difficulty == 'Easy') {
+    return 'EA';
+  }
+  if (difficulty == 'Intermediate') {
+    return 'IM';
+  }
+  if (difficulty == 'Advanced') {
+    return 'AD';
+  }
+  return 'EA';
+}
+
 function CreateProject({editMode = false, project = project}) {
   console.log(project);
   const theme = useTheme();
@@ -23,7 +36,9 @@ function CreateProject({editMode = false, project = project}) {
   );
   const [teamSize, setTeamSize] = useState(editMode ? project.team_size : 0);
   const [credit, setCredit] = useState(editMode ? project.credit : 5);
-  const [difficulty, setDifficulty] = useState('EA');
+  const [difficulty, setDifficulty] = useState(
+    editMode ? getDifficulty(project.difficulty) : 'EA',
+  );
   const [prerequisites, setPrerequisites] = useState(
     editMode
       ? project.prerequisites.map((pr) => {
@@ -118,15 +133,7 @@ function CreateProject({editMode = false, project = project}) {
             Difficulty
           </Text>
           <RadioButton.Group
-            defaultValue={
-              editMode
-                ? project.difficulty == 'Advanced'
-                  ? 'AD'
-                  : project.difficulty == 'Intermediate'
-                  ? 'IM'
-                  : 'EA'
-                : 'EA'
-            }
+            defaultValue={editMode ? getDifficulty(project.difficulty) : 'EA'}
             onValueChange={(newValue) => setDifficulty(newValue)}
             value={difficulty}>
             <RadioButton.Item label="Easy" value="EA" />

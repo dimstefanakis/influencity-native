@@ -18,18 +18,22 @@ function getExpertisePreferences(value) {
   return {colors: ['#f25500', '#ff3232'], icon: 'code-braces'};
 }
 
-export function SearchBox({expertise, setSelectedExpertise}) {
+export function SearchBox({expertise, setSelectedExpertise, onSelect}) {
   const navigation = useNavigation();
   const theme = useTheme();
   let {colors, icon} = getExpertisePreferences(expertise.name);
 
   function handleBoxClick() {
-    setSelectedExpertise(expertise);
-    navigation.navigate('SearchFocus', {
-      selectedExpertise: expertise,
-      setSelectedExpertise: setSelectedExpertise,
-      focus: false,
-    });
+    if (onSelect) {
+      onSelect();
+    } else {
+      setSelectedExpertise(expertise);
+      navigation.navigate('SearchFocus', {
+        selectedExpertise: expertise,
+        setSelectedExpertise: setSelectedExpertise,
+        focus: false,
+      });
+    }
   }
 
   return (

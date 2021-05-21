@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
-import {Button, Avatar, Text, useTheme} from 'react-native-paper';
+import {Button, Avatar, Badge, Text, useTheme} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
@@ -20,6 +20,7 @@ import {WebView} from 'react-native-webview';
 import MyProjects from '../projects/MyProjects';
 import CoachHorizontalList from '../coachHorizontalList/CoachHorizontalList';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
+import AlertBox from '../alertBox/AlertBox';
 import axios from 'axios';
 
 function Header({title}) {
@@ -294,16 +295,30 @@ function SetupStripeAccount() {
   }
 
   return (
-    <View style={{margin: 20, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{margin: 20, justifyContent: 'center'}}>
+      {!user.coach.charges_enabled ? (
+        <View style={{marginTop: 20, marginBottom: 40}}>
+          <AlertBox
+            type="warning"
+            title="Setup your payout method"
+            description="In order for you to be visible as a coach you need to setup your payout method"
+          />
+        </View>
+      ) : null}
       <Text style={{...theme.fonts.medium, fontSize: 24}}>Payout status</Text>
-      <Text style={{marginTop: 20, fontSize: 16, textAlign: 'center'}}>
+      <Text style={{marginTop: 20, fontSize: 16}}>
         {settingUpConnectAccount
           ? 'Your account is currently being processed by stripe and will be shortly available. In the meanwhile you can review your application in case you missed required information.'
           : 'Troosh uses Stripe to get you paid quickly and keep your personal and payment information secure. Thousands of companies around the world trust Stripe to process payments for their users. Set up a Stripe account to get paid with Troosh.'}
       </Text>
-      <ActionButton loading={loading} onPress={handleCreateStripeAccount}>
-        {settingUpConnectAccount ? 'Review application' : 'Setup account'}
-      </ActionButton>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <ActionButton
+          style={{maxWidth: 300}}
+          loading={loading}
+          onPress={handleCreateStripeAccount}>
+          {settingUpConnectAccount ? 'Review application' : 'Setup account'}
+        </ActionButton>
+      </View>
     </View>
   );
 }
@@ -336,16 +351,35 @@ function Profile() {
     <TabBar
       {...props}
       renderLabel={({route, focused, color}) => (
-        <Text
-          style={{
-            color: 'black',
-            margin: 8,
-            width: '100%',
-            fontSize: 18,
-            ...getLabelExtraStyle(focused),
-          }}>
-          {route.title}
-        </Text>
+        <View style={{position: 'relative'}}>
+          {route.title == 'Dashboard' &&
+          user.coach &&
+          !user.coach.charges_enabled ? (
+            <View
+              style={{
+                position: 'absolute',
+                right: -7,
+                top: -7,
+                zIndex: 1,
+              }}>
+              <Badge
+                style={{
+                  backgroundColor: theme.colors.brandOrange,
+                }}
+              />
+            </View>
+          ) : null}
+          <Text
+            style={{
+              color: 'black',
+              margin: 8,
+              width: '100%',
+              fontSize: 18,
+              ...getLabelExtraStyle(focused),
+            }}>
+            {route.title}
+          </Text>
+        </View>
       )}
       indicatorStyle={{
         backgroundColor: '#f3f3f3',

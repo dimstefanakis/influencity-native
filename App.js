@@ -67,6 +67,8 @@ import ChangeTier from './src/features/tiers/ChangeTier';
 import EditProfile from './src/features/profile/EditProfile';
 import Gallery from './src/screens/GalleryScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
+import CoachOnboardScreen from './src/screens/CoachOnboardScreen';
+import SelectExpertiseScreen from './src/screens/SelectExpertiseScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import {getMyTiers} from './src/features/tiers/tiersSlice';
@@ -182,6 +184,19 @@ const App = () => {
     return <SplashScreen />;
   }
 
+  function getInitialRoute() {
+    if (token) {
+      if (!checkingForToken) {
+        if (user && user?.coach && !user?.coach?.seen_welcome_page) {
+          return 'CoachOnboardScreen';
+        }
+      }
+      return 'BottomStackNavigation';
+    } else {
+      return 'Login';
+    }
+  }
+
   // change dark theme here
   return (
     <PaperProvider theme={theme}>
@@ -190,7 +205,7 @@ const App = () => {
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
-          initialRouteName={token ? 'BottomStackNavigation' : 'Login'}
+          initialRouteName={getInitialRoute()}
           screenOptions={{
             gestureEnabled: true,
             cardOverlayEnabled: true,
@@ -252,6 +267,22 @@ const App = () => {
           <VanillaStack.Screen
             name="CoachSubmissionSentScreen"
             component={CoachSubmissionSentScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="CoachOnboardScreen"
+            component={CoachOnboardScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          />
+          <VanillaStack.Screen
+            name="SelectExpertiseScreen"
+            component={SelectExpertiseScreen}
             options={{
               title: '',
               headerShown: false,
@@ -522,7 +553,25 @@ function BottomStackNavigation() {
             );
           }
           if (route.name === 'ProfileScreen') {
-            return <AntDesign name={'user'} size={24} color={color} />;
+            return (
+              <View>
+                <AntDesign name={'user'} size={24} color={color} />
+                {user.coach && !user.coach.charges_enabled ? (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: -10,
+                      right: -10,
+                    }}>
+                    <Badge
+                      style={{
+                        backgroundColor: theme.colors.brandOrange,
+                      }}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            );
           }
           if (route.name === 'Home') {
             iconName = 'home';
