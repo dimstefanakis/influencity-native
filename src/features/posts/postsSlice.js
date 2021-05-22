@@ -57,6 +57,7 @@ export const postsSlice = createSlice({
     selectedForAttachment: [],
     loading: false,
     hasLoadedInitial: false,
+    hasLoadedInitialCoachPosts: false,
     feedLoading: true,
   },
   reducers: {
@@ -72,6 +73,9 @@ export const postsSlice = createSlice({
     },
     setCoachPostCount(state, action) {
       state.coachPostCount = action.payload;
+    },
+    setHasLoadedInitialCoachPosts(state, action) {
+      state.hasLoadedInitialCoachPosts = action.payload;
     },
   },
   extraReducers: {
@@ -113,4 +117,5 @@ export const {
   addAttachedPost,
   removeAttachedPost,
   setCoachPostCount,
+  setHasLoadedInitialCoachPosts,
 } = postsSlice.actions;

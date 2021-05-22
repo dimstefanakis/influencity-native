@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useEffect} from 'react';
-import {Image, View, SafeAreaView} from 'react-native';
+import {Image, View, SafeAreaView, ActivityIndicator} from 'react-native';
 import {Button, Chip, FAB, Avatar, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
 import {SharedElement} from 'react-navigation-shared-element';
@@ -11,7 +11,10 @@ import {getProjects} from '../features/projects/projectsSlice';
 
 function CoachMainScreen2({route}) {
   const coach = route.params.coach;
-  const {coachPostCount} = useSelector((state) => state.posts);
+  const theme = useTheme();
+  const {coachPostCount, hasLoadedInitialCoachPosts} = useSelector(
+    (state) => state.posts,
+  );
   return (
     <View>
       <View style={{width: '100%'}}>
@@ -33,6 +36,17 @@ function CoachMainScreen2({route}) {
           }}>
           {coachPostCount} pieces of knowdlege
         </Text>
+        {hasLoadedInitialCoachPosts ? null : (
+          <View
+            style={{
+              width: '100%',
+              height: 300,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        )}
       </View>
     </View>
   );

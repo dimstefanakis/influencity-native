@@ -63,6 +63,15 @@ function CoachPostList({ListHeaderComponent, coach}) {
   );
 
   const renderItem = ({item}) => <PostItem post={item} />;
+  const onEndReachedCalledDuringMomentum = useRef(null);
+
+  function loadMore() {
+    getPosts();
+  }
+
+  useEffect(() => {
+    loadMore();
+  }, []);
 
   return (
     <FlatList
@@ -70,7 +79,15 @@ function CoachPostList({ListHeaderComponent, coach}) {
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={ListHeaderComponent}
-      onEndReached={getPosts}
+      onMomentumScrollBegin={() => {
+        onEndReachedCalledDuringMomentum.current = false;
+      }}
+      onEndReached={() => {
+        if (!onEndReachedCalledDuringMomentum.current) {
+          loadMore(); // LOAD MORE DATA
+          onEndReachedCalledDuringMomentum.current = true;
+        }
+      }}
     />
   );
 }

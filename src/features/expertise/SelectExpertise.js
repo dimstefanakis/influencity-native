@@ -55,10 +55,9 @@ function SelectExpertise() {
   }
 
   return (
-    <SafeAreaView style={{backgroundColor: theme.colors.background}}>
+    <SafeAreaView style={{backgroundColor: theme.colors.background, flex: 1}}>
       <ScrollView
         contentContainerStyle={{
-          height: '100%',
           backgroundColor: theme.colors.background,
         }}>
         {/* <Text
