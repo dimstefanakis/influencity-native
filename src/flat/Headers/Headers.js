@@ -46,3 +46,29 @@ export function BigHeader({title, icon}) {
     </View>
   );
 }
+
+export function BiggerHeader({title, icon}) {
+  const theme = useTheme();
+
+  return (
+    <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+      {icon ? (
+        <Avatar.Icon
+          size={30}
+          style={{marginRight: 10}}
+          color="white"
+          icon={({size, color}) => (
+            <AntDesign name="rocket1" size={size} color="black" />
+          )}
+        />
+      ) : null}
+      <Text
+        style={{
+          fontSize: 34,
+          ...theme.fonts.medium,
+        }}>
+        {title}
+      </Text>
+    </View>
+  );
+}

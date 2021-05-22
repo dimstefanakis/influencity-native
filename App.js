@@ -190,6 +190,10 @@ const App = () => {
         if (user && user?.coach && !user?.coach?.seen_welcome_page) {
           return 'CoachOnboardScreen';
         }
+
+        if (user && user?.coach && !user?.coach?.submitted_expertise) {
+          return 'SelectExpertiseScreen';
+        }
       }
       return 'BottomStackNavigation';
     } else {
