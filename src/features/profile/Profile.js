@@ -52,7 +52,6 @@ function AwardList() {
           style={{
             margin: 20,
             fontSize: 20,
-            textAlign: 'center',
             color: 'gray',
           }}>
           Join projects and get awarded on your progress!
@@ -95,7 +94,9 @@ function ProjectHistory() {
 
 function MyCoachList() {
   const theme = useTheme();
-  return (
+  const {myCoaches, loading} = useSelector((state) => state.myCoaches);
+
+  return myCoaches.length == 0 && !loading ? null : (
     <View>
       <Header title="My subscriptions" />
       <CoachHorizontalList withTiers />
@@ -239,7 +240,6 @@ const StudentRoute = () => {
       <AwardList />
       <ProjectHistory />
       <MyCoachList />
-      <Button onPress={handleClick}>Logout</Button>
     </View>
   );
 };

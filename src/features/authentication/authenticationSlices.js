@@ -40,6 +40,21 @@ export const login = createAsyncThunk(
   },
 );
 
+export const changePassword = createAsyncThunk(
+  'authentication/changePassword',
+  async (data) => {
+    const url = Config.DOMAIN + '/rest-auth/password/change/';
+    try {
+      let formData = new FormData();
+      formData.append('old_password', data.oldPassword);
+      formData.append('new_password1', data.newPassword1);
+      formData.append('new_password2', data.newPassword2);
+      let response = await axios.post(url, formData);
+      return response;
+    } catch (e) {}
+  },
+);
+
 export const forgotPassword = createAsyncThunk(
   'authentication/forgotPassword',
   async (email) => {
@@ -158,8 +173,17 @@ export const authenticationSlice = createSlice({
     refresh: null,
     user: null,
     loading: false,
+    changePasswordLoading: false,
     updatingUserData: false,
     checkingForToken: true,
+  },
+  reducers: {
+    async logout(state, action) {
+      state.token = null;
+      state.refresh = null;
+      await AsyncStorage.removeItem('@token');
+      await AsyncStorage.removeItem('@refresh');
+    },
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
@@ -225,5 +249,16 @@ export const authenticationSlice = createSlice({
     [forgotPassword.rejected]: (state, action) => {
       state.loading = false;
     },
+    [changePassword.fulfilled]: (state, action) => {
+      state.changePasswordLoading = false;
+    },
+    [changePassword.pending]: (state, action) => {
+      state.changePasswordLoading = true;
+    },
+    [changePassword.rejected]: (state, action) => {
+      state.changePasswordLoading = false;
+    },
   },
 });
+
+export const {logout} = authenticationSlice.actions;

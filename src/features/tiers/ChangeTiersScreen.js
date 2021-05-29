@@ -24,10 +24,12 @@ function ChangeTiers() {
     dispatch(getMyTiers());
   }, [dispatch]);
   return (
-    <View
+    <ScrollView
       style={{
         width: '100%',
         flex: 1,
+      }}
+      contentContainerStyle={{
         justifyContent: 'space-around',
         alignItems: 'center',
       }}>
@@ -39,7 +41,7 @@ function ChangeTiers() {
           />
         );
       })}
-    </View>
+    </ScrollView>
   );
 }
 

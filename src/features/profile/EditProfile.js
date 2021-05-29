@@ -18,6 +18,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Config from 'react-native-config';
 import RNFetchBlob from 'rn-fetch-blob';
 import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import {useSelector, useDispatch} from 'react-redux';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
@@ -27,7 +28,6 @@ import axios from 'axios';
 function EditProfile() {
   const theme = useTheme();
   const {user, token} = useSelector((state) => state.authentication);
-  console.log(user);
   const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState(user.subscriber.name);
   const [bio, setBio] = useState('');
@@ -70,6 +70,9 @@ function EditProfile() {
         setLoading(false);
         console.log(r, 'response');
         if (r.respInfo.status == 200 || r.respInfo.status == 201) {
+          Toast.show({
+            text1: 'Saved changes!',
+          });
           dispatch(updateUserData());
           //navigation.goBack();
         }
@@ -85,13 +88,18 @@ function EditProfile() {
         formdata.append('bio', bio);
         setLoading(true);
         let response = await axios.patch(url, formdata);
+        if (response.status == 200) {
+          Toast.show({
+            text1: 'Saved changes!',
+          });
+        }
         setLoading(false);
         dispatch(updateUserData());
       }
     }
   }
   return (
-    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView style={{flex: 1, backgroundColor: theme.colors.background}}>
       <View style={{...styles.spacing}}>
         <View
           style={{
@@ -135,7 +143,7 @@ function EditProfile() {
             value={name}
             onChangeText={(text) => setName(text)}
             label="Name"
-            style={{borderWidth: 0, backgroundColor: 'white'}}
+            style={{borderWidth: 0, backgroundColor: theme.colors.background}}
           />
         </View>
         {user.is_coach ? (
@@ -147,7 +155,10 @@ function EditProfile() {
                 numberOfLines={4}
                 onChangeText={(text) => setBio(text)}
                 label="Bio"
-                style={{borderWidth: 0, backgroundColor: 'white'}}
+                style={{
+                  borderWidth: 0,
+                  backgroundColor: theme.colors.background,
+                }}
               />
             </View>
           </>

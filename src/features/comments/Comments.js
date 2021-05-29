@@ -13,6 +13,7 @@ import {Text, Avatar, FAB, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {Config} from 'react-native-config';
 import CommentToolbar from './CommentToolbar';
+import EmptyComments from './EmptyComments';
 import axios from 'axios';
 
 function squeezeReplies(setComments, replies, parent) {
@@ -106,6 +107,7 @@ function Comments({route}) {
   const theme = useTheme();
   const {post} = route.params;
   const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [next, setNext] = useState(null);
   const [hasMore, setHasMore] = useState(true);
 
@@ -116,9 +118,12 @@ function Comments({route}) {
   async function getComments() {
     try {
       let url = `${Config.API_URL}/v1/comments/${post.id}/`;
+      setLoading(true);
       let response = await axios.get(url);
+      setLoading(false);
       setComments(response.data.results);
     } catch (e) {
+      setLoading(false);
       console.error(e);
     }
   }
@@ -130,11 +135,16 @@ function Comments({route}) {
   return (
     <View
       style={{...styles.container, backgroundColor: theme.colors.background}}>
-      <FlatList
-        data={comments}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {!loading && comments.length == 0 ? (
+        <EmptyComments />
+      ) : (
+        <FlatList
+          data={comments}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      )}
+
       <FAB
         style={{...styles.fab, backgroundColor: theme.colors.primary}}
         icon="reply"

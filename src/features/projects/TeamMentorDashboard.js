@@ -20,11 +20,12 @@ function TeamMentorDashboard({route}) {
   const {selectedProjectTeams, createdProjects} = useSelector(
     (state) => state.projects,
   );
+  const {myChatRooms} = useSelector((state) => state.chat);
+
   let {team, project} = route.params;
   team = selectedProjectTeams.find((t) => t.surrogate == team.surrogate);
   project = createdProjects.find((p) => p.id == project.id);
 
-  console.log('team', JSON.stringify(team, null, 2));
   function handleTaskPress(task) {
     if (task.reports.length > 0) {
       navigation.navigate('CompleteTaskMentorScreen', {
@@ -33,6 +34,15 @@ function TeamMentorDashboard({route}) {
         team: team,
       });
     }
+  }
+
+  function onPress() {
+    navigation.navigate('TeamChatScreen', {
+      room: myChatRooms.find(
+        (room) => room.project == project.id && room.team_type == 'TC',
+      ),
+      project: project,
+    });
   }
 
   return (
@@ -50,7 +60,7 @@ function TeamMentorDashboard({route}) {
         </Text>
         <View>
           {team.milestones.map((milestone) => {
-            console.log("team", milestone.status)
+            console.log('team', milestone.status);
             return (
               <Task
                 project={project}
@@ -74,7 +84,9 @@ function TeamMentorDashboard({route}) {
             marginTop: 40,
             marginBottom: 40,
           }}>
-          <ActionButton icon="chat-outline">Chat with team</ActionButton>
+          <ActionButton icon="chat-outline" onPress={onPress}>
+            Chat with team
+          </ActionButton>
         </View>
       </View>
     </ScrollView>

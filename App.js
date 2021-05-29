@@ -19,6 +19,7 @@ import {changeNavigationBarColor} from 'react-native-navigation-bar-color';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {loadStripe} from '@stripe/stripe-js';
 import Config from 'react-native-config';
+import Toast from 'react-native-toast-message';
 import {enableScreens} from 'react-native-screens';
 import {useGalleryInit} from 'react-native-gallery-toolkit';
 enableScreens();
@@ -65,6 +66,7 @@ import Settings from './src/features/settings/Settings';
 import TierSettings from './src/features/settings/TierSettings';
 import ChangeTier from './src/features/tiers/ChangeTier';
 import EditProfile from './src/features/profile/EditProfile';
+import PrivacySettings from './src/features/settings/PrivacySettings';
 import Gallery from './src/screens/GalleryScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import CoachOnboardScreen from './src/screens/CoachOnboardScreen';
@@ -121,6 +123,8 @@ const theme = {
     accent: '#5CD6FF',
     textPrimary: '#141414',
     brandOrange: '#ffd29b',
+    warningRed: '#b33a3a',
+    successBlue: '#00BFFF',
     background: 'white',
   },
 };
@@ -135,6 +139,8 @@ const darkTheme = {
     accent: '#5CD6FF',
     textPrimary: '#141414',
     brandOrange: '#ffd29b',
+    warningRed: '#b33a3a',
+    successBlue: '#00BFFF',
     background: 'black',
   },
 };
@@ -476,6 +482,13 @@ const App = () => {
             }}
           />
           <VanillaStack.Screen
+            name="PrivacySettings"
+            component={PrivacySettings}
+            options={{
+              title: '',
+            }}
+          />
+          <VanillaStack.Screen
             name="ChangeTierScreen"
             component={ChangeTier}
             options={{
@@ -487,7 +500,7 @@ const App = () => {
             component={AwardsScreen}
             options={{
               title: 'Give award',
-              ...TransitionPresets.ModalPresentationIOS,
+              ...TransitionPresets.ModalPrxesentationIOS,
             }}
           />
           <VanillaStack.Screen
@@ -501,6 +514,7 @@ const App = () => {
             }}
           />
         </VanillaStack.Navigator>
+        <Toast ref={(ref) => Toast.setRef(ref)} />
       </NavigationContainer>
     </PaperProvider>
   );

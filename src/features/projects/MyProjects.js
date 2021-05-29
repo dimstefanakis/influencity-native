@@ -21,6 +21,7 @@ import {
 import Project from './Project';
 import {useDispatch, useSelector} from 'react-redux';
 import Config from 'react-native-config';
+import LottieView from 'lottie-react-native';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/dist/AntDesign';
 import {getMyProjects} from '../projects/projectsSlice';
@@ -77,20 +78,24 @@ function MyProjects({viewAs = 'sub'}) {
             alignItems: 'center',
           }}>
           {viewAs == 'my_profile' ? null : (
-            <AntDesign name="rocket1" size={200} color="#c7c7c7" />
+            <LottieView
+              source={require('../../common/lottie/tumbleweed.json')}
+              autoPlay
+              loop
+              style={{width: '100%'}}
+            />
           )}
           <Text
             style={{
-              marginLeft: 20,
               marginRight: 20,
               marginTop: 20,
               fontSize: 20,
-              textAlign: 'center',
+              textAlign: viewAs == 'my_profile' ? 'left' : 'center',
               color: 'gray',
             }}>
             Subscribe to coaches and participate in interactive projects!
           </Text>
-          <View>
+          <View style={{marginBottom: 20}}>
             <ActionButton onPress={handleExplorePress}>
               Explore coaches
             </ActionButton>

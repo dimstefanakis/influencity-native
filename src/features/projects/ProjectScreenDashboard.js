@@ -91,7 +91,7 @@ function ProjectScreenDashboard({route}) {
   }, [myChatRooms, navigation, project]);
 
   useEffect(() => {
-    LocalNotification();
+    //LocalNotification();
   }, []);
 
   // This handles the case where the user is not a member of the project

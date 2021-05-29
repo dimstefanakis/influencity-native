@@ -32,7 +32,7 @@ function CoachActionsList() {
 
   function handleCreatePostPress() {
     navigation.navigate('PostEditor');
-    LocalNotification();
+    //LocalNotification();
   }
 
   function handleViewProjectsPress() {

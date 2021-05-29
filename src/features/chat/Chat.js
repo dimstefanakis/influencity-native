@@ -43,6 +43,8 @@ function Chat({route}) {
   //const {room} = route.params;
 
   const [loading, setLoading] = useState(false);
+  const [roomLoading, setRoomLoading] = useState(false);
+  const [wsStatus, setWsStatus] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [scrollOffset, setScrollOffset] = useState(null);
   const [messageText, setMessage] = useState('');
@@ -160,6 +162,21 @@ function Chat({route}) {
       <Bubble {...props} currentMessage={parsedMessage} />
     );
   }
+
+  useEffect(() => {
+    try {
+      const ws = wsContext.data.find((d) => d.room.id == room.id).ws;
+      console.log('ready', ws.readyState);
+      setWsStatus(ws.readyState);
+      // if (ws.readyState == 0) {
+      //   setRoomLoading(true);
+      // } else {
+      //   setRoomLoading(false);
+      // }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [wsContext.data, room.id]);
 
   const onTextChange = (value, props) => {
     const lastChar = messageText.substr(messageText.length - 1);
@@ -327,6 +344,41 @@ function Chat({route}) {
 
   return (
     <View style={{backgroundColor: theme.colors.background, flex: 1}}>
+      {wsStatus == 0 || wsStatus == 3 ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 30,
+            height: 40,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '80%',
+              height: '100%',
+              backgroundColor:
+                wsStatus == 0
+                  ? theme.colors.successBlue
+                  : theme.colors.warningRed,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 10,
+            }}>
+            {wsStatus == 0 && (
+              <Text style={{textAlign: 'center', ...theme.fonts.medium}}>
+                Connecting to chat...
+              </Text>
+            )}
+            {wsStatus == 3 && (
+              <Text style={{textAlign: 'center', ...theme.fonts.medium}}>
+                Could not connect to chat
+              </Text>
+            )}
+          </View>
+        </View>
+      ) : null}
       <Modal
         isVisible={modalVisible}
         coverScreen={false}

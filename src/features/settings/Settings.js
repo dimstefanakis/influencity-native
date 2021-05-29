@@ -10,9 +10,10 @@ import {
 import {Text, Divider, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useNavigation, CommonActions} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
 import SettingsStack from './SettingsStack';
+import {logout} from '../authentication/authenticationSlices';
 
 function Settings() {
   const theme = useTheme();
@@ -31,7 +32,10 @@ function Settings() {
             Settings
           </Text>
           <ProfileSettings />
-          {user.is_coach ? (
+          <PrivacySettings />
+          <Logout />
+          {/* Needs work so just dont render this for now */}
+          {user && user.is_coach && false ? (
             <>
               <Divider />
               <MyTiersSettings />
@@ -57,6 +61,20 @@ function ProfileSettings() {
   );
 }
 
+function PrivacySettings() {
+  const navigation = useNavigation();
+  function handlePress() {
+    navigation.push('PrivacySettings');
+  }
+
+  return (
+    <View style={{marginTop: 20, marginBottom: 10}}>
+      <Header title="Privacy" />
+      <Setting icon="lock" text="Reset password" onPress={handlePress} />
+    </View>
+  );
+}
+
 function GeneralSettings() {}
 
 function MyTiersSettings() {
@@ -68,6 +86,34 @@ function MyTiersSettings() {
     <View style={{marginTop: 10, marginBottom: 10}}>
       <Header title="My tiers" />
       <Setting icon="staro" text="Change my tiers" onPress={handlePress} />
+    </View>
+  );
+}
+
+function Logout() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+
+  function handlePress() {
+    dispatch(logout());
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      }),
+    );
+  }
+  return (
+    <View style={{marginTop: 10, marginBottom: 10}}>
+      <Header title="Logout" />
+      <Setting
+        icon="logout"
+        text="Logout"
+        color={theme.colors.warningRed}
+        onPress={handlePress}
+      />
     </View>
   );
 }
@@ -102,7 +148,7 @@ function Setting({text, icon, color = 'black', onPress}) {
           style={{padding: 10, borderRadius: 100, backgroundColor: '#f3f3f3'}}>
           <AntDesign name={icon} size={20} color={color} />
         </View>
-        <Text style={{flex: 1, marginLeft: 10}}>{text}</Text>
+        <Text style={{flex: 1, marginLeft: 10, color: color}}>{text}</Text>
       </View>
     </TouchableNativeFeedback>
   );
