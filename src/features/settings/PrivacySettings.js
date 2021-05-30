@@ -12,6 +12,7 @@ import ActionButton from '../../flat/SubmitButton/SubmitButton';
 function PrivacySettings() {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState({});
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordAgain, setNewPasswordAgain] = useState('');
@@ -24,8 +25,31 @@ function PrivacySettings() {
         newPassword1: newPassword,
         newPassword2: newPasswordAgain,
       }),
-    );
+    )
+      .then(unwrapResult)
+      .then((result) => {
+        if (result.status == 200) {
+          setErrors({});
+          Toast.show({
+            text1: 'Updated password!',
+          });
+        }
+        if (result.status == 400) {
+          setErrors(result.data);
+        }
+      });
   }
+
+  function getFlatErrors() {
+    let nestedErrors = Object.keys(errors).map((key) => {
+      return errors[key].map((err) => {
+        console.log(err);
+        return err;
+      });
+    });
+    return nestedErrors.flat();
+  }
+  console.log('error', errors, getFlatErrors());
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: theme.colors.background}}>
@@ -61,20 +85,29 @@ function PrivacySettings() {
               style={{borderWidth: 0, backgroundColor: theme.colors.background}}
             />
           </View>
-          {newPassword != newPasswordAgain && (
-            <View
-              style={{
-                marginTop: 20,
-                marginBottom: 20,
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{color: theme.colors.warningRed}}>
-                Passwords don't match
-              </Text>
-            </View>
-          )}
+          {newPassword != newPasswordAgain ||
+            (Object.keys(errors).length > 0 && (
+              <View
+                style={{
+                  marginTop: 10,
+                  marginBottom: 20,
+                  width: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: theme.colors.warningRed, marginTop: 10}}>
+                  Passwords don't match
+                </Text>
+                {getFlatErrors().map((err) => {
+                  return (
+                    <Text
+                      style={{color: theme.colors.warningRed, marginTop: 10}}>
+                      {err}
+                    </Text>
+                  );
+                })}
+              </View>
+            ))}
           <View
             style={{
               width: '100%',

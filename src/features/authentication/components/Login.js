@@ -20,6 +20,7 @@ import {getMyTiers} from '../../tiers/tiersSlice';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
 import SubmitButton from '../../../flat/SubmitButton/SubmitButton';
+import useKeyboardOpen from '../../../hooks/useKeyboardOpen';
 
 function Login() {
   const theme = useTheme();
@@ -30,6 +31,8 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
+
+  const isKeyboardVisible = useKeyboardOpen();
 
   async function handlePress() {
     setErrors([]);
@@ -78,7 +81,9 @@ function Login() {
       }}>
       <TopLeft style={{position: 'absolute', top: 0, left: 0}} />
       <BottomRight style={{position: 'absolute', bottom: 0, right: 0}} />
-      <Image source={require('../../../../assets/images/96.png')} />
+      {!isKeyboardVisible && (
+        <Image source={require('../../../../assets/images/96.png')} />
+      )}
       <Text
         style={{
           fontSize: 24,

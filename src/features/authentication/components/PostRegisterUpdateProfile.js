@@ -28,6 +28,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {updateUserData} from '../authenticationSlices';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
+import useKeyboardOpen from '../../../hooks/useKeyboardOpen';
 
 function PostRegisterUpdateProfile() {
   const theme = useTheme();
@@ -40,6 +41,8 @@ function PostRegisterUpdateProfile() {
   const [name, setName] = useState('');
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const isKeyboardVisible = useKeyboardOpen();
 
   console.log(user);
   function handleChangeAvatar() {

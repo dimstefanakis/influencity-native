@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import Config from 'react-native-config';
 import {Text, TextInput, useTheme} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
@@ -43,7 +43,13 @@ function SelectExpertise() {
       let response = await axios.post(url, formdata);
       dispatch(updateUserData());
       setLoading(false);
-      navigation.navigate('BottomStackNavigation');
+      //navigation.navigate('BottomStackNavigation');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'BottomStackNavigation'}],
+        }),
+      );
     } catch (e) {
       setLoading(false);
       console.error(e);

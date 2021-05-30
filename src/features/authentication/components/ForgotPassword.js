@@ -8,6 +8,7 @@ import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
 import {forgotPassword} from '../authenticationSlices';
 import {unwrapResult} from '@reduxjs/toolkit';
+import useKeyboardOpen from '../../../hooks/useKeyboardOpen';
 
 function ForgotPassword() {
   const theme = useTheme();
@@ -17,6 +18,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
+  const isKeyboardVisible = useKeyboardOpen();
 
   function handleLoginPress() {
     navigation.navigate('Login');
@@ -41,7 +43,9 @@ function ForgotPassword() {
       }}>
       <TopLeft style={{position: 'absolute', top: 0, left: 0}} />
       <BottomRight style={{position: 'absolute', bottom: 0, right: 0}} />
-      <Image source={require('../../../../assets/images/96.png')} />
+      {!isKeyboardVisible && (
+        <Image source={require('../../../../assets/images/96.png')} />
+      )}
       <Text
         style={{
           fontSize: 24,

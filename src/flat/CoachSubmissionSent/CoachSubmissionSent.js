@@ -2,7 +2,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Text, Button, useTheme} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, CommonActions} from '@react-navigation/native';
 import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {BigHeader} from '../Headers/Headers';
 import SubmitButton from '../SubmitButton/SubmitButton';
@@ -12,7 +12,13 @@ function CoachSubmissionSent() {
   const navigation = useNavigation();
 
   function onSubmitPress() {
-    navigation.navigate('BottomStackNavigation');
+    //navigation.navigate('BottomStackNavigation');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'BottomStackNavigation'}],
+      }),
+    );
   }
   return (
     <View

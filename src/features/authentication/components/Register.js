@@ -18,6 +18,7 @@ import {TextInput, Text, Button, useTheme} from 'react-native-paper';
 import {register} from '../authenticationSlices';
 import TopLeft from './Illustrations/TopLeftIllustration';
 import BottomRight from './Illustrations/BottomRightIllustration';
+import useKeyboardOpen from '../../../hooks/useKeyboardOpen';
 
 function Register() {
   const theme = useTheme();
@@ -29,6 +30,8 @@ function Register() {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [errors, setErrors] = useState([]);
+
+  const isKeyboardVisible = useKeyboardOpen();
 
   async function handlePress() {
     setErrors([]);
@@ -75,7 +78,9 @@ function Register() {
       }}>
       <TopLeft style={{position: 'absolute', top: 0, left: 0}} />
       <BottomRight style={{position: 'absolute', bottom: 0, right: 0}} />
-      <Image source={require('../../../../assets/images/96.png')} />
+      {!isKeyboardVisible && (
+        <Image source={require('../../../../assets/images/96.png')} />
+      )}
       <Text
         style={{
           fontSize: 24,

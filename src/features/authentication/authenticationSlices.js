@@ -51,7 +51,12 @@ export const changePassword = createAsyncThunk(
       formData.append('new_password2', data.newPassword2);
       let response = await axios.post(url, formData);
       return response;
-    } catch (e) {}
+    } catch (e) {
+      return {
+        status: e.response.status,
+        data: e.response.data,
+      };
+    }
   },
 );
 
