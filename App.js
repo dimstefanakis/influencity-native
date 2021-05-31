@@ -509,7 +509,6 @@ const App = () => {
             options={({route}) => {
               return {
                 title: 'Edit your profile',
-                ...TransitionPresets.ModalSlideFromBottomIOS,
               };
             }}
           />

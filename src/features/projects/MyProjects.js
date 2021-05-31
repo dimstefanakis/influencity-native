@@ -54,7 +54,7 @@ function MyProjects({viewAs = 'sub'}) {
   }
 
   return (
-    <View>
+    <View style={{flex:1}}>
       {viewAs == 'my_profile' ? null : (
         <Text
           style={{
@@ -87,15 +87,15 @@ function MyProjects({viewAs = 'sub'}) {
           )}
           <Text
             style={{
-              marginRight: 20,
-              marginTop: 20,
+              width: '100%',
+              padding: 20,
               fontSize: 20,
               textAlign: viewAs == 'my_profile' ? 'left' : 'center',
               color: 'gray',
             }}>
             Subscribe to coaches and participate in interactive projects!
           </Text>
-          <View style={{marginBottom: 20}}>
+          <View style={{marginBottom: 40}}>
             <ActionButton onPress={handleExplorePress}>
               Explore coaches
             </ActionButton>
