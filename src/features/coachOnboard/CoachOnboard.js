@@ -38,6 +38,7 @@ function CoachOnboard() {
       style={{
         flex: 1,
         width: '100%',
+        backgroundColor: theme.colors.background,
       }}
       contentContainerStyle={{alignItems: 'center'}}>
       <LottieView
@@ -64,7 +65,7 @@ function CoachOnboard() {
         <PayNextStep />
         <StartCreatingNextStep />
         <GetPaidNextStep />
-        <View>
+        <View style={{marginBottom: 40}}>
           <ActionButton
             onPress={handleGotItClick}
             style={{backgroundColor: theme.colors.accent}}>

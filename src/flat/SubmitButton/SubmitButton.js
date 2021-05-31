@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     marginTop: 30,
+    marginBottom: 5,
     borderRadius: 50,
     shadowColor: '#000',
     shadowOffset: {

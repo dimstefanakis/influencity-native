@@ -124,6 +124,7 @@ function SelectExpertise() {
           style={{
             width: '100%',
             marginTop: 50,
+            marginBottom: 50,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
