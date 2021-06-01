@@ -34,7 +34,7 @@ function Search() {
   return (
     <ScrollView
       style={{flex: 1}}
-      contentContainerStyle={{backgroundColor: 'white'}}>
+      contentContainerStyle={{backgroundColor: theme.colors.background}}>
       <Text
         style={{
           marginTop: 40,

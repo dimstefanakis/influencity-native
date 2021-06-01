@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator, Dimensions} from 'react-native';
+import {View, ActivityIndicator, ScrollView, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Searchbar, Text, useTheme} from 'react-native-paper';
 import {SharedElement} from 'react-navigation-shared-element';
@@ -14,6 +14,7 @@ import axios from 'axios';
 
 function SearchFocus({route, navigation}) {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const {selectedExpertise, setSelectedExpertise, focus} = route.params;
   const [searchQuery, setSearchQuery] = useState('');
   //const [results, setResults] = useState([]);
@@ -43,7 +44,9 @@ function SearchFocus({route, navigation}) {
   }, [selectedExpertise, searchQuery]);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView
+      style={{flex: 1}}
+      contentContainerStyle={{backgroundColor: theme.colors.background}}>
       <SharedElement id={'searchbar'}>
         <Searchbar
           autoFocus={focus}
@@ -86,7 +89,7 @@ function SearchFocus({route, navigation}) {
         ) : null}
       </View>
       <Results results={results} loading={loading} />
-    </View>
+    </ScrollView>
   );
 }
 
