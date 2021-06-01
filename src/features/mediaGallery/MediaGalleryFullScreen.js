@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import Config from 'react-native-config';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
+import VideoPlayer from 'react-native-video-controls';
 import axios from 'axios';
 
 function MediaGalleryFullScreen({
@@ -71,14 +72,15 @@ function MediaGalleryFullScreen({
 
     return (
       <View style={{minHeight: 200}}>
-        <Video
+        <VideoPlayer
           repeat
-          controls
+          fullscreen={false}
+          disableBack
+          disableVolume
           source={{
             uri: `https://stream.mux.com/${playback_id}.m3u8`,
             type: 'm3u8',
           }}
-          resizeMode="cover"
           style={{
             width: screenWidth,
             minHeight: 200,
