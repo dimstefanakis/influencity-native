@@ -33,7 +33,8 @@ function Search() {
 
   return (
     <ScrollView
-      contentContainerStyle={{height: '100%', backgroundColor: 'white'}}>
+      style={{flex: 1}}
+      contentContainerStyle={{backgroundColor: 'white'}}>
       <Text
         style={{
           marginTop: 40,

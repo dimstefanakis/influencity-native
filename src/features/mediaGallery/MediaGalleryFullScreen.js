@@ -66,7 +66,6 @@ function MediaGalleryFullScreen({
   }
 
   function renderVideos({item, index}) {
-    console.log(`${Config.MUX_API_URL}/video/v1/assets/${item.asset_id}`);
     const playback_id = item.playback_ids[0].playback_id;
     const inputInfo = getInputInfo(item);
 
