@@ -73,6 +73,7 @@ function MediaGalleryFullScreen({
       <View style={{minHeight: 200}}>
         <Video
           repeat
+          controls
           source={{
             uri: `https://stream.mux.com/${playback_id}.m3u8`,
             type: 'm3u8',
