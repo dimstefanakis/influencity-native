@@ -4,21 +4,29 @@ import {View} from 'react-native';
 import {Text, Button, useTheme} from 'react-native-paper';
 import {useNavigation, CommonActions} from '@react-navigation/native';
 import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import {useSelector, useDispatch, unwrapResult} from 'react-redux';
 import {BigHeader} from '../Headers/Headers';
 import SubmitButton from '../SubmitButton/SubmitButton';
+import {updateUserData} from '../../features/authentication/authenticationSlices';
 
 function CoachSubmissionSent() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {updatingUserData} = useSelector((state) => state.authentication);
 
   function onSubmitPress() {
     //navigation.navigate('BottomStackNavigation');
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'BottomStackNavigation'}],
-      }),
-    );
+    dispatch(updateUserData())
+      .then(unwrapResult)
+      .then((result) => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomStackNavigation'}],
+          }),
+        );
+      });
   }
   return (
     <View
@@ -38,7 +46,9 @@ function CoachSubmissionSent() {
         Troosh in the meanwhile!
       </Text>
       <View style={{marginTop: 100}}>
-        <SubmitButton onPress={onSubmitPress}>Explore Troosh</SubmitButton>
+        <SubmitButton onPress={onSubmitPress} loading={updatingUserData}>
+          Explore Troosh
+        </SubmitButton>
       </View>
     </View>
   );

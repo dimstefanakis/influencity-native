@@ -42,8 +42,6 @@ function PostRegisterUpdateProfile() {
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const isKeyboardVisible = useKeyboardOpen();
-
   console.log(user);
   function handleChangeAvatar() {
     ImagePicker.openPicker({mediaType: 'photo'}).then((results) => {
@@ -52,9 +50,10 @@ function PostRegisterUpdateProfile() {
   }
 
   async function handlePress() {
-    setErrors([]);
+    //setErrors([]);
     handleUpdateProfile();
   }
+
   function handleUpdateProfile() {
     const url = `${Config.API_URL}/v1/subscriber/me/`;
     let data = [];
@@ -88,13 +87,14 @@ function PostRegisterUpdateProfile() {
           //navigation.goBack();
         }
 
+        navigation.navigate('ChooseAccountTypeScreen');
         // get the updated user data before proceeding to home screen
-        dispatch(updateUserData())
-          .then(unwrapResult)
-          .then((result) => {
-            console.log(result);
-            navigation.navigate('ChooseAccountTypeScreen');
-          });
+        // dispatch(updateUserData())
+        //   .then(unwrapResult)
+        //   .then((result) => {
+        //     console.log(result);
+        //     navigation.navigate('ChooseAccountTypeScreen');
+        //   });
       })
       .catch((e) => {
         setLoading(false);

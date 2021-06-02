@@ -13,6 +13,7 @@ import axios from 'axios';
 function BecomeCoachPostRegister() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
 

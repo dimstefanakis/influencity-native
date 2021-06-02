@@ -1,17 +1,30 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector, unwrapResult} from 'react-redux';
 import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
 import {BigHeader} from '../../flat/Headers/Headers';
+import {updateUserData} from '../authentication/authenticationSlices';
 
 function ChooseAccountType() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const {updatingUserData} = useSelector((state) => state.authentication);
 
   function handleUserSelect() {
-    navigation.navigate('BottomStackNavigation');
+    dispatch(updateUserData())
+      .then(unwrapResult)
+      .then((result) => {
+        navigation.navigate('BottomStackNavigation');
+      });
   }
 
   function handleCoachSelect() {
@@ -45,13 +58,41 @@ function ChooseAccountType() {
       <View style={{flex: 1}}>
         <TouchableOpacity onPress={handleUserSelect}>
           <View style={styles.accountType}>
-            <Material size={60} name="account-outline" />
-            <Text style={{...theme.fonts.medium, fontSize: 20}}>Mentee</Text>
-            <Text>Learn from mentors</Text>
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 20,
+                backgroundColor: theme.colors.primary,
+                opacity: updatingUserData ? 0.3 : 1,
+              }}>
+              <Material size={60} name="account-outline" />
+              <Text style={{...theme.fonts.medium, fontSize: 20}}>Mentee</Text>
+              <Text>Learn from mentors</Text>
+            </View>
+            {updatingUserData ? (
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                }}>
+                <ActivityIndicator animating size="large" />
+              </View>
+            ) : null}
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCoachSelect}>
-          <View style={styles.accountType}>
+          <View
+            style={{
+              ...styles.accountType,
+              backgroundColor: theme.colors.primary,
+              padding: 20,
+            }}>
             <Material size={60} name="brain" />
             <Text style={{...theme.fonts.medium, fontSize: 20}}>Mentor</Text>
             <Text>Share your knowledge</Text>
@@ -66,12 +107,11 @@ const styles = StyleSheet.create({
   accountType: {
     height: 200,
     width: 200,
-    padding: 20,
     borderRadius: 5,
-    backgroundColor: '#aaf0d1',
     marginTop: 40,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
 });
 

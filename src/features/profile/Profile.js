@@ -308,17 +308,17 @@ function SetupStripeAccount() {
       <Text style={{...theme.fonts.medium, fontSize: 24}}>Payout status</Text>
       <Text style={{marginTop: 20, fontSize: 16}}>
         {settingUpConnectAccount
-          ? 'Your account is currently being processed by stripe and will be shortly available. In the meanwhile you can review your application in case you missed required information.'
+          ? "Your account is currently being processed by stripe and will be shortly available. If you don't see immidiate changes try restarting Troosh." //In the meanwhile you can review your application in case you missed required information.
           : 'Troosh uses Stripe to get you paid quickly and keep your personal and payment information secure. Thousands of companies around the world trust Stripe to process payments for their users. Set up a Stripe account to get paid with Troosh.'}
       </Text>
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <ActionButton
           style={{maxWidth: 300}}
           loading={loading}
           onPress={handleCreateStripeAccount}>
           {settingUpConnectAccount ? 'Review application' : 'Setup account'}
         </ActionButton>
-      </View>
+      </View> */}
     </View>
   );
 }
