@@ -130,7 +130,7 @@ function ProjectAsNonMember({project}) {
   let foundCoach = myCoaches.find((c) => c.surrogate == project.coach_data.id);
 
   console.log('coach', JSON.stringify(foundCoach, null, 2));
-  console.log('coach', foundCoach);
+  console.log('coach', myCoaches, project.coach_data.id);
   async function joinProject() {
     navigation.navigate('ProjectPaymentScreen', {
       coach: foundCoach,
@@ -214,7 +214,7 @@ function ProjectAsNonMember({project}) {
           onPress={joinProject}
           loading={loading}
           disabled={isDisabled()}>
-          {foundCoach.coupon?.valid
+          {foundCoach?.coupon?.valid
             ? 'Join this project for free'
             : `Join this project for $${project.credit}`}
         </ActionButton>

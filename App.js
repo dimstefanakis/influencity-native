@@ -77,6 +77,7 @@ import {getMyTiers} from './src/features/tiers/tiersSlice';
 import {getMyTeams} from './src/features/teams/teamsSlice';
 import {getPaymentMethod} from './src/features/stripeElements/stripeSlice';
 import {getMyAwards} from './src/features/awards/awardsSlice';
+import {getMyCoaches} from './src/features/myCoaches/myCoachesSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 
@@ -186,6 +187,11 @@ const App = () => {
     dispatch(getUserData());
   }, [dispatch]);
 
+  useEffect(()=>{
+    if(token){
+      dispatch(getMyCoaches());
+    }
+  },[token])
   if (checkingForToken) {
     return <SplashScreen />;
   }

@@ -146,9 +146,9 @@ function ProjectPayment({route}) {
               marginTop: 10,
               ...theme.fonts.medium,
             }}>
-            {foundCoach.coupon?.valid ? 'Free' : `$${project.credit}`}
+            {foundCoach?.coupon?.valid ? 'Free' : `$${project.credit}`}
           </Text>
-          {foundCoach.coupon?.valid ? (
+          {foundCoach?.coupon?.valid ? (
             <Text style={{color: '#3e3e3e'}}>
               Your first project on every coach is free!
             </Text>
@@ -163,7 +163,7 @@ function ProjectPayment({route}) {
             Change plan
           </Button>
         </Surface>
-        {foundCoach.coupon.valid == 'FR' ? null : (
+        {foundCoach?.coupon.valid == 'FR' ? null : (
           <>
             <SmallHeader title="Payment details" />
             {paymentMethodCreated ? (
