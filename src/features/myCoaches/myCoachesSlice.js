@@ -22,7 +22,7 @@ export const myCoachesSlice = createSlice({
   },
   extraReducers: {
     [getMyCoaches.fulfilled]: (state, action) => {
-      state.myCoaches = action.payload;
+      state.myCoaches = action.payload || [];
       state.loading = false;
     },
     [getMyCoaches.pending]: (state, action) => {

@@ -171,9 +171,11 @@ function MyBalance() {
               Get paid
             </Button>
           </View>
-          <Text style={{fontSize: 20, flex: 1, marginTop: 15, color: 'gray'}}>
-            ${balance.pending} (available in 7 days)
-          </Text>
+          {balance.pending && (
+            <Text style={{fontSize: 20, flex: 1, marginTop: 15, color: 'gray'}}>
+              ${balance.pending} (available in 7 days)
+            </Text>
+          )}
         </View>
       </View>
     </View>
