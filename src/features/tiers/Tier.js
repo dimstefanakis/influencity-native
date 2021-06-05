@@ -50,6 +50,9 @@ function Tier({tier, selectedTier, onPress}) {
               }}>
               {tier.label}
             </Text>
+            <Text style={{marginBottom: 10}}>
+              ({tier.post_count} posts available)
+            </Text>
             {tier.subheading ? (
               <Subheading>{tier.subheading}</Subheading>
             ) : null}

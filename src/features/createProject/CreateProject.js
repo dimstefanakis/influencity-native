@@ -330,7 +330,8 @@ function Prerequisites({prerequisites, setPrerequisites}) {
   return (
     <View style={{marginTop: 30, marginLeft: -4}}>
       <Text style={{marginLeft: 15, fontSize: 20, ...theme.fonts.medium}}>
-        Prerequisites
+        Prerequisites{' '}
+        <Text style={{color: 'gray', fontStyle: 'italic'}}>(optional)</Text>
       </Text>
       <Text style={{marginLeft: 15, marginRight: 15, marginTop: 5}}>
         An optional list of things that your mentees should know of before
@@ -435,7 +436,8 @@ function AttachPosts() {
   return (
     <View style={{marginTop: 30, marginLeft: -4}}>
       <Text style={{marginLeft: 15, fontSize: 20, ...theme.fonts.medium}}>
-        Attach posts
+        Attach posts{' '}
+        <Text style={{color: 'gray', fontStyle: 'italic'}}>(optional)</Text>
       </Text>
       <Text style={{marginLeft: 15, marginRight: 15, marginTop: 5}}>
         If you already have created posts that are related to this project you

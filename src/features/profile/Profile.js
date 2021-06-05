@@ -118,7 +118,7 @@ function MyBalance() {
       setBalanceLoading(true);
       let response = await axios.get(url);
       setBalanceLoading(false);
-      setBalance(response.data.balance);
+      setBalance(response.data);
     } catch (e) {
       setBalanceLoading(false);
       console.error(e);
@@ -144,29 +144,37 @@ function MyBalance() {
   }, []);
 
   return (
-    <View>
+    <View style={{marginBottom: 20}}>
       <Header title="My balance" />
       <View style={{...styles.spacing, flexDirection: 'row'}}>
-        <Text style={{...theme.fonts.medium, fontSize: 36, flex: 1}}>
-          ${balance}
-        </Text>
-        <Button
-          style={{
-            backgroundColor: theme.colors.primary,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 25,
-          }}
-          labelStyle={{color: 'black'}}
-          loading={stripeLoginLoading}
-          onPress={() =>
-            navigation.navigate('StripeWebViewScreen', {
-              url: stripeLoginLink,
-              type: 'checkout',
-            })
-          }>
-          Get paid
-        </Button>
+        <View>
+          <View style={{flexDirection: 'row'}}>
+            <Text style={{...theme.fonts.medium, fontSize: 36, flex: 1}}>
+              ${balance.available}
+            </Text>
+
+            <Button
+              style={{
+                backgroundColor: theme.colors.primary,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 25,
+              }}
+              labelStyle={{color: 'black'}}
+              loading={stripeLoginLoading}
+              onPress={() =>
+                navigation.navigate('StripeWebViewScreen', {
+                  url: stripeLoginLink,
+                  type: 'checkout',
+                })
+              }>
+              Get paid
+            </Button>
+          </View>
+          <Text style={{fontSize: 20, flex: 1, marginTop: 15, color: 'gray'}}>
+            ${balance.pending} (available in 7 days)
+          </Text>
+        </View>
       </View>
     </View>
   );
