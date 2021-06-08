@@ -10,9 +10,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@bam.tech/react-native-make": "^3.0.0",
     "@mux/upchunk": "^2.0.0",
     "@react-native-async-storage/async-storage": "^1.15.1",
+    "@react-native-community/cli": "^5.0.1-alpha.2",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/push-notification-ios": "^1.8.0",
     "@react-navigation/material-top-tabs": "^5.2.16",
@@ -23,6 +23,8 @@
     "@stripe/stripe-js": "^1.11.0",
     "axios": "^0.21.1",
     "expo": "^40.0.1",
+    "fsevents": "^2.3.2",
+    "jest-haste-map": "^27.0.2",
     "jetify": "^1.0.2",
     "lottie-ios": "3.1.8",
     "lottie-react-native": "^4.0.2",
@@ -46,13 +48,13 @@
     "react-native-shared-element": "^0.7.0",
     "react-native-skeleton-placeholder": "^3.0.4",
     "react-native-snap-carousel": "^3.9.1",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "^12.1.1",
     "react-native-tab-view": "^2.15.2",
     "react-native-toast-message": "^1.4.9",
     "react-native-vector-icons": "^7.0.0",
     "react-native-video": "^5.1.0-alpha8",
     "react-native-video-controls": "^2.8.1",
-    "react-native-webview": "^11.2.3",
+    "react-native-webview": "^11.6.2",
     "react-navigation": "^4.4.0",
     "react-navigation-shared-element": "^3.0.0",
     "react-navigation-stack": "^2.8.2",
@@ -60,6 +62,7 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.0.5",
     "rn-fetch-blob": "^0.12.0",
+    "sharp": "^0.28.3",
     "tipsi-stripe": "^8.0.1"
   },
   "devDependencies": {
@@ -68,9 +71,9 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.1.0",
     "eslint": "^7.5.0",
-    "jest": "^26.1.0",
+    "jest": "^27.0.4",
     "jetifier": "^2.0.0",
-    "metro-react-native-babel-preset": "^0.60.0",
+    "metro-react-native-babel-preset": "^0.66.0",
     "react-test-renderer": "16.13.1"
   },
   "jest": {

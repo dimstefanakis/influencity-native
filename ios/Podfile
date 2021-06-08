@@ -8,9 +8,8 @@ workspace 'influencity'
 target 'influencity' do
   pod 'Stripe', '~> 19.0.1'
   # Install additional dependencies
-  pod 'Firebase/Core'
+  pod 'Firebase/Core', '~> 6.7.0'
   pod 'Firebase/Auth'
-  pod 'Firebase/Crash'
   pod 'Firebase/Database'
   pod 'Firebase/Firestore'
   pod 'Firebase/Messaging'
@@ -44,6 +43,16 @@ target 'influencity' do
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '9.0'
       end
     end
+
+    # # REMOVE ALL WEB VIEWS
+    # react_project = Xcodeproj::Project.open("../node_modules/react- 
+    # native/React/React.xcodeproj")
+    # react_project.main_group["React/Views"].files.each do |file|
+    #   if file.path.match(/^RCTWebView/)
+    #     file.remove_from_project
+    #   end
+    # end
+    # react_project.save
   end
 end
 
