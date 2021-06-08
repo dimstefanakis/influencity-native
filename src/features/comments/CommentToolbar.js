@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {View} from 'react-native';
+import {Text, useTheme} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Config from 'react-native-config';
@@ -13,6 +14,7 @@ function CommentToolbar({
   setTopLevelComments,
   squeezeReplies,
 }) {
+  const theme = useTheme();
   const navigation = useNavigation();
   const [reactCount, setReactCount] = useState(comment.reacts);
   const url = `${Config.API_URL}/v1/comment/${comment.id}/change_react/`;

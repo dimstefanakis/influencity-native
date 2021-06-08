@@ -9,6 +9,7 @@ import Config from 'react-native-config';
 import axios from 'axios';
 
 function PostToolbar({post}) {
+  const theme = useTheme();
   const navigation = useNavigation();
   const [reactCount, setReactCount] = useState(post.reacts);
 
@@ -42,6 +43,17 @@ function PostToolbar({post}) {
       />
       <IconWrapper onPress={handleCommentClick}>
         <Icon name="comment-text-outline" size={25} color="#212121" />
+        {post.comment_count ? (
+          <Text
+            style={{
+              ...theme.fonts.medium,
+              fontSize: 16,
+              marginLeft: 5,
+              color: '#212121',
+            }}>
+            {post.comment_count}
+          </Text>
+        ) : null}
       </IconWrapper>
       <View style={{flex: 1}} />
       {post.linked_project ? (
