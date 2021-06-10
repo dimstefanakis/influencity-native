@@ -170,12 +170,12 @@ function ProjectAsNonMember({project}) {
 
   function getDisabledText() {
     if (foundCoach?.tier_full.tier == 'FR') {
-      return 'Upgrade to Tier 1 join projects!';
+      return 'Upgrade to Basic Tier to join projects!';
     } else if (
       foundCoach?.tier_full.tier == 'T1' &&
       project.coach_data.number_of_projects_joined == 1
     ) {
-      return 'You can only join 1 project with Tier 1 subscription. Upgrade to Tier 2 to get access to all projects!';
+      return 'You can only join 1 project with Basic Tier subscription. Upgrade to Tier 2 to get access to all projects!';
     }
   }
 
@@ -587,12 +587,20 @@ function ChatWithCoach({project}) {
   const {myChatRooms} = useSelector((state) => state.chat);
 
   function onPress() {
-    navigation.navigate('TeamChatScreen', {
-      room: myChatRooms.find(
+    try {
+      const foundRoom = myChatRooms.find(
         (room) => room.project == project.id && room.team_type == 'TC',
-      ),
-      project: project,
-    });
+      );
+      if (foundRoom) {
+        navigation.navigate('TeamChatScreen', {
+          room: foundRoom,
+          project: project,
+        });
+      }
+    } catch (e) {
+      // rooms might not have loaded yet
+      console.error(e);
+    }
   }
 
   return (

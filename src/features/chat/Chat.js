@@ -25,6 +25,7 @@ import {
   Bubble,
   Actions,
   Composer,
+  MessageText,
   Send,
 } from 'react-native-gifted-chat';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -35,7 +36,6 @@ import {useSelector, useDispatch} from 'react-redux';
 import {addMessages} from './chatSlice';
 import {WsContext} from '../../context/wsContext';
 import {v4 as uuid} from 'uuid';
-import axios from 'axios';
 
 function Chat({route}) {
   const dispatch = useDispatch();
@@ -56,33 +56,38 @@ function Chat({route}) {
   const [userName, setUserName] = useState('');
   const msgInput = useRef();
   const scrollViewRef = useRef();
-  const messages = room.messages.map((message) => {
-    // when adding messages through the handleWsEvents function
-    // we try to format the messages based on the giftedChat format
-    // when this is the case the || triggers and the left side is undefined
-    let image = null;
-    // image might be already an object and not require parsing
-    // if that is the case an error will be thrown
-    try {
-      image = JSON.parse(message.images[0])?.image;
-    } catch (e) {
-      if (message.images && message.images.length > 0) {
-        image = message.images[0]?.image;
-      }
-    }
-    return {
-      _id: message.id || message._id,
-      image: message.images ? image : null,
-      createdAt: message.created,
-      text: message.text,
-      sent: message.sent === undefined || message.sent ? true : false,
-      user: {
-        name: message.user.name,
-        avatar: message.user.avatar,
-        _id: message.user.id || message.user._id,
-      },
-    };
-  });
+  const messages =
+    // the below for some reason might be undefined until some more data is loaded
+    // so we do some checks here
+    room && room.messages
+      ? room.messages.map((message) => {
+          // when adding messages through the handleWsEvents function
+          // we try to format the messages based on the giftedChat format
+          // when this is the case the || triggers and the left side is undefined
+          let image = null;
+          // image might be already an object and not require parsing
+          // if that is the case an error will be thrown
+          try {
+            image = JSON.parse(message.images[0])?.image;
+          } catch (e) {
+            if (message.images && message.images.length > 0) {
+              image = message.images[0]?.image;
+            }
+          }
+          return {
+            _id: message.id || message._id,
+            image: message.images ? image : null,
+            createdAt: message.created,
+            text: message.text,
+            sent: message.sent === undefined || message.sent ? true : false,
+            user: {
+              name: message.user.name,
+              avatar: message.user.avatar,
+              _id: message.user.id || message.user._id,
+            },
+          };
+        })
+      : [];
   // console.log(messages);
   // console.log(JSON.stringify(messages, null, 2));
   const onSend = (messages = []) => {
@@ -248,6 +253,15 @@ function Chat({route}) {
     );
   };
 
+  const renderMessageText = (props) => {
+    const {currentMessage} = props;
+    const {text: currText} = currentMessage;
+    if (currText.indexOf('[x]') === -1) {
+      return <MessageText {...props} />;
+    }
+    return <ImageLoading {...props} />;
+  };
+
   const onSuggestionTap = (dataObj) => {
     setModalVisible(false);
     const sliceText = messageText.slice(0, -userName.length);
@@ -268,6 +282,23 @@ function Chat({route}) {
             data: RNFetchBlob.wrap(result.path),
           };
           const url = `${Config.API_URL}/v1/create_message/`;
+          let mediaMessage = {
+            text: '',
+            user: {
+              _id: messages[0].user._id,
+            },
+            images: [{image: result.path}],
+            sent: false,
+            room: room.id,
+            _id: uuid(), // we also assign a random id for this message, it will be overriden later by the server generated one
+          };
+          dispatch(
+            addMessages({
+              room: room,
+              newMessages: [mediaMessage],
+              pending: true,
+            }),
+          );
           RNFetchBlob.fetch(
             'POST',
             url,
@@ -432,6 +463,33 @@ function Chat({route}) {
     </View>
   );
 }
+
+const ImageLoading = (props) => {
+  const {currentMessage} = props;
+  const {text: currText} = currentMessage;
+  const [checked, setChecked] = React.useState(false);
+
+  return (
+    <View style={styles.checkboxView}>
+      <MessageText
+        {...props}
+        style={{flex: 1}}
+        textStyle={{
+          left: {
+            color: '#000',
+          },
+          right: {
+            color: '#000',
+          },
+        }}
+        currentMessage={{
+          ...currentMessage,
+          text: currText.replace('[x]', '').trim(),
+        }}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   modalContainer: {

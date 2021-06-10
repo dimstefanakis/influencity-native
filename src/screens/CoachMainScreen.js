@@ -203,6 +203,7 @@ function Projects({coach}) {
 
 function CoachMainScreenWithPosts({route}) {
   const theme = useTheme();
+  const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
   const coach = route.params.coach;
   const MainScreen = <CoachMainScreen2 route={route} />;
@@ -214,6 +215,11 @@ function CoachMainScreenWithPosts({route}) {
   function handleBecomeMemberPress() {
     navigation.navigate('BecomeMemberScreen', {coach: coach});
   }
+
+  function becomeMemberHidden() {
+    return user.coach?.surrogate == coach?.surrogate || foundCoach;
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <PostList ListHeaderComponent={MainScreen} coach={coach} />
@@ -227,7 +233,7 @@ function CoachMainScreenWithPosts({route}) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {foundCoach ? null : (
+        {becomeMemberHidden() ? null : (
           <FAB
             style={{backgroundColor: theme.colors.primary}}
             label="Become member"

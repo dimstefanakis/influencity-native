@@ -42,13 +42,14 @@ function handleWsEvents() {
       let message = {
         _id: data.message_id,
         text: data.message,
+        images: JSON.parse(data.images),
         user: {
           _id: data.user_id,
           avatar: data.user_avatar,
           name: data.user_name,
         },
       };
-      console.log(JSON.stringify(message, null, 2));
+      console.log('received',JSON.stringify(message, null, 2));
       dispatch(
         addMessages({room: room, newMessages: [message], pending: false}),
       );

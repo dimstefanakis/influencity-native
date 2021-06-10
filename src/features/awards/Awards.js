@@ -39,6 +39,10 @@ function Awards({route}) {
     }
   }
 
+  function handleIllPassPress() {
+    navigation.goBack();
+  }
+
   useEffect(() => {
     dispatch(getAwards());
   }, []);
@@ -89,7 +93,10 @@ function Awards({route}) {
           width: '100%',
           marginTop: 50,
         }}>
-        <ActionButton loading={loading} mode="cancel">
+        <ActionButton
+          loading={loading}
+          mode="cancel"
+          onPress={handleIllPassPress}>
           I'll pass
         </ActionButton>
       </View>

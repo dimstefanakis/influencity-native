@@ -33,6 +33,7 @@ function Settings() {
           </Text>
           <ProfileSettings />
           <PrivacySettings />
+          {user && !user.is_coach ? <BecomeMentorSetting /> : null}
           <Logout />
           {/* Needs work so just dont render this for now */}
           {user && user.is_coach && false ? (
@@ -71,6 +72,21 @@ function PrivacySettings() {
     <View style={{marginTop: 20, marginBottom: 10}}>
       <Header title="Privacy" />
       <Setting icon="lock" text="Reset password" onPress={handlePress} />
+    </View>
+  );
+}
+
+function BecomeMentorSetting() {
+  const navigation = useNavigation();
+
+  function handlePress() {
+    navigation.navigate('BecomeCoachPostRegisterScreen');
+  }
+
+  return (
+    <View style={{marginTop: 20, marginBottom: 10}}>
+      <Header title="Privacy" />
+      <Setting icon="rocket1" text="Become mentor" onPress={handlePress} />
     </View>
   );
 }

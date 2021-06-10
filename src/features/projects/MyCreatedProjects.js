@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableNativeFeedback,
 } from 'react-native';
-import {useTheme, Button, Text} from 'react-native-paper';
+import {useTheme, Text} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,6 +19,7 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
   const dispatch = useDispatch();
 
   const {createdProjects} = useSelector((state) => state.projects);
+  const {user} = useSelector((state) => state.authentication);
 
   function handleProjectPress(project) {
     if (route?.params?.handleSelectProject) {
@@ -36,7 +37,7 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
   }, [dispatch]);
 
   return (
-    <ScrollView style={{backgroundColor: 'white', flex: 1}}>
+    <ScrollView style={{backgroundColor: theme.colors.background, flex: 1}}>
       <View style={{padding: 10}}>
         {createdProjects.map((project) => {
           return (
@@ -58,13 +59,16 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
         }}>
         <View style={{borderRadius: 100, overflow: 'hidden'}}>
           <TouchableNativeFeedback
+            disabled={!user.coach.charges_enabled}
             onPress={() => navigation.navigate('CreateProjectScreen')}
             background={TouchableNativeFeedback.Ripple('#6f6f6f', true)}>
             <View
               style={{
                 height: 100,
                 width: 100,
-                backgroundColor: theme.colors.primary,
+                backgroundColor: user.coach.charges_enabled
+                  ? theme.colors.primary
+                  : '#eaeaea',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -81,6 +85,28 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
           }}>
           Create project
         </Text>
+        {!user.coach.charges_enabled ? (
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 16,
+                margin: 20,
+                maxWidth: 300,
+                color: '#6f6f6f',
+              }}>
+              In order to be able to create projects you need to setup your
+              payout method in your{' '}
+              <Text style={{...theme.fonts.medium}}>
+                profile > Dashboard > Setup account
+              </Text>
+            </Text>
+          </View>
+        ) : null}
       </View>
     </ScrollView>
   );
