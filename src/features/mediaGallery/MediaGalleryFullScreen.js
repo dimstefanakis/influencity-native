@@ -73,6 +73,7 @@ function MediaGalleryFullScreen({
       <View style={{minHeight: 200}}>
         <VideoPlayer
           repeat
+          paused={index !== activeSlide}
           fullscreen={false}
           disableBack
           disableVolume

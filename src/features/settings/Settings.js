@@ -111,8 +111,8 @@ function Logout() {
   const dispatch = useDispatch();
   const theme = useTheme();
 
-  function handlePress() {
-    dispatch(logout());
+  async function handlePress() {
+    await dispatch(logout());
 
     navigation.dispatch(
       CommonActions.reset({

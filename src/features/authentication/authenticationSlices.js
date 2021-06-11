@@ -126,14 +126,15 @@ export const register = createAsyncThunk(
 
 export const getUserData = createAsyncThunk(
   'authentication/getUserData',
-  async () => {
+  async (_, thunkApi) => {
     let userData = {};
     let userToken;
+    const authenticationState = thunkApi.getState().authentication;
 
     try {
       userToken = await AsyncStorage.getItem('@token');
       userData.token = userToken;
-      axios.defaults.withCredentials = true;
+      //axios.defaults.withCredentials = true;
       axios.interceptors.request.use(function (config) {
         const token = userToken;
 
@@ -171,6 +172,19 @@ export const updateUserData = createAsyncThunk(
   },
 );
 
+export const logout = createAsyncThunk('authentication/logout', async () => {
+  await AsyncStorage.removeItem('@token');
+  await AsyncStorage.removeItem('@refresh');
+  axios.interceptors.request.use(function (config) {
+    config.headers.Authorization = '';
+    return config;
+  });
+
+  //await AsyncStorage.setItem('@token', '');
+  //await AsyncStorage.setItem('@refresh', '');
+  //AsyncStorage.clear();
+});
+
 export const authenticationSlice = createSlice({
   name: 'authentication',
   initialState: {
@@ -181,14 +195,6 @@ export const authenticationSlice = createSlice({
     changePasswordLoading: false,
     updatingUserData: false,
     checkingForToken: true,
-  },
-  reducers: {
-    async logout(state, action) {
-      state.token = null;
-      state.refresh = null;
-      await AsyncStorage.removeItem('@token');
-      await AsyncStorage.removeItem('@refresh');
-    },
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
@@ -206,6 +212,13 @@ export const authenticationSlice = createSlice({
     [login.rejected]: (state, action) => {
       state.loading = true;
     },
+    [logout.fulfilled]: (state, action) => {
+      state.token = null;
+      state.refresh = null;
+      state.user = null;
+    },
+    [logout.pending]: (state, action) => {},
+    [logout.rejected]: (state, action) => {},
     [register.fulfilled]: (state, action) => {
       state.token = action.payload.access;
       state.loading = false;
@@ -265,5 +278,3 @@ export const authenticationSlice = createSlice({
     },
   },
 });
-
-export const {logout} = authenticationSlice.actions;

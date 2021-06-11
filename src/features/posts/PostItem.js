@@ -123,6 +123,7 @@ function PostItem({post, showProfile = true, fullscreen = false}) {
         <View style={{...styles.item, minHeight: 200}}>
           <Video
             repeat
+            paused={index !== activeSlide}
             source={{
               uri: `https://stream.mux.com/${playback_id}.m3u8`,
               type: 'm3u8',

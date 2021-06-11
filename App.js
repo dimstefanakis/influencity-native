@@ -1,7 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  CommonActions,
+  useNavigation,
+} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {View, Text, Platform, StatusBar} from 'react-native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
@@ -187,11 +191,11 @@ const App = () => {
     dispatch(getUserData());
   }, [dispatch]);
 
-  useEffect(()=>{
-    if(token){
+  useEffect(() => {
+    if (token) {
       dispatch(getMyCoaches());
     }
-  },[token])
+  }, [token]);
   if (checkingForToken) {
     return <SplashScreen />;
   }
@@ -527,10 +531,23 @@ const App = () => {
 
 function BottomStackNavigation() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const {user, loading, token, checkingForToken} = useSelector(
     (state) => state.authentication,
   );
   const {unreadCount} = useSelector((state) => state.notifications);
+
+  // after user logs out he lands here, not sure why
+  // navigate him to login
+  if (!user) {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Login'}],
+      }),
+    );
+    return null;
+  }
 
   return (
     <BottomStack.Navigator
