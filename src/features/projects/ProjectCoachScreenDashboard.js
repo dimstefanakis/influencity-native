@@ -88,41 +88,18 @@ function ProjectCoachScreenDashboard({route}) {
           <Subheading>Teams</Subheading>
         </View>
       </View>
-      {tierTwoTeams.length > 0 ? (
-        <>
-          <View style={styles.spacing}>
-            <SmallHeader title="Tier 2 teams" />
-          </View>
-          {tierTwoTeams.map((team) => {
-            return (
-              <Team
-                team={team}
-                tier={2}
-                project={project}
-                handleTeamPress={handleTeamPress}
-              />
-            );
-          })}
-        </>
-      ) : null}
-
-      {tierOneTeams.length > 0 ? (
-        <>
-          <View style={styles.spacing}>
-            <SmallHeader title="Tier 1 teams" />
-          </View>
-          {tierOneTeams.map((team) => {
-            return (
-              <Team
-                team={team}
-                tier={1}
-                project={project}
-                handleTeamPress={handleTeamPress}
-              />
-            );
-          })}
-        </>
-      ) : null}
+      <View style={styles.spacing}>
+        {[...tierOneTeams, ...tierTwoTeams].map((team) => {
+          return (
+            <Team
+              team={team}
+              tier={2}
+              project={project}
+              handleTeamPress={handleTeamPress}
+            />
+          );
+        })}
+      </View>
     </ScrollView>
   );
 }

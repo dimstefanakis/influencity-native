@@ -97,7 +97,7 @@ function MyCoachList() {
   const {myCoaches, loading} = useSelector((state) => state.myCoaches);
 
   return myCoaches.length == 0 && !loading ? null : (
-    <View>
+    <View style={{paddingBottom: 50}}>
       <Header title="My subscriptions" />
       <CoachHorizontalList withTiers />
     </View>
@@ -207,11 +207,11 @@ function SubscriberData() {
               Tier 1: {user.subscriber_data.tier1_subscribers_count}
             </Text>
           </SubscriberBubble>
-          <SubscriberBubble>
+          {/* <SubscriberBubble>
             <Text style={{fontSize: 18}}>
               Tier 2: {user.subscriber_data.tier2_subscribers_count}
             </Text>
-          </SubscriberBubble>
+          </SubscriberBubble> */}
         </View>
       </View>
     </View>
@@ -413,8 +413,13 @@ function Profile() {
   );
 
   return (
-    <SafeAreaView style={{flexGrow: 1, backgroundColor: 'white'}}>
-      <ScrollView style={{height: '100%', backgroundColor: 'white'}}>
+    <SafeAreaView
+      style={{flexGrow: 1, backgroundColor: theme.colors.background}}>
+      <ScrollView
+        style={{
+          height: '100%',
+          backgroundColor: theme.colors.background,
+        }}>
         <TouchableOpacity
           style={{
             position: 'absolute',
@@ -470,6 +475,7 @@ function SupportMessage() {
         textAlign: 'center',
         fontStyle: 'italic',
         fontSize: 14,
+        paddingBottom: 20,
       }}>
       For any questions regarding stripe, payments or your account you can
       contact us via email at contact@troosh.app

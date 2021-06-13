@@ -34,6 +34,7 @@ function Settings() {
           <ProfileSettings />
           <PrivacySettings />
           {user && !user.is_coach ? <BecomeMentorSetting /> : null}
+          <ContactSupport />
           <Logout />
           {/* Needs work so just dont render this for now */}
           {user && user.is_coach && false ? (
@@ -122,7 +123,7 @@ function Logout() {
     );
   }
   return (
-    <View style={{marginTop: 10, marginBottom: 10}}>
+    <View style={{marginTop: 20, marginBottom: 10}}>
       <Header title="Logout" />
       <Setting
         icon="logout"
@@ -130,6 +131,24 @@ function Logout() {
         color={theme.colors.warningRed}
         onPress={handlePress}
       />
+    </View>
+  );
+}
+
+function ContactSupport() {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const theme = useTheme();
+
+  async function handlePress() {
+    navigation.navigate('WebViewScreen', {
+      url: 'https://troosh.app/',
+    });
+  }
+  return (
+    <View style={{marginTop: 20, marginBottom: 10}}>
+      <Header title="Contact support" />
+      <Setting icon="info" text="Contact support" onPress={handlePress} />
     </View>
   );
 }

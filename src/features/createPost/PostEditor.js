@@ -45,12 +45,16 @@ function ChainedPostsCarousel({route}) {
       linked_project: null,
     },
   ]);
+  const [postButtonActive, setPostButtonActive] = useState(false);
 
   async function handleCreatePosts(selectedTiers, setLoading) {
     let newPostIds = [];
     let createdPosts = [];
     // first create each post separetaly
     for await (let post of posts) {
+      if (!(post.text || post.images.length > 0 || post.videos.length > 0)) {
+        continue;
+      }
       let imageData = post.images.map((i) => {
         console.log(i);
         const path = i.path.split('/');
@@ -197,13 +201,14 @@ function ChainedPostsCarousel({route}) {
         <Button
           onPress={handleSelectTier /*handleCreatePosts*/}
           mode="contained"
-          labelStyle={{color: 'white'}}
+          labelStyle={{color: 'black'}}
+          disabled={!postButtonActive}
           style={{marginRight: 10, borderRadius: 100}}>
           Post
         </Button>
       ),
     });
-  }, [navigation, handleCreatePosts]);
+  }, [navigation, posts, handleCreatePosts]);
 
   function renderItem({item, index}) {
     return (
@@ -214,6 +219,7 @@ function ChainedPostsCarousel({route}) {
         setPosts={setPosts}
         isComment={isComment}
         carouselRef={carouselRef}
+        setPostButtonActive={setPostButtonActive}
       />
     );
   }
@@ -230,7 +236,15 @@ function ChainedPostsCarousel({route}) {
   );
 }
 
-function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
+function PostEditor({
+  post,
+  posts,
+  setPosts,
+  index,
+  isComment,
+  setPostButtonActive,
+  carouselRef,
+}) {
   const navigation = useNavigation();
   const theme = useTheme();
   const isKeyboardVisible = useKeyboardOpen();
@@ -239,12 +253,19 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
   const [fileData, setData] = useState('');
   const [attachedProject, setAttachedProject] = useState(null);
 
+  function buttonActive(_posts) {
+    return _posts.some((_post) => {
+      return _post.text || _post.images.length > 0 || _post.videos.length > 0;
+    });
+  }
+
   function handleChangeText(value) {
     let _post = post;
     _post.text = value;
     setPosts((oldPosts) => {
       let foundIndex = oldPosts.findIndex((element) => element.index === index);
       oldPosts[foundIndex] = _post;
+      setPostButtonActive(buttonActive(oldPosts));
       return oldPosts;
     });
     //setText(value);
@@ -297,6 +318,7 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
           (element) => element.index === index,
         );
         oldPosts[foundIndex] = _post;
+        setPostButtonActive(buttonActive(oldPosts));
         return oldPosts;
       });
       //setImages([...images, ...results]);
@@ -343,6 +365,7 @@ function PostEditor({post, posts, setPosts, index, isComment, carouselRef}) {
           (element) => element.index === index,
         );
         oldPosts[foundIndex] = _post;
+        setPostButtonActive(buttonActive(oldPosts));
         return oldPosts;
       });
     }

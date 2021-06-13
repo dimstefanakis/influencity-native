@@ -60,6 +60,7 @@ import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
 import SubscribePaymentScreen from './src/screens/SubscribePaymentScreen';
 import ProjectPaymentScreen from './src/screens/ProjectPaymentScreen';
 import StripeWebViewScreen from './src/screens/StripeWebViewScreen';
+import WebViewScreen from './src/screens/WebViewScreen';
 import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import ProjectLinkedPostsScreen from './src/screens/ProjectLinkedPostsScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
@@ -195,7 +196,8 @@ const App = () => {
     if (token) {
       dispatch(getMyCoaches());
     }
-  }, [token]);
+  }, [token, dispatch]);
+
   if (checkingForToken) {
     return <SplashScreen />;
   }
@@ -410,6 +412,13 @@ const App = () => {
           <VanillaStack.Screen
             name="StripeWebViewScreen"
             component={StripeWebViewScreen}
+            options={({route}) => {
+              return {title: ''};
+            }}
+          />
+          <VanillaStack.Screen
+            name="WebViewScreen"
+            component={WebViewScreen}
             options={({route}) => {
               return {title: ''};
             }}

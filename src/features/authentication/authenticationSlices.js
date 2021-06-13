@@ -133,19 +133,24 @@ export const getUserData = createAsyncThunk(
 
     try {
       userToken = await AsyncStorage.getItem('@token');
+
       userData.token = userToken;
       //axios.defaults.withCredentials = true;
-      axios.interceptors.request.use(function (config) {
-        const token = userToken;
+      const token = userToken;
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
-        if (token) {
-          config.headers.Authorization = 'Bearer ' + token;
-        }
+      // const interceptor = axios.interceptors.request.use(function (config) {
+      //   const token = userToken;
 
-        return config;
-      });
+      //   if (token) {
+      //     config.headers.Authorization = 'Bearer ' + token;
+      //   }
+
+      //   return config;
+      // });
       if (userToken) {
         userData.token = userToken;
+        userData.interceptor = null; //interceptor;
         let results = await axios.get(Config.API_URL + '/v1/user/me/');
         userData.user = results.data[0];
       }
@@ -172,18 +177,19 @@ export const updateUserData = createAsyncThunk(
   },
 );
 
-export const logout = createAsyncThunk('authentication/logout', async () => {
-  await AsyncStorage.removeItem('@token');
-  await AsyncStorage.removeItem('@refresh');
-  axios.interceptors.request.use(function (config) {
-    config.headers.Authorization = '';
-    return config;
-  });
-
-  //await AsyncStorage.setItem('@token', '');
-  //await AsyncStorage.setItem('@refresh', '');
-  //AsyncStorage.clear();
-});
+export const logout = createAsyncThunk(
+  'authentication/logout',
+  async (_, thunkApi) => {
+    const authenticationState = thunkApi.getState().authentication;
+    const interceptor = authenticationState.axiosInterceptor;
+    await AsyncStorage.removeItem('@token');
+    await AsyncStorage.removeItem('@refresh');
+    await AsyncStorage.setItem('@token', '');
+    await AsyncStorage.setItem('@refresh', '');
+    axios.interceptors.request.eject(interceptor);
+    axios.defaults.headers.common['Authorization'] = null;
+  },
+);
 
 export const authenticationSlice = createSlice({
   name: 'authentication',
@@ -195,6 +201,7 @@ export const authenticationSlice = createSlice({
     changePasswordLoading: false,
     updatingUserData: false,
     checkingForToken: true,
+    axiosInterceptor: null,
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
@@ -216,6 +223,7 @@ export const authenticationSlice = createSlice({
       state.token = null;
       state.refresh = null;
       state.user = null;
+      state.axiosInterceptor = null;
     },
     [logout.pending]: (state, action) => {},
     [logout.rejected]: (state, action) => {},
@@ -238,6 +246,8 @@ export const authenticationSlice = createSlice({
       state.checkingForToken = false;
       state.token = action.payload.token;
       state.user = action.payload.user;
+      console.log('intttt', action.payload.interceptor)
+      state.axiosInterceptor = action.payload.interceptor;
     },
     [getUserData.pending]: (state, action) => {
       state.checkingForToken = true;
