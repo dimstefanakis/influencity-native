@@ -25,12 +25,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import Config from 'react-native-config';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import {getPosts, resetFeedPosts} from '../posts/postsSlice';
 import useKeyboardOpen from '../../hooks/useKeyboardOpen';
 const {width: screenWidth} = Dimensions.get('window');
 
 function ChainedPostsCarousel({route}) {
+  const dispatch = useDispatch();
   const carouselRef = useRef();
   const currentPost = route.params?.currentPost;
   const isComment = route.params?.isComment;
@@ -111,20 +113,8 @@ function ChainedPostsCarousel({route}) {
             console.error(e, 'error');
             setLoading(false);
           });
-        /*let formData = new FormData();
-        formData.append('text', post.text);
-        formData.append('linked_project', post.linked_project);
-        selectedTiers.map((t) => {
-          formData.append('tiers', t);
-        });
-        let response = await axios.post(url, formData);
-        let {id} = response.data;
-        createdPosts.push(response.data);
-        if (post.videos.length > 0) {
-          handleCreateVideo(response.data);
-        }
-
-        newPostIds.push(id);*/
+        dispatch(resetFeedPosts());
+        dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
       } catch (e) {
         console.error(e);
         setLoading(false);

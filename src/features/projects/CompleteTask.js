@@ -45,7 +45,7 @@ function CompleteTask({route}) {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
 
-  console.log(report);
+  console.log('report', report);
   async function handleCreateVideo(milestoneReport) {
     try {
       // const data = videos.map((vid) => RNFetchBlob.wrap(vid.path));
@@ -197,7 +197,9 @@ function CompleteTask({route}) {
         />
         <SubmitButton
           task={task}
-          disabled={selectedMembers.length == 0}
+          disabled={
+            selectedMembers.length == 0 || (report && report.status == 'AC')
+          }
           handleCompleteTask={handleCompleteTask}
           loading={loading}
         />
@@ -413,6 +415,7 @@ function SubmitButton({task, disabled = false, handleCompleteTask, loading}) {
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 20,
+        marginBottom: 40,
       }}>
       <Button
         loading={loading}

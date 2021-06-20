@@ -15,6 +15,9 @@ import JustPosted from './JustPosted';
 import MentionedYou from './MentionedYou';
 import NotificationsSkeleton from './NotificationsSkeleton';
 import EmptyNotifications from './EmptyNotifications';
+import MarkedYourMilestone from './MarkedYourMilestone';
+import CompletedMilestone from './CompletedMilestone';
+import SubscribedToYou from './SubscribedToYou';
 
 function Notifications() {
   const theme = useTheme();
@@ -24,6 +27,7 @@ function Notifications() {
     (state) => state.notifications,
   );
 
+  console.log('notifications', notifications);
   useEffect(() => {
     dispatch(getMyNotifications());
     dispatch(getUnreadCount());
@@ -59,10 +63,17 @@ function Notifications() {
 }
 
 function NotificationRender({notification}) {
+  console.log('notification', notification.verb);
   if (notification.verb == 'just posted') {
     return <JustPosted notification={notification} />;
   } else if (notification.verb == 'mentioned you') {
     return <MentionedYou notification={notification} />;
+  } else if (notification.verb.includes('marked your milestone')) {
+    return <MarkedYourMilestone notification={notification} />;
+  } else if (notification.verb == 'completed a milestone') {
+    return <CompletedMilestone notification={notification} />;
+  } else if(notification.verb.includes('subscribed on your')){
+    return <SubscribedToYou notification={notification}/>
   }
 
   return null;

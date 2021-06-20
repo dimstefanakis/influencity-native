@@ -478,7 +478,7 @@ function SupportMessage() {
         paddingBottom: 20,
       }}>
       For any questions regarding stripe, payments or your account you can
-      contact us via email at contact@troosh.app
+      contact us via email at beta@troosh.app
     </Text>
   );
 }

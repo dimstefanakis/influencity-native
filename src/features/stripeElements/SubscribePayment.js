@@ -20,7 +20,7 @@ import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import {getMyCoaches} from '../myCoaches/myCoachesSlice';
 import {getMyTeams} from '../teams/teamsSlice';
 import {getMyProjects} from '../projects/projectsSlice';
-import {getNewPosts} from '../posts/postsSlice';
+import {getNewPosts, resetFeedPosts, getPosts} from '../posts/postsSlice';
 import {getPaymentMethod} from '../stripeElements/stripeSlice';
 
 stripe.setOptions({
@@ -41,9 +41,8 @@ function SubscribePayment({route}) {
   const [date, setDate] = useState('');
   const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
-  const [paymentMethodCreated, setPaymentMethodCreated] = useState(
-    paymentMethod,
-  );
+  const [paymentMethodCreated, setPaymentMethodCreated] =
+    useState(paymentMethod);
 
   // if this returns true that means the user has already subscribed to this tier
   let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
@@ -72,7 +71,8 @@ function SubscribePayment({route}) {
       await dispatch(getMyCoaches());
       await dispatch(getMyProjects());
       dispatch(getMyTeams());
-      dispatch(getNewPosts());
+      dispatch(resetFeedPosts());
+      dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
 
       setLoading(false);
       navigation.navigate('CoachMainScreen', {coach: coach});

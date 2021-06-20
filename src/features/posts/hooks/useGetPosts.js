@@ -10,6 +10,12 @@ function useGetPosts(endpoint) {
   const [next, setNext] = useState(null);
   const hasMore = useRef(true);
 
+  function resetPosts() {
+    setPosts([]);
+    setNext(null);
+    hasMore.current = true;
+  }
+
   async function getPosts() {
     if (!hasMore.current) {
       return;
@@ -43,7 +49,7 @@ function useGetPosts(endpoint) {
     getPosts();
   }, []);
 
-  return [posts, next, hasMore, getPosts];
+  return [posts, next, hasMore, getPosts, resetPosts];
 }
 
 export default useGetPosts;

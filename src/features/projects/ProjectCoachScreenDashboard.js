@@ -24,6 +24,9 @@ function ProjectCoachScreenDashboard({route}) {
 
   // get project from redux to not have stale data
   project = createdProjects.find((p) => p.id == project.id);
+  if (!project) {
+    navigation.goBack();
+  }
   const {overlapContainer, avatarContainer, avatar} = styles;
   const theme = useTheme();
   const navigation = useNavigation();

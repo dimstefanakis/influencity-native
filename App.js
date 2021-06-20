@@ -192,11 +192,11 @@ const App = () => {
     dispatch(getUserData());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (token) {
-      dispatch(getMyCoaches());
-    }
-  }, [token, dispatch]);
+  // useEffect(() => {
+  //   if (token) {
+  //     dispatch(getMyCoaches());
+  //   }
+  // }, [token, dispatch]);
 
   if (checkingForToken) {
     return <SplashScreen />;

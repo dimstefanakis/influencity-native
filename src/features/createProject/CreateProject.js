@@ -34,7 +34,7 @@ function CreateProject({editMode = false, project = project}) {
   const [description, setDescription] = useState(
     editMode ? project.description : '',
   );
-  const [teamSize, setTeamSize] = useState(editMode ? project.team_size : 0);
+  const [teamSize, setTeamSize] = useState(editMode ? project.team_size : 1);
   const [credit, setCredit] = useState(editMode ? project.credit : 5);
   const [difficulty, setDifficulty] = useState(
     editMode ? getDifficulty(project.difficulty) : 'EA',

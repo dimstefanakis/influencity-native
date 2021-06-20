@@ -20,6 +20,8 @@ import FeedSkeleton from '../features/posts/FeedSkeleton';
 import SkeletonCoachHorizontalList from '../features/coachHorizontalList/SkeletonCoachHorizontalList';
 import {getMyTiers} from '../features/tiers/tiersSlice';
 import {getMyTeams} from '../features/teams/teamsSlice';
+import {getMyCoaches} from '../features/myCoaches/myCoachesSlice';
+import {getMyCreatedProjects} from '../features/projects/projectsSlice';
 import {getPaymentMethod} from '../features/stripeElements/stripeSlice';
 import {getMyAwards} from '../features/awards/awardsSlice';
 
@@ -57,6 +59,8 @@ function Home() {
     dispatch(getMyTeams());
     dispatch(getPaymentMethod());
     dispatch(getMyAwards());
+    dispatch(getMyCreatedProjects())
+    dispatch(getMyCoaches());
   }, [dispatch, token]);
 
   return (

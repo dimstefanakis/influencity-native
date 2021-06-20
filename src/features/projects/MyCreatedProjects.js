@@ -26,9 +26,11 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
       route.params.handleSelectProject(project);
       navigation.goBack();
     } else {
-      navigation.navigate('ProjectCoachScreenDashboardScreen', {
-        project: project,
-      });
+      if (createdProjects && createdProjects.length > 0) {
+        navigation.navigate('ProjectCoachScreenDashboardScreen', {
+          project: project,
+        });
+      }
     }
   }
 

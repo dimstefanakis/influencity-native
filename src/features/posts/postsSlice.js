@@ -77,6 +77,13 @@ export const postsSlice = createSlice({
     setHasLoadedInitialCoachPosts(state, action) {
       state.hasLoadedInitialCoachPosts = action.payload;
     },
+    resetFeedPosts(state, action) {
+      state.posts = [];
+      state.next = null;
+      state.hasMore = true;
+      state.hasLoadedInitial = false;
+      state.feedLoading = true;
+    },
   },
   extraReducers: {
     [getPosts.fulfilled]: (state, action) => {
@@ -118,4 +125,5 @@ export const {
   removeAttachedPost,
   setCoachPostCount,
   setHasLoadedInitialCoachPosts,
+  resetFeedPosts,
 } = postsSlice.actions;

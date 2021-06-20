@@ -58,9 +58,10 @@ function HomePostList({ListHeaderComponent}) {
 }
 
 function CoachPostList({ListHeaderComponent, coach}) {
-  const [posts, next, hasMore, getPosts] = useGetPosts(
+  const [posts, next, hasMore, getPosts, resetPosts] = useGetPosts(
     `${Config.API_URL}/v1/coach/${coach.surrogate}/posts/`,
   );
+  const {myCoaches} = useSelector((state) => state.myCoaches);
 
   const renderItem = ({item}) => <PostItem post={item} />;
   const onEndReachedCalledDuringMomentum = useRef(null);
@@ -70,8 +71,13 @@ function CoachPostList({ListHeaderComponent, coach}) {
   }
 
   useEffect(() => {
+    resetPosts();
     loadMore();
-  }, []);
+  }, [myCoaches]);
+
+  // useEffect(() => {
+  //   loadMore();
+  // }, []);
 
   return (
     <FlatList
