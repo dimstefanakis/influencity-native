@@ -1188,7 +1188,7 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@expo/config-plugins@1.0.33":
+"@expo/config-plugins@1.0.33", "@expo/config-plugins@^1.0.24":
   version "1.0.33"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-1.0.33.tgz#8ee78ea6f939f7e04606e9afa22b32139ea974a0"
   integrity sha512-YQJop0c69LKD/6ZJJto7klS7TDmzgs44TI0Z5RBqesOjYlDwNFcQk2Rl2BaA1wlAYkH+rRrhN2+WjjSyD9HiPg==
@@ -2319,6 +2319,13 @@
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.15.0.tgz#86178cfbe66151910b09b03595e60048ab4c698e"
   integrity sha512-KQsNPc+uVQkc8dewwz1A6uHOWeU2cWoZyNIbsx5mtmperr5TPxw4u8M20WOa22n6zmIOh/zLdzEe8DYK/0IjBw==
+
+"@stripe/stripe-react-native@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-react-native/-/stripe-react-native-0.1.4.tgz#d9f6c86e82cd10b8c844e5910f8b67d7cea03259"
+  integrity sha512-K+cA6FG4AXvcOUFMQagOBl1yPjKF1pSpDV6us7cYjKqdrJukTgwWfRfxfbE2ra+jjOztoKyxojoBgjI/RbbVZA==
+  dependencies:
+    "@expo/config-plugins" "^1.0.24"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -11343,11 +11350,6 @@ tinycolor2@^1.4.1:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
-
-tipsi-stripe@^8.0.1:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/tipsi-stripe/-/tipsi-stripe-8.0.2.tgz#7f3d83ab632ba0a88f84e1bf4a611bf7e0c6b776"
-  integrity sha512-LV2JegJlK0SEwB/auxDS5jnxnVNI2vju+IPNt3Uq1hmzV40li7UIyLQA5w6rihe/JDk2IdmRMFQUTuSoBzf1mQ==
 
 tmp@^0.0.33:
   version "0.0.33"

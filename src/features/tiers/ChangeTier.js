@@ -69,7 +69,7 @@ function ChangeTier({route}) {
         />
         {tier.tier == 'FR' || tier.tier == 'T1' ? (
           <Text style={{marginTop: 5, color: 'gray'}}>
-            Notice: The pricing of Free Tier and Tier 1 cannot be changed.
+            Notice: The pricing of Free Tier and Basic Tier cannot be changed.
           </Text>
         ) : null}
         <SmallHeader title="Benefits" />

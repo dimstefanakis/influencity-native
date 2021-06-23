@@ -24,6 +24,7 @@ import {Provider, useDispatch, useSelector} from 'react-redux';
 import {loadStripe} from '@stripe/stripe-js';
 import Config from 'react-native-config';
 import Toast from 'react-native-toast-message';
+import {StripeProvider} from '@stripe/stripe-react-native';
 import {enableScreens} from 'react-native-screens';
 import {useGalleryInit} from 'react-native-gallery-toolkit';
 enableScreens();
@@ -153,9 +154,11 @@ const darkTheme = {
 
 function ReduxWrapper() {
   return (
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <StripeProvider publishableKey="pk_test_51IA29LGhvsp3ZgMGa4Z9GAd9yc1aFUi9skdePzuiMC5GNhTshwn46QAcQwnwJC0zWr2YfPw90B9PhZoWogl2AtlT00hg4lj15h">
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </StripeProvider>
   );
 }
 

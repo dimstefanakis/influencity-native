@@ -11,8 +11,9 @@ import {
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {useStripe} from '@stripe/stripe-react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import stripe from 'tipsi-stripe';
+
 import Config from 'react-native-config';
 import axios from 'axios';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
@@ -23,17 +24,23 @@ import {getMyProjects} from '../projects/projectsSlice';
 import {getPaymentMethod} from '../stripeElements/stripeSlice';
 import {getMyChatRooms} from '../chat/chatSlice';
 
-stripe.setOptions({
-  publishableKey: Config.STRIPE_PUBLISHABLE_KEY,
-  androidPayMode: 'test', // Android only
-});
+// stripe.setOptions({
+//   publishableKey: Config.STRIPE_PUBLISHABLE_KEY,
+//   androidPayMode: 'test', // Android only
+// });
 
 function ProjectPayment({route}) {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const {initPaymentSheet, presentPaymentSheet, confirmPaymentSheetPayment} =
+    useStripe();
   const navigation = useNavigation();
   const {myCoaches} = useSelector((state) => state.myCoaches);
-  const {paymentMethod} = useSelector((state) => state.stripe);
+  //const {paymentMethod} = useSelector((state) => state.stripe);
+  const [paymentMethod, setPaymentMethod] = useState({
+    image: null,
+    label: null,
+  });
   const coach = route.params.coach;
   const project = route.params.project;
   const [cardholderName, setCardholderName] = useState('');
@@ -42,9 +49,8 @@ function ProjectPayment({route}) {
   const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [paymentMethodCreated, setPaymentMethodCreated] = useState(
-    paymentMethod,
-  );
+  const [paymentMethodCreated, setPaymentMethodCreated] =
+    useState(paymentMethod);
 
   // if this returns true that means the user has already subscribed to this tier
   let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
@@ -52,6 +58,60 @@ function ProjectPayment({route}) {
     navigation.goBack();
   }
 
+  const fetchPaymentSheetParams = async () => {
+    console.log('url', `${Config.API_URL}/v1/project_payment_sheet/${project.id}`);
+    let response = await axios.post(
+      `${Config.API_URL}/v1/project_payment_sheet/${project.id}`,
+    );
+    const {paymentIntent, ephemeralKey, customer} = await response.data;
+
+    return {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+    };
+  };
+
+  const initializePaymentSheet = async () => {
+    const {paymentIntent, ephemeralKey, customer} =
+      await fetchPaymentSheetParams();
+
+    const {error, paymentOption} = await initPaymentSheet({
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      customFlow: true,
+      merchantDisplayName: `Troosh / ${foundCoach.name}`,
+      style: 'alwaysDark',
+    });
+    setLoading(false);
+    updateButtons(paymentOption);
+  };
+
+  const updateButtons = (paymentOption) => {
+    if (paymentOption) {
+      setPaymentMethod({
+        label: paymentOption.label,
+        image: paymentOption.image,
+      });
+    } else {
+      setPaymentMethod(null);
+    }
+  };
+
+  const choosePaymentOption = async () => {
+    console.log("innnnn1")
+    const {error, paymentOption} = await presentPaymentSheet({
+      confirmPayment: false,
+    });
+    console.log("error", error, paymentOption)
+    updateButtons(paymentOption);
+  };
+
+  useEffect(()=>{
+    console.log("innnnn2")
+    initializePaymentSheet();
+  },[])
   async function onSubmit() {
     try {
       const url = `${Config.API_URL}/v1/join_project/${project.id}`;
@@ -81,35 +141,17 @@ function ProjectPayment({route}) {
     }
   }
 
-  async function createPaymentMethod() {
-    const [expMonth, expYear] = getExpDetails();
-    try {
-      const paymentMethod = await stripe.createPaymentMethod({
-        card: {
-          number: cardNumber,
-          cvc: cvc,
-          expMonth: expMonth,
-          expYear: expYear,
-        },
-      });
-      return paymentMethod;
-    } catch (e) {
-      console.error(e);
-      // Handle error
-    }
-  }
-
   async function handleOpenPaymentCardForm() {
-    let paymentMethodWithCard = await stripe.paymentRequestWithCardForm();
-    console.log(paymentMethodWithCard);
-    try {
-      const url = `${Config.API_URL}/v1/attach_payment_method/`;
-      let response = await axios.post(url, paymentMethodWithCard);
-      await dispatch(getPaymentMethod());
-    } catch (e) {
-      console.error(e);
-    }
-    setPaymentMethodCreated(paymentMethodWithCard);
+    // let paymentMethodWithCard = await stripe.paymentRequestWithCardForm();
+    // console.log(paymentMethodWithCard);
+    // try {
+    //   const url = `${Config.API_URL}/v1/attach_payment_method/`;
+    //   let response = await axios.post(url, paymentMethodWithCard);
+    //   await dispatch(getPaymentMethod());
+    // } catch (e) {
+    //   console.error(e);
+    // }
+    // setPaymentMethodCreated(paymentMethodWithCard);
   }
 
   function getExpDetails() {
@@ -166,7 +208,7 @@ function ProjectPayment({route}) {
         {foundCoach?.coupon.valid == 'FR' ? null : (
           <>
             <SmallHeader title="Payment details" />
-            {paymentMethodCreated ? (
+            {/* {paymentMethodCreated ? (
               <View
                 style={{
                   flexDirection: 'row',
@@ -183,9 +225,9 @@ function ProjectPayment({route}) {
               <Text style={{marginBottom: 20}}>
                 You don't have any payment methods
               </Text>
-            )}
+            )} */}
 
-            <Button mode="contained" onPress={handleOpenPaymentCardForm}>
+            <Button mode="contained" onPress={choosePaymentOption}>
               Add method
             </Button>
           </>

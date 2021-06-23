@@ -204,7 +204,7 @@ function SubscriberData() {
           </SubscriberBubble>
           <SubscriberBubble>
             <Text style={{fontSize: 18}}>
-              Tier 1: {user.subscriber_data.tier1_subscribers_count}
+              Basic: {user.subscriber_data.tier1_subscribers_count}
             </Text>
           </SubscriberBubble>
           {/* <SubscriberBubble>
