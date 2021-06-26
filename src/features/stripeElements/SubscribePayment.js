@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
-import {ScrollView, View, StyleSheet} from 'react-native';
+import {ScrollView, Image, View, Alert, StyleSheet} from 'react-native';
 import {
   Subheading,
   TextInput,
@@ -11,16 +11,21 @@ import {
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import {useDispatch, useSelector} from 'react-redux';
 import {useStripe} from '@stripe/stripe-react-native';
 //import stripe from 'tipsi-stripe';
 import Config from 'react-native-config';
 import axios from 'axios';
+import StripeButton from './StripeButton';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import ActionButton from '../../flat/SubmitButton/SubmitButton';
 import {getMyCoaches} from '../myCoaches/myCoachesSlice';
 import {getMyTeams} from '../teams/teamsSlice';
-import {getMyProjects} from '../projects/projectsSlice';
+import {
+  getMyProjects,
+  setSelectedProjectTeams,
+} from '../projects/projectsSlice';
 import {getNewPosts, resetFeedPosts, getPosts} from '../posts/postsSlice';
 import {getPaymentMethod} from '../stripeElements/stripeSlice';
 
@@ -44,11 +49,12 @@ function SubscribePayment({route}) {
   //const {paymentMethod} = useSelector((state) => state.stripe);
   const coach = route.params.coach;
   const tier = route.params.tier;
-  const [cardholderName, setCardholderName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [date, setDate] = useState('');
+  const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
   const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
+  const [_creationId, setCreationId] = useState(null);
+  const [_subcriptionId, setSubscriptionId] = useState(null);
+  const [_paymentIntentId, setPaymentIntendId] = useState(null);
   const [paymentMethodCreated, setPaymentMethodCreated] =
     useState(paymentMethod);
 
@@ -65,22 +71,32 @@ function SubscribePayment({route}) {
       `${Config.API_URL}/v1/create_stripe_subscription/${tier.surrogate}`,
     );
 
-    const {subscriptionId} = await response.data;
+    const {
+      subscriptionId,
+      paymentIntentId,
+      clientSecret,
+      ephemeralKey,
+      customer,
+      creationId,
+    } = await response.data;
 
-    response = await axios.get(
-      `${Config.API_URL}/v1/preview_subscription_invoice/${subscriptionId}`,
-    );
-    const {paymentIntent, ephemeralKey, customer} = await response.data;
+    setCreationId(creationId);
+    setSubscriptionId(subscriptionId);
+    setPaymentIntendId(paymentIntentId);
+    // response = await axios.post(
+    //   `${Config.API_URL}/v1/preview_subscription_invoice/${subscriptionId}`,
+    // );
+    //const {paymentIntent, ephemeralKey, customer} = await response.data;
 
     return {
-      paymentIntent,
+      paymentIntent: clientSecret,
       ephemeralKey,
       customer,
     };
   };
 
   const initializePaymentSheet = async () => {
-    const {paymentIntent, ephemeralKey, customer} =
+    const {paymentIntent, paymentIntentId, ephemeralKey, customer} =
       await fetchPaymentSheetParams();
 
     const {error, paymentOption} = await initPaymentSheet({
@@ -88,9 +104,12 @@ function SubscribePayment({route}) {
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
       customFlow: true,
-      merchantDisplayName: `Troosh / ${foundCoach.name}`,
+      merchantDisplayName: 'Troosh',
       style: 'alwaysDark',
     });
+    if (!error) {
+      setPaymentSheetEnabled(true);
+    }
     setLoading(false);
     updateButtons(paymentOption);
   };
@@ -107,37 +126,34 @@ function SubscribePayment({route}) {
   };
 
   const choosePaymentOption = async () => {
-    //console.log("in")
     const {error, paymentOption} = await presentPaymentSheet({
       confirmPayment: false,
     });
-    //console.log("error", error, paymentOption)
 
     updateButtons(paymentOption);
   };
 
-  useEffect(()=>{
-    console.log("innnnn2")
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
 
-    //initializePaymentSheet();
-  },[])
-
-  async function onSubmit() {
+  async function handleActionButtonClick() {
+    if (isSubscribedToThisTier) {
+      await handleCancelSubscription();
+    } else {
+      await onPressBuy();
+    }
+  }
+  async function handleCancelSubscription() {
+    const url = `${Config.API_URL}/v1/cancel_subscription/${tier.surrogate}`;
     try {
-      const url = `${Config.API_URL}/v1/subscribe/${tier.surrogate}`;
       setLoading(true);
-      let body = paymentMethodCreated
-        ? JSON.stringify(paymentMethodCreated)
-        : null;
+      let response = await axios.post(url);
+      Toast.show({
+        text1: 'Suscription cancelled',
+        text2: `Your subscription to ${coach.name} has been canceled`,
+      });
 
-      if (isSubscribedToThisTier) {
-        let response = await axios.delete(url, paymentMethodCreated);
-      } else {
-        let response = await axios.post(url, paymentMethodCreated);
-      }
-
-      // updating the state tree so user has immidiate feedback
-      // I am not really sure if await has any effect here but I will leave it as is
       await dispatch(getMyCoaches());
       await dispatch(getMyProjects());
       dispatch(getMyTeams());
@@ -147,29 +163,66 @@ function SubscribePayment({route}) {
       setLoading(false);
       navigation.navigate('CoachMainScreen', {coach: coach});
     } catch (e) {
-      setLoading(false);
+      console.error(e);
     }
   }
 
-  async function handleOpenPaymentCardForm() {
-    // let paymentMethodWithCard = await stripe.paymentRequestWithCardForm();
-    // console.log(paymentMethodWithCard);
-    // try {
-    //   const url = `${Config.API_URL}/v1/attach_payment_method/`;
-    //   let response = await axios.post(url, paymentMethodWithCard);
-    //   await dispatch(getPaymentMethod());
-    // } catch (e) {
-    //   console.error(e);
-    // }
-    // setPaymentMethodCreated(paymentMethodWithCard);
+  const onPressBuy = async () => {
+    setLoading(true);
+    const {error} = await confirmPaymentSheetPayment();
+
+    if (error) {
+      Toast.show({
+        type: 'error',
+        text1: `Error code: ${error.code}`,
+        text2: error.message,
+      });
+    } else {
+      let repeatTimes = 10;
+      let interval = 2000;
+      let timeouts = [];
+      for (let i = 0; i < repeatTimes; i++) {
+        let timeout = setTimeout(async function () {
+          let status = await checkSubscriptionStatus();
+          if (status == 'completed') {
+            Toast.show({
+              text1: 'Payment succeeded!',
+              text2: `Your subscription to ${coach.name} has started!`,
+            });
+            await dispatch(getMyCoaches());
+            await dispatch(getMyProjects());
+            dispatch(getMyTeams());
+            dispatch(resetFeedPosts());
+            dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
+
+            setLoading(false);
+            navigation.navigate('CoachMainScreen', {coach: coach});
+            timeouts.map((t) => clearTimeout(t));
+          }
+        }, i * interval);
+        timeouts.push(timeout);
+      }
+    }
+  };
+
+  async function checkSubscriptionStatus() {
+    try {
+      const url = `${Config.API_URL}/v1/check_subscription_status/${_subcriptionId}`;
+      let response = await axios.get(url);
+      let data = response.data;
+      return data.status;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
-  function getExpDetails() {
-    let expMonth = cvc.substring(0, 2);
-    let expYear = `20${cvc.substring(0, 2)}`;
-    return [expMonth, expYear];
+  function isActionButtonDisabled() {
+    if (isSubscribedToThisTier) {
+      return loading;
+    } else {
+      return loading || !paymentSheetEnabled;
+    }
   }
-
   return (
     <ScrollView
       contentContainerStyle={{
@@ -239,9 +292,32 @@ function SubscribePayment({route}) {
               </Text>
             )} */}
 
-            <Button mode="contained" onPress={choosePaymentOption}>
-              Add method
-            </Button>
+            <StripeButton
+              variant="primary"
+              loading={!paymentSheetEnabled}
+              title={
+                paymentMethod ? (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={{
+                        uri: `data:image/png;base64,${paymentMethod.image}`,
+                      }}
+                      style={{height: 20, width: 20}}
+                    />
+                    <Text style={{marginLeft: 10}}>{paymentMethod.label}</Text>
+                  </View>
+                ) : (
+                  'Choose payment method'
+                )
+              }
+              disabled={!paymentSheetEnabled}
+              onPress={choosePaymentOption}
+            />
           </>
         )}
         <View
@@ -251,9 +327,12 @@ function SubscribePayment({route}) {
             marginTop: 30,
           }}>
           <ActionButton
-            onPress={onSubmit}
+            onPress={handleActionButtonClick}
             loading={loading}
-            disabled={tier.tier != 'FR' && !paymentMethodCreated}
+            disabled={
+              (tier.tier != 'FR' && !paymentMethodCreated) ||
+              isActionButtonDisabled()
+            }
             mode={isSubscribedToThisTier ? 'danger' : 'info'}>
             {isSubscribedToThisTier ? 'Cancel subscription' : 'Subscribe'}
           </ActionButton>

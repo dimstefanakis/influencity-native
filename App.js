@@ -154,7 +154,7 @@ const darkTheme = {
 
 function ReduxWrapper() {
   return (
-    <StripeProvider publishableKey="pk_test_51IA29LGhvsp3ZgMGa4Z9GAd9yc1aFUi9skdePzuiMC5GNhTshwn46QAcQwnwJC0zWr2YfPw90B9PhZoWogl2AtlT00hg4lj15h">
+    <StripeProvider publishableKey={Config.STRIPE_PUBLISHABLE_KEY}>
       <Provider store={store}>
         <App />
       </Provider>
