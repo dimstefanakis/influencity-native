@@ -109,6 +109,8 @@ function SubscribePayment({route}) {
     });
     if (!error) {
       setPaymentSheetEnabled(true);
+    } else {
+      Alert.alert(`Error code: ${error.code}`, error.message);
     }
     setLoading(false);
     updateButtons(paymentOption);
@@ -130,11 +132,19 @@ function SubscribePayment({route}) {
       confirmPayment: false,
     });
 
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    }
     updateButtons(paymentOption);
   };
 
   useEffect(() => {
-    initializePaymentSheet();
+    // we don't want to create an incomplete subscription if user has already subscribed to this tier
+    // we also don't want to create and incomplete subscription if this tier is 'Free'
+    // because this automatically marks the payment as complete
+    if (!isSubscribedToThisTier && tier.tier != 'FR') {
+      initializePaymentSheet();
+    }
   }, []);
 
   async function handleActionButtonClick() {
@@ -220,7 +230,11 @@ function SubscribePayment({route}) {
     if (isSubscribedToThisTier) {
       return loading;
     } else {
-      return loading || !paymentSheetEnabled;
+      if (tier.tier == 'FR') {
+        return loading;
+      } else {
+        return loading || !paymentSheetEnabled || !paymentMethodCreated;
+      }
     }
   }
   return (
@@ -329,10 +343,7 @@ function SubscribePayment({route}) {
           <ActionButton
             onPress={handleActionButtonClick}
             loading={loading}
-            disabled={
-              (tier.tier != 'FR' && !paymentMethodCreated) ||
-              isActionButtonDisabled()
-            }
+            disabled={isActionButtonDisabled()}
             mode={isSubscribedToThisTier ? 'danger' : 'info'}>
             {isSubscribedToThisTier ? 'Cancel subscription' : 'Subscribe'}
           </ActionButton>

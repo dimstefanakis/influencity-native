@@ -201,7 +201,7 @@ function ProjectPayment({route}) {
     if (foundCoach?.coupon?.valid) {
       return loading;
     } else {
-      return loading || !paymentSheetEnabled;
+      return loading || !paymentSheetEnabled || !paymentMethod;
     }
   }
   return (
