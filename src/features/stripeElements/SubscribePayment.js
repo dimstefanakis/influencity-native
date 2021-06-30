@@ -154,6 +154,18 @@ function SubscribePayment({route}) {
       await onPressBuy();
     }
   }
+
+  async function refreshData() {
+    await dispatch(getMyCoaches());
+    await dispatch(getMyProjects());
+    dispatch(getMyTeams());
+    dispatch(resetFeedPosts());
+    dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
+
+    setLoading(false);
+    navigation.navigate('CoachMainScreen', {coach: coach});
+  }
+
   async function handleCancelSubscription() {
     const url = `${Config.API_URL}/v1/cancel_subscription/${tier.surrogate}`;
     try {
@@ -163,15 +175,7 @@ function SubscribePayment({route}) {
         text1: 'Suscription cancelled',
         text2: `Your subscription to ${coach.name} has been canceled`,
       });
-
-      await dispatch(getMyCoaches());
-      await dispatch(getMyProjects());
-      dispatch(getMyTeams());
-      dispatch(resetFeedPosts());
-      dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
-
-      setLoading(false);
-      navigation.navigate('CoachMainScreen', {coach: coach});
+      await refreshData();
     } catch (e) {
       console.error(e);
     }
@@ -179,6 +183,14 @@ function SubscribePayment({route}) {
 
   const onPressBuy = async () => {
     setLoading(true);
+    if (tier.tier == 'FR') {
+      let response = await axios.post(
+        `${Config.API_URL}/v1/create_stripe_subscription/${tier.surrogate}`,
+      );
+      await refreshData();
+      return;
+    }
+
     const {error} = await confirmPaymentSheetPayment();
 
     if (error) {
@@ -199,14 +211,7 @@ function SubscribePayment({route}) {
               text1: 'Payment succeeded!',
               text2: `Your subscription to ${coach.name} has started!`,
             });
-            await dispatch(getMyCoaches());
-            await dispatch(getMyProjects());
-            dispatch(getMyTeams());
-            dispatch(resetFeedPosts());
-            dispatch(getPosts({endpoint: `${Config.API_URL}/v1/new_posts/`}));
-
-            setLoading(false);
-            navigation.navigate('CoachMainScreen', {coach: coach});
+            await refreshData();
             timeouts.map((t) => clearTimeout(t));
           }
         }, i * interval);
