@@ -54,7 +54,7 @@ function MyProjects({viewAs = 'sub'}) {
   }
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       {viewAs == 'my_profile' ? null : (
         <Text
           style={{

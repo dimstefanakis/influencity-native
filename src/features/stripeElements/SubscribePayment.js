@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {ScrollView, Image, View, Alert, StyleSheet} from 'react-native';
 import {
   Subheading,
@@ -49,8 +49,8 @@ function SubscribePayment({route}) {
   //const {paymentMethod} = useSelector((state) => state.stripe);
   const coach = route.params.coach;
   const tier = route.params.tier;
+  const subscriptionComplete = useRef(null);
   const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
-  const [cvc, setCvC] = useState('');
   const [loading, setLoading] = useState(false);
   const [_creationId, setCreationId] = useState(null);
   const [_subcriptionId, setSubscriptionId] = useState(null);
@@ -206,7 +206,8 @@ function SubscribePayment({route}) {
       for (let i = 0; i < repeatTimes; i++) {
         let timeout = setTimeout(async function () {
           let status = await checkSubscriptionStatus();
-          if (status == 'completed') {
+          if (status == 'completed' && !subscriptionComplete?.current) {
+            subscriptionComplete.current = true;
             Toast.show({
               text1: 'Payment succeeded!',
               text2: `Your subscription to ${coach.name} has started!`,
