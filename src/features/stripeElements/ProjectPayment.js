@@ -87,7 +87,8 @@ function ProjectPayment({route}) {
     let response = await axios.post(
       `${Config.API_URL}/v1/project_payment_sheet/${project.id}`,
     );
-    const {paymentIntent, paymentIntentId, ephemeralKey, customer} = await response.data;
+    const {paymentIntent, paymentIntentId, ephemeralKey, customer} =
+      await response.data;
 
     setPaymentIntendId(paymentIntentId);
     return {

@@ -15,7 +15,7 @@ function getExpertisePreferences(value) {
     return {colors: ['#e3526e', '#e91c4c'], icon: 'dumbbell'};
   }
 
-  return {colors: ['#f25500', '#ff3232'], icon: 'code-braces'};
+  return {colors: ['#71757acc', '#70757a'], icon: null};
 }
 
 function ExpertiseFieldButton({

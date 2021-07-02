@@ -95,7 +95,7 @@ function MyProjects({viewAs = 'sub'}) {
             }}>
             Subscribe to coaches and participate in interactive projects!
           </Text>
-          <View style={{marginBottom: 10}}>
+          <View style={{marginBottom: viewAs != 'my_profile' ? 40 : 10}}>
             <ActionButton onPress={handleExplorePress}>
               Explore coaches
             </ActionButton>
