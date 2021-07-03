@@ -35,6 +35,7 @@ function Tier({tier, selectedTier, onPress}) {
             alignItems: 'center',
             flexDirection: 'row',
             width: '100%',
+            minHeight: Dimensions.get('window').height / 2.8, //100,
             padding: 20,
           }}>
           <View

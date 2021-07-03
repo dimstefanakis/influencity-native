@@ -54,7 +54,7 @@ function MyProjects({viewAs = 'sub'}) {
   }
 
   return (
-    <View style={{flex: 1}}>
+    <ScrollView style={{flex: 1}}>
       {viewAs == 'my_profile' ? null : (
         <Text
           style={{
@@ -114,7 +114,7 @@ function MyProjects({viewAs = 'sub'}) {
           })}
         </View>
       </ListWrapper>
-    </View>
+    </ScrollView>
   );
 }
 

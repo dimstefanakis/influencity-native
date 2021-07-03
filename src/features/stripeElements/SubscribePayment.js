@@ -239,7 +239,12 @@ function SubscribePayment({route}) {
       if (tier.tier == 'FR') {
         return loading;
       } else {
-        return loading || !paymentSheetEnabled || !paymentMethodCreated;
+        return (
+          loading ||
+          !paymentSheetEnabled ||
+          !paymentMethodCreated ||
+          !paymentMethod?.label
+        );
       }
     }
   }

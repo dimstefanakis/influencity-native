@@ -202,7 +202,7 @@ function ProjectPayment({route}) {
     if (foundCoach?.coupon?.valid) {
       return loading;
     } else {
-      return loading || !paymentSheetEnabled || !paymentMethod;
+      return loading || !paymentSheetEnabled || !paymentMethod?.label;
     }
   }
   return (
@@ -243,12 +243,12 @@ function ProjectPayment({route}) {
             <Text style={{color: '#3e3e3e'}}>paid once</Text>
           )}
 
-          <Button
+          {/* <Button
             mode="contained"
             style={{marginTop: 40}}
             onPress={onChangePlan}>
-            Change plan
-          </Button>
+            Change project
+          </Button> */}
         </Surface>
         {foundCoach?.coupon?.valid ? null : (
           <>
