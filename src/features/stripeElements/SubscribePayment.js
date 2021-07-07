@@ -199,6 +199,7 @@ function SubscribePayment({route}) {
         text1: `Error code: ${error.code}`,
         text2: error.message,
       });
+      setLoading(false);
     } else {
       let repeatTimes = 10;
       let interval = 2000;
@@ -213,6 +214,15 @@ function SubscribePayment({route}) {
               text2: `Your subscription to ${coach.name} has started!`,
             });
             await refreshData();
+            timeouts.map((t) => clearTimeout(t));
+          }
+          if (status == 'payment_failed' && !subscriptionComplete.current){
+            subscriptionComplete.current = true;
+            Toast.show({
+              type: 'error',
+              text1: 'Payment failed',
+            });
+            setLoading(false);
             timeouts.map((t) => clearTimeout(t));
           }
         }, i * interval);

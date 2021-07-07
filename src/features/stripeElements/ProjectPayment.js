@@ -172,6 +172,7 @@ function ProjectPayment({route}) {
         text1: `Error code: ${error.code}`,
         text2: error.message,
       });
+      setLoading(false);
     } else {
       let repeatTimes = 10;
       let interval = 2000;
@@ -190,6 +191,14 @@ function ProjectPayment({route}) {
             await dispatch(getMyChatRooms());
             setLoading(false);
             navigation.navigate('Projects');
+            timeouts.map((t) => clearTimeout(t));
+          }
+          if (status == 'payment_failed') {
+            Toast.show({
+              type: 'error',
+              text1: 'Payment failed',
+            });
+            setLoading(false);
             timeouts.map((t) => clearTimeout(t));
           }
         }, i * interval);
