@@ -6,6 +6,7 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   Image,
+  SafeAreaView,
   Keyboard,
   Dimensions,
 } from 'react-native';
@@ -365,136 +366,117 @@ function PostEditor({
   return (
     <View
       style={{
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         width: '100%',
         minHeight: '100%',
+        height: '100%',
         backgroundColor: theme.colors.background,
       }}>
-      <TextInput
-        multiline
-        mode="flat"
-        label="Post your knowledge"
+      <View
         style={{
           backgroundColor: theme.colors.background,
           width: '100%',
-          flex: 1,
-        }}
-        underlineColor="transparent"
-        onChangeText={handleChangeText}
-      />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          width: '100%',
+          zIndex: 100000,
+          // this fixes a bug where text input would lose focus when keyboard was open
+          marginTop: 40,
         }}>
-        {post.videos.map((vid) => {
-          return (
-            <Video
-              source={{
-                uri: vid.path,
-                type: 'm3u8',
-              }}
-              resizeMode="cover"
-              style={{
-                height: 100,
-                width: 100,
-                borderColor: '#f9f9f9',
-                borderWidth: 1,
-                borderRadius: 15,
-              }}
-            />
-          );
-        })}
-        {post.images.map((im) => {
-          return (
-            <Image
-              source={{uri: im.path}}
-              style={{
-                height: 100,
-                width: 100,
-                borderColor: '#f9f9f9',
-                borderWidth: 1,
-                borderRadius: 15,
-              }}
-            />
-          );
-        })}
+        <TextInput
+          style={{backgroundColor: theme.colors.background}}
+          multiline
+          mode="flat"
+          label="Post your knowledge"
+          underlineColor="transparent"
+          onChangeText={handleChangeText}
+        />
       </View>
-      {attachedProject ? (
+      <View style={{width: '100%'}}>
         <View
           style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            alignItems: 'center',
             width: '100%',
-            padding: 10,
+          }}>
+          {post.videos.map((vid) => {
+            return (
+              <Video
+                source={{
+                  uri: vid.path,
+                  type: 'm3u8',
+                }}
+                resizeMode="cover"
+                style={{
+                  height: 100,
+                  width: 100,
+                  borderColor: '#f9f9f9',
+                  borderWidth: 1,
+                  borderRadius: 15,
+                }}
+              />
+            );
+          })}
+          {post.images.map((im) => {
+            return (
+              <Image
+                source={{uri: im.path}}
+                style={{
+                  height: 100,
+                  width: 100,
+                  borderColor: '#f9f9f9',
+                  borderWidth: 1,
+                  borderRadius: 15,
+                }}
+              />
+            );
+          })}
+        </View>
+        {attachedProject ? (
+          <View
+            style={{
+              width: '100%',
+              padding: 10,
+              backgroundColor: theme.colors.background,
+            }}>
+            <Text style={{fontSize: 20, ...theme.fonts.medium}}>
+              Attached project
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10,
+                marginBottom: 10,
+              }}>
+              <TouchableOpacity
+                style={{
+                  padding: 5,
+                  backgroundColor: '#f7f7f9',
+                  borderRadius: 100,
+                }}
+                onPress={() => setAttachedProject(null)}>
+                <Icon size={14} name="close" color="gray" />
+              </TouchableOpacity>
+              <Avatar.Icon
+                size={30}
+                icon="code-tags"
+                color="white"
+                style={{marginLeft: 5}}
+              />
+              <Text style={{marginLeft: 5, ...theme.fonts.medium}}>
+                {attachedProject.name}
+              </Text>
+            </View>
+          </View>
+        ) : null}
+        <View
+          style={{
+            flexDirection: 'row',
+            height: 80,
             backgroundColor: theme.colors.background,
           }}>
-          <Text style={{fontSize: 20, ...theme.fonts.medium}}>
-            Attached project
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 10,
-              marginBottom: 10,
-            }}>
-            <TouchableOpacity
-              style={{
-                padding: 5,
-                backgroundColor: '#f7f7f9',
-                borderRadius: 100,
-              }}
-              onPress={() => setAttachedProject(null)}>
-              <Icon size={14} name="close" color="gray" />
-            </TouchableOpacity>
-            <Avatar.Icon
-              size={30}
-              icon="code-tags"
-              color="white"
-              style={{marginLeft: 5}}
-            />
-            <Text style={{marginLeft: 5, ...theme.fonts.medium}}>
-              {attachedProject.name}
-            </Text>
-          </View>
-        </View>
-      ) : null}
-      <View
-        style={{
-          flexDirection: 'row',
-          height: 80,
-          backgroundColor: theme.colors.background,
-        }}>
-        <TouchableNativeFeedback onPress={handleSelectImages}>
-          <View
-            style={{
-              width: '33%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icon size={24} name="camera-outline" />
-            <Subheading style={{fontSize: 12}}>Add media</Subheading>
-          </View>
-        </TouchableNativeFeedback>
-        <TouchableNativeFeedback onPress={chainNewPost}>
-          <View
-            style={{
-              width: '33%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icon size={24} name="link-variant" />
-            <Subheading style={{fontSize: 12}}>Chain posts</Subheading>
-          </View>
-        </TouchableNativeFeedback>
-        {isComment ? null : (
-          <TouchableNativeFeedback onPress={handleAttachProjectPress}>
+          <TouchableNativeFeedback onPress={handleSelectImages}>
             <View
               style={{
                 width: '33%',
@@ -502,11 +484,37 @@ function PostEditor({
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <AntDesign size={24} name="rocket1" />
-              <Subheading style={{fontSize: 12}}>Attach project</Subheading>
+              <Icon size={24} name="camera-outline" />
+              <Subheading style={{fontSize: 12}}>Add media</Subheading>
             </View>
           </TouchableNativeFeedback>
-        )}
+          <TouchableNativeFeedback onPress={chainNewPost}>
+            <View
+              style={{
+                width: '33%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon size={24} name="link-variant" />
+              <Subheading style={{fontSize: 12}}>Chain posts</Subheading>
+            </View>
+          </TouchableNativeFeedback>
+          {isComment ? null : (
+            <TouchableNativeFeedback onPress={handleAttachProjectPress}>
+              <View
+                style={{
+                  width: '33%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <AntDesign size={24} name="rocket1" />
+                <Subheading style={{fontSize: 12}}>Attach project</Subheading>
+              </View>
+            </TouchableNativeFeedback>
+          )}
+        </View>
       </View>
     </View>
   );
