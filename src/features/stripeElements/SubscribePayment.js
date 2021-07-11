@@ -172,7 +172,7 @@ function SubscribePayment({route}) {
       setLoading(true);
       let response = await axios.post(url);
       Toast.show({
-        text1: 'Suscription cancelled',
+        text1: 'Subscription cancelled',
         text2: `Your subscription to ${coach.name} has been canceled`,
       });
       await refreshData();
@@ -216,7 +216,7 @@ function SubscribePayment({route}) {
             await refreshData();
             timeouts.map((t) => clearTimeout(t));
           }
-          if (status == 'payment_failed' && !subscriptionComplete.current){
+          if (status == 'payment_failed' && !subscriptionComplete.current) {
             subscriptionComplete.current = true;
             Toast.show({
               type: 'error',

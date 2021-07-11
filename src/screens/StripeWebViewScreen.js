@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {WebView} from 'react-native-webview';
+import Toast from 'react-native-toast-message';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {setConnectAccountStatus} from '../features/stripeElements/stripeSlice';
@@ -14,12 +15,17 @@ function StripeWebViewScreen({route}) {
     //navigation.goBack();
     if (
       (navState && navState.url.includes('?code=')) ||
-      (navState && navState.url.includes('reauth'))
+      (navState && navState.url.includes('reauth')) ||
+      (navState && navState.url.includes('https://troosh.app'))
     ) {
       if (type == 'setup') {
         dispatch(setConnectAccountStatus(true));
       }
       navigation.goBack();
+      Toast.show({
+        text1: 'Successfully setup payment method',
+        text2: `If the information you provided is correct you will soon be able to receive payments from Troosh!`,
+      });
     }
   }
 
