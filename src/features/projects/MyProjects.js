@@ -54,7 +54,7 @@ function MyProjects({viewAs = 'sub'}) {
   }
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ProjectListWrapper viewAs={viewAs}>
       {viewAs == 'my_profile' ? null : (
         <Text
           style={{
@@ -114,8 +114,16 @@ function MyProjects({viewAs = 'sub'}) {
           })}
         </View>
       </ListWrapper>
-    </ScrollView>
+    </ProjectListWrapper>
   );
+}
+
+function ProjectListWrapper({viewAs, children}){
+  if(viewAs=='sub'){
+    return <ScrollView style={{flex: 1}}>{children}</ScrollView>
+  }else{
+    return <View style={{flex: 1}}>{children}</View>
+  }
 }
 
 function ListWrapper({children, viewAs}) {

@@ -33,7 +33,9 @@ function Settings() {
           </Text>
           <ProfileSettings />
           <PrivacySettings />
-          {user && !user.is_coach ? <BecomeMentorSetting /> : null}
+          {user && !user.is_coach && !user.is_coach_application_pending ? (
+            <BecomeMentorSetting />
+          ) : null}
           <ContactSupport />
           <Logout />
           {/* Needs work so just dont render this for now */}
