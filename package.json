@@ -21,7 +21,7 @@
     "@reduxjs/toolkit": "^1.4.0",
     "@stripe/react-stripe-js": "^1.2.0",
     "@stripe/stripe-js": "^1.11.0",
-    "@stripe/stripe-react-native": "^0.1.4",
+    "@stripe/stripe-react-native": "^0.1.5",
     "axios": "^0.21.1",
     "expo": "^40.0.1",
     "fsevents": "^2.3.2",

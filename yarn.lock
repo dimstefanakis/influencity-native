@@ -2320,10 +2320,10 @@
   resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.15.0.tgz#86178cfbe66151910b09b03595e60048ab4c698e"
   integrity sha512-KQsNPc+uVQkc8dewwz1A6uHOWeU2cWoZyNIbsx5mtmperr5TPxw4u8M20WOa22n6zmIOh/zLdzEe8DYK/0IjBw==
 
-"@stripe/stripe-react-native@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-react-native/-/stripe-react-native-0.1.4.tgz#d9f6c86e82cd10b8c844e5910f8b67d7cea03259"
-  integrity sha512-K+cA6FG4AXvcOUFMQagOBl1yPjKF1pSpDV6us7cYjKqdrJukTgwWfRfxfbE2ra+jjOztoKyxojoBgjI/RbbVZA==
+"@stripe/stripe-react-native@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-react-native/-/stripe-react-native-0.1.5.tgz#4adbbb58caf47cef2388b87008b640edaf238b6d"
+  integrity sha512-goGM83qKiVkkRnV3ogei7GM4R7wAGcvnDzrx+6/piXw4yzRy+DWHp5QwQCdJYGF6jBPk1X2PNinm0oG/zi2eYw==
   dependencies:
     "@expo/config-plugins" "^1.0.24"
 
