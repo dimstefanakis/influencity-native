@@ -285,7 +285,7 @@ function Chat({route}) {
           let mediaMessage = {
             text: '',
             user: {
-              _id: messages[0].user._id,
+              _id: messages[0] ? messages[0].user._id : user.subscriber.id,
             },
             images: [{image: result.path}],
             sent: false,
