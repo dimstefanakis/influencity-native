@@ -11,8 +11,20 @@ function CompletedMilestone({notification}) {
 
   let timeSinceText = timeSince(new Date(notification.timestamp));
 
+  function handleNotificationPress() {
+    try {
+      navigation.navigate('CompleteTaskMentorScreen', {
+        project: notification.action_object.project,
+        task: notification.action_object,
+        team: notification.action_object.team,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
-    <TouchableNativeFeedback>
+    <TouchableNativeFeedback onPress={handleNotificationPress}>
       <View
         style={{
           padding: 15,

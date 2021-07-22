@@ -17,9 +17,17 @@ function CompleteTaskMentor({route}) {
   const navigation = useNavigation();
   let {project, task, team} = route.params;
   const {selectedProjectTeams} = useSelector((state) => state.projects);
-  team = selectedProjectTeams.find((t) => t.surrogate == team.surrogate);
-  task = team.milestones.find((t) => t.id == task.id);
+  //console.log('selectedProjectTeams', selectedProjectTeams, team)
+  team =
+    selectedProjectTeams.find((t) => t.surrogate == team.surrogate) || team;
+  task = task
+    ? task
+    : team.milestones.find((t) => t.id == task.id || t.surrogate == task.id);
 
+  // prevent errors
+  if (!task || !team) {
+    navigation.goBack();
+  }
   const selectedPostItem = useRef(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [acceptLoading, setAcceptLoading] = useState(false);

@@ -18,6 +18,7 @@ import EmptyNotifications from './EmptyNotifications';
 import MarkedYourMilestone from './MarkedYourMilestone';
 import CompletedMilestone from './CompletedMilestone';
 import SubscribedToYou from './SubscribedToYou';
+import JoinedYourProject from './JoinedYourProject';
 
 function Notifications() {
   const theme = useTheme();
@@ -72,8 +73,10 @@ function NotificationRender({notification}) {
     return <MarkedYourMilestone notification={notification} />;
   } else if (notification.verb == 'completed a milestone') {
     return <CompletedMilestone notification={notification} />;
-  } else if(notification.verb.includes('subscribed on your')){
-    return <SubscribedToYou notification={notification}/>
+  } else if (notification.verb.includes('subscribed on your')) {
+    return <SubscribedToYou notification={notification} />;
+  } else if (notification.verb.includes('joined your project')) {
+    return <JoinedYourProject notification={notification} />;
   }
 
   return null;

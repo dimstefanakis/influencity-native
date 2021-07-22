@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Avatar, Text, useTheme} from 'react-native-paper';
 import timeSince from '../../utils/timeSince';
 
-function MarkedYourMilestone({notification}) {
+function JoinedYourProject({notification}) {
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -13,15 +13,14 @@ function MarkedYourMilestone({notification}) {
 
   function handleNotificationPress() {
     try {
-      navigation.navigate('CompleteTaskScreen', {
-        project: notification.action_object.project,
-        task: notification.action_object.milestone,
-        report: notification.action_object,
+      navigation.navigate('ProjectCoachScreenDashboardScreen', {
+        project: notification.action_object,
       });
     } catch (e) {
       console.error(e);
     }
   }
+
   return (
     <TouchableNativeFeedback onPress={handleNotificationPress}>
       <View
@@ -56,7 +55,13 @@ function MarkedYourMilestone({notification}) {
         <View style={{flexDirection: 'column', flex: 1}}>
           <Text style={{...theme.fonts.medium}}>
             {notification.actor.name}
-            <Text> {notification.verb}</Text>
+            <Text>
+              {' '}
+              {notification.verb.toLowerCase()}{' '}
+              <Text style={{...theme.fonts.medium}}>
+                {notification?.action_object?.name}
+              </Text>
+            </Text>
           </Text>
           <View>
             <Text style={{color: 'gray'}}>{timeSinceText} ago</Text>
@@ -67,4 +72,4 @@ function MarkedYourMilestone({notification}) {
   );
 }
 
-export default MarkedYourMilestone;
+export default JoinedYourProject;

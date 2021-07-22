@@ -79,7 +79,8 @@ export const notificationsSlice = createSlice({
     [getMyNotifications.rejected]: (state, action) => {},
     [getMyNotifications.pending]: (state, action) => {},
     [addNotification.fulfilled]: (state, action) => {
-      state.notifications.push(action.payload);
+      // add newer notifications at the start of the array
+      state.notifications.unshift(action.payload);
     },
     [addNotification.rejected]: (state, action) => {},
     [addNotification.pending]: (state, action) => {},
