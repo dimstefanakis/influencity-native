@@ -25,7 +25,6 @@ function getDifficulty(difficulty) {
 }
 
 function CreateProject({editMode = false, project = project}) {
-  console.log(project);
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
