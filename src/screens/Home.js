@@ -59,7 +59,7 @@ function Home() {
     dispatch(getMyTeams());
     dispatch(getPaymentMethod());
     dispatch(getMyAwards());
-    dispatch(getMyCreatedProjects())
+    dispatch(getMyCreatedProjects());
     dispatch(getMyCoaches());
   }, [dispatch, token]);
 

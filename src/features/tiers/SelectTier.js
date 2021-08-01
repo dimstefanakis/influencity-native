@@ -65,6 +65,7 @@ function SelectTier({route}) {
         contentStyle={{padding: 10}}
         style={{borderRadius: 50, width: 200, margin: 20}}
         onPress={() => getTierValuesAndCreateItems(myTiers)}
+        disabled={!selectedTier}
         loading={loading}>
         Finish post
       </Button>

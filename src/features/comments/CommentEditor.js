@@ -48,7 +48,7 @@ function CommentEditor({route}) {
         <Button
           onPress={handlePostComment /*handleCreatePosts*/}
           mode="contained"
-          labelStyle={{color: 'white'}}
+          labelStyle={{color: 'black'}}
           style={{marginRight: 10, borderRadius: 100}}>
           Post
         </Button>
