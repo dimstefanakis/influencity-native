@@ -7,15 +7,43 @@ import {
   Image,
   TouchableNativeFeedback,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import ZoomUs, {ZoomEmitter} from 'react-native-zoom-us';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {Avatar, Text, Subheading, useTheme} from 'react-native-paper';
 import {Config} from 'react-native-config';
 import {SmallHeader, BigHeader} from '../../flat/Headers/Headers';
 import {setSelectedProjectTeams} from './projectsSlice';
 import axios from 'axios';
+
+const skdKey = Config.ZOOM_SDK_KEY;
+const sdkSecret = Config.ZOOM_SDK_SECRET_KEY;
+
+const exampleStartMeeting = {
+  meetingNumber: '',
+  // More info (https://devforum.zoom.us/t/non-login-user-host-meeting-userid-accesstoken-zoomaccesstoken-zak/18720/3)
+  zoomAccessToken: '', // `TODO`: Use API at https://marketplace.zoom.us/docs/api-reference/zoom-api/users/usertoken to get `zak` token
+};
+
+async function getZacToken() {
+  const zak = Config.ZOOM_JWT;
+  fetch('https://api.zoom.us/v2/users/jimstef@outlook.com/token?type=zak', {
+    method: 'post',
+    headers: new Headers({
+      Authorization: `Bearer ${zak}`,
+      'Content-Type': 'application/json',
+    }),
+    body: '',
+  });
+
+  const data = {
+    email: 'jimstef@outlook.com',
+    password: 'test',
+  };
+}
 
 function ProjectCoachScreenDashboard({route}) {
   const dispatch = useDispatch();
@@ -33,6 +61,7 @@ function ProjectCoachScreenDashboard({route}) {
   const [teams, setTeams] = useState([]);
   const [tierOneTeams, setTierOneTeams] = useState([]);
   const [tierTwoTeams, setTierTwoTeams] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   async function getTeams() {
     try {
@@ -74,6 +103,27 @@ function ProjectCoachScreenDashboard({route}) {
       ),
     });
   }, []);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const initializeResult = await ZoomUs.initialize({
+  //         clientKey: skdKey,
+  //         clientSecret: sdkSecret,
+  //       });
+  //       await ZoomUs.joinMeeting({
+  //         userName: 'Johny',
+  //         meetingNumber: '82640333717',
+  //       })
+  //       console.log({initializeResult});
+
+  //       setIsInitialized(true);
+  //     } catch (e) {
+  //       Alert.alert('Error', 'Could not execute initialize');
+  //       console.error(e);
+  //     }
+  //   })();
+  // }, []);
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.spacing}>

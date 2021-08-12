@@ -9878,6 +9878,13 @@ react-native-webview@^11.6.2:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
 
+react-native-zoom-us@^5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/react-native-zoom-us/-/react-native-zoom-us-5.10.0.tgz#f2c6ebc65c305631ec65e4feb0bd53efa0c3d78e"
+  integrity sha512-dz/GI/zluFVpW07t9CF1YauF/6m/vJ7rPgI1kWW6zBS31TRMutAjiIOyYDITeXAB8bB/b31UIxS3n9hwW4EvQQ==
+  dependencies:
+    invariant "^2.2.4"
+
 react-native@^0.63.0:
   version "0.63.4"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.63.4.tgz#2210fdd404c94a5fa6b423c6de86f8e48810ec36"

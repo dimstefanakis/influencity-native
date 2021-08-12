@@ -30,7 +30,9 @@ function EditProfile() {
   const {user, token} = useSelector((state) => state.authentication);
   const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState(user.subscriber.name);
-  const [bio, setBio] = useState('');
+  const [bio, setBio] = useState(
+    user.is_coach && user.coach.bio ? user.coach.bio : '',
+  );
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();

@@ -571,6 +571,9 @@ PODS:
     - React
   - RNVectorIcons (7.1.0):
     - React
+  - RNZoomUs (5.10.0):
+    - React
+    - ZoomSDK (= 5.4.54802.0124.1)
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
@@ -590,6 +593,7 @@ PODS:
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
+  - ZoomSDK (5.4.54802.0124.1)
 
 DEPENDENCIES:
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
@@ -664,6 +668,7 @@ DEPENDENCIES:
   - RNSharedElement (from `../node_modules/react-native-shared-element`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNZoomUs (from `../node_modules/react-native-zoom-us`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -716,6 +721,7 @@ SPEC REPOS:
     - StripeCore
     - TOCropViewController
     - YogaKit
+    - ZoomSDK
 
 EXTERNAL SOURCES:
   BVLinearGradient:
@@ -806,6 +812,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNZoomUs:
+    :path: "../node_modules/react-native-zoom-us"
   stripe-react-native:
     :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
@@ -897,6 +905,7 @@ SPEC CHECKSUMS:
   RNSharedElement: 00b1a1420d213a34459bb9a5aacabb38107d7948
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
+  RNZoomUs: c9eed84d050423693f24ac53c100b75acdc15018
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Stripe: 90596971ef49bade169f68bc59369a796b30a045
@@ -905,6 +914,7 @@ SPEC CHECKSUMS:
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
+  ZoomSDK: 807ba23dfb0099945bb94fa2e4b729d615aed009
 
 PODFILE CHECKSUM: 8afad003f46a73eb908bae74800f652e4e6c3610
 

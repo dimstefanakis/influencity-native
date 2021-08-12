@@ -59,7 +59,7 @@ function ProfileSettings() {
 
   return (
     <View style={{marginTop: 20, marginBottom: 10}}>
-      <Header title="Personilization" />
+      <Header title="Personalization" />
       <Setting icon="user" text="Edit your profile" onPress={handlePress} />
     </View>
   );

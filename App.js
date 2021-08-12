@@ -86,7 +86,13 @@ import {getMyAwards} from './src/features/awards/awardsSlice';
 import {getMyCoaches} from './src/features/myCoaches/myCoachesSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
+import { LogBox } from 'react-native';
 
+// Ignore log notification by message:
+LogBox.ignoreLogs(['Warning: ...']);
+
+// Ignore all log notifications:
+LogBox.ignoreAllLogs();
 notifHandler();
 
 const stripePromise = loadStripe(Config.STRIPE_PUBLISHABLE_KEY);
