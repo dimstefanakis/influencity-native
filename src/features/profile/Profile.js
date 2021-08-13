@@ -150,7 +150,7 @@ function MyBalance() {
         <View>
           <View style={{flexDirection: 'row'}}>
             <Text style={{...theme.fonts.medium, fontSize: 36, flex: 1}}>
-              ${balance.available}
+              €{balance.available}
             </Text>
 
             <Button
@@ -172,7 +172,7 @@ function MyBalance() {
             </Button>
           </View>
           <Text style={{fontSize: 20, flex: 1, marginTop: 15, color: 'gray'}}>
-            ${balance.pending} (available in 7 days)
+            €{balance.pending} (available in 7 days)
           </Text>
         </View>
       </View>

@@ -174,10 +174,10 @@ function CreateProject({editMode = false, project = project}) {
           <Text style={{marginLeft: 15, marginRight: 15, marginTop: 5}}>
             Mentees will pay for this project once. First time subscribers can
             purchase one of their choice project for free. Add the amount in
-            dollars ($).
+            euros (€).
           </Text>
           <TextInput
-            label="Price (USD)"
+            label="Price (EUR)"
             defaultValue={credit.toString()}
             onChangeText={(text) => setCredit(text)}
             style={{

@@ -292,7 +292,7 @@ function SubscribePayment({route}) {
               marginTop: 10,
               ...theme.fonts.medium,
             }}>
-            {tier.tier == 'FR' ? 'Free' : `$${tier.credit}`}
+            {tier.tier == 'FR' ? 'Free' : `€${tier.credit}`}
           </Text>
           {tier.tier == 'FR' ? null : (
             <Text style={{color: '#3e3e3e'}}>paid monthly</Text>

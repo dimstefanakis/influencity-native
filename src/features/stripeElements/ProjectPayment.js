@@ -242,7 +242,7 @@ function ProjectPayment({route}) {
               marginTop: 10,
               ...theme.fonts.medium,
             }}>
-            {foundCoach?.coupon?.valid ? 'Free' : `$${project.credit}`}
+            {foundCoach?.coupon?.valid ? 'Free' : `€${project.credit}`}
           </Text>
           {foundCoach?.coupon?.valid ? (
             <Text style={{color: '#3e3e3e'}}>
