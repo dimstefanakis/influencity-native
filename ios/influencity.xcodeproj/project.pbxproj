@@ -88,6 +88,7 @@
 		54EBDB2C572740CBB010910E /* Nunito-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Light.ttf"; path = "../assets/fonts/Nunito-Light.ttf"; sourceTree = "<group>"; };
 		55416DDC2681403200125F7F /* influencity-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "influencity-Bridging-Header.h"; sourceTree = "<group>"; };
 		55416DDD2681403300125F7F /* Fix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fix.swift; sourceTree = "<group>"; };
+		5543526E26CC7F9C00436D69 /* influencity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = influencity.entitlements; path = influencity/influencity.entitlements; sourceTree = "<group>"; };
 		6225A69ADC9B484BB95F87C1 /* Nunito-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-SemiBoldItalic.ttf"; path = "../assets/fonts/Nunito-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		65CFF28C6A03423189EC7142 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		6E92C07B2B75C16B021BFA77 /* libPods-influencity.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-influencity.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -255,6 +256,7 @@
 		13B07FAE1A68108700A75B9A /* influencity */ = {
 			isa = PBXGroup;
 			children = (
+				5543526E26CC7F9C00436D69 /* influencity.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -928,6 +930,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = influencity/influencity.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 94R3NUTP8S;
 				ENABLE_BITCODE = NO;
@@ -954,6 +957,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = influencity/influencity.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 94R3NUTP8S;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;

@@ -8,8 +8,13 @@ import {setConnectAccountStatus} from '../features/stripeElements/stripeSlice';
 
 function StripeWebViewScreen({route}) {
   const dispatch = useDispatch();
+  const [webviewKey, setWebviewKey] = useState(0);
   const {url, type} = route.params;
   const navigation = useNavigation();
+
+  function reload() {
+    setWebviewKey((key) => key + 1);
+  }
 
   function onWebViewStateChange(navState) {
     //navigation.goBack();
@@ -24,12 +29,14 @@ function StripeWebViewScreen({route}) {
       navigation.goBack();
       Toast.show({
         text1: 'Successfully setup payment method',
-        text2: `If the information you provided is correct you will soon be able to receive payments from Troosh!`,
+        text2:
+          'If the information you provided is correct you will soon be able to receive payments from Troosh!',
       });
     }
   }
 
   function handleOnError(e) {
+    console.log(e);
     if (type == 'setup') {
       dispatch(setConnectAccountStatus(true));
     }
@@ -38,6 +45,8 @@ function StripeWebViewScreen({route}) {
 
   return (
     <WebView
+      key={webviewKey}
+      onContentProcessDidTerminate={reload}
       source={{uri: url}}
       startInLoadingState
       scalesPageToFit

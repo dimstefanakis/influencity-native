@@ -104,7 +104,7 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
               In order to be able to create projects you need to setup your
               payout method in your{' '}
               <Text style={{...theme.fonts.medium}}>
-                profile > Dashboard > Setup account
+                Profile > Dashboard > Setup account
               </Text>
             </Text>
           </View>

@@ -54,7 +54,6 @@ import PostScreen from './src/screens/PostScreen';
 import TeamChatScreen from './src/screens/TeamChatScreen';
 import CommentsScreen from './src/screens/CommentsScreen';
 import CompleteTaskScreen from './src/screens/CompleteTaskScreen';
-import SettingsScreen from './src/screens/SettingsScreen';
 import CreateProjectScreen from './src/screens/CreateProjectScreen';
 import EditProjectScreen from './src/screens/EditProjectScreen';
 import BecomeMemberScreen from './src/screens/BecomeMemberScreen';
@@ -76,20 +75,47 @@ import PrivacySettings from './src/features/settings/PrivacySettings';
 import Gallery from './src/screens/GalleryScreen';
 import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import CoachOnboardScreen from './src/screens/CoachOnboardScreen';
+import StripeConnectOnboardCallbackScreen from './src/flat/StripeConnectOnboardCallback/StripeConnectOnboardCallback';
 import SelectExpertiseScreen from './src/screens/SelectExpertiseScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
-import {getMyTiers} from './src/features/tiers/tiersSlice';
-import {getMyTeams} from './src/features/teams/teamsSlice';
-import {getPaymentMethod} from './src/features/stripeElements/stripeSlice';
-import {getMyAwards} from './src/features/awards/awardsSlice';
-import {getMyCoaches} from './src/features/myCoaches/myCoachesSlice';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
 import {notifHandler} from './notifHandler';
 
 notifHandler();
 
 const stripePromise = loadStripe(Config.STRIPE_PUBLISHABLE_KEY);
+//users/oauth/callback
+const config = {
+  screens: {
+    BottomStackNavigation: {
+      screens: {
+        Home: {
+          screens: {
+            StripeConnectOnboardCallbackScreen: {
+              path: 'users/oauth/callback',
+            },
+            CoachMainScreen: {
+              path: 'mentor/:coach',
+              parse: {
+                coach: (id) => id,
+              },
+              stringify: {
+                coach: (id) => id,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+const linking = {
+  prefixes: ['https://troosh.app', 'troosh://'],
+  config,
+};
+
 const fontConfig = {
   default: {
     regular: {
@@ -226,7 +252,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <VanillaStack.Navigator
           mode="modal"
           headerMode="screen"
@@ -305,6 +331,14 @@ const App = () => {
               headerShown: false,
             }}
           />
+          {/* <VanillaStack.Screen
+            name="StripeConnectOnboardCallbackScreen"
+            component={StripeConnectOnboardCallbackScreen}
+            options={{
+              title: '',
+              headerShown: false,
+            }}
+          /> */}
           <VanillaStack.Screen
             name="SelectExpertiseScreen"
             component={SelectExpertiseScreen}
@@ -676,6 +710,14 @@ function HomeStack() {
           component={Home}
           options={{
             headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="StripeConnectOnboardCallbackScreen"
+          component={StripeConnectOnboardCallbackScreen}
+          options={({route}) => {
+            //return {title: route.params.coach.name};
+            return {title: '', ...preset};
           }}
         />
         <Stack.Screen

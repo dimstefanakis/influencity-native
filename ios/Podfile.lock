@@ -441,7 +441,7 @@ PODS:
     - react-native-config/App (= 1.4.2)
   - react-native-config/App (1.4.2):
     - React-Core
-  - react-native-safe-area-context (3.2.0):
+  - react-native-safe-area-context (3.3.0):
     - React-Core
   - react-native-video (5.1.1):
     - React-Core
@@ -562,7 +562,7 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.3.0):
+  - RNScreens (3.5.0):
     - React-Core
     - React-RCTImage
   - RNSharedElement (0.7.0):
@@ -872,7 +872,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
   react-native-config: c98128a72bc2c3a1ca72caec0b021f0fa944aa29
-  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
+  react-native-safe-area-context: 61c8c484a3a9e7d1fda19f7b1794b35bbfd2262a
   react-native-video: 0bb76b6d6b77da3009611586c7dbf817b947f30e
   react-native-webview: 193d233c29eacce1f42ca2637dab7ba79c25a6de
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
@@ -893,7 +893,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 08ba3a2e2f4f8833d606f01906c371e382c4dea9
   RNReanimated: d9da990fc90123f4ffbfdda93d00fc15174863a8
-  RNScreens: bf59f17fbf001f1025243eeed5f19419d3c11ef2
+  RNScreens: 01ab149b5dd5c27f5ff26741b1d2bdf2cee1af35
   RNSharedElement: 00b1a1420d213a34459bb9a5aacabb38107d7948
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59

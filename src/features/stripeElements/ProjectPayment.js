@@ -68,7 +68,7 @@ function ProjectPayment({route}) {
         setLoading(false);
         setError(response.data.error);
       } else {
-        // updating the state tree so user has immidiate feedback
+        // updating the state tree so user has immediate feedback
         // I am not really sure if await has any effect here but I will leave it as is
         await dispatch(getMyCoaches());
         await dispatch(getMyProjects());

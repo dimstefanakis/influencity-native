@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Image, View, SafeAreaView, ActivityIndicator} from 'react-native';
 import {Button, Chip, FAB, Avatar, Text, useTheme} from 'react-native-paper';
 import Config from 'react-native-config';
@@ -8,9 +9,10 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import PostList from '../features/posts/PostList';
 import {getProjects} from '../features/projects/projectsSlice';
+import axios from 'axios';
 
-function CoachMainScreen2({route}) {
-  const coach = route.params.coach;
+function CoachMainScreen2({route, coach}) {
+  //const coach = route.params.coach;
   const theme = useTheme();
   const {coachPostCount, hasLoadedInitialCoachPosts} = useSelector(
     (state) => state.posts,
@@ -201,12 +203,49 @@ function Projects({coach}) {
   );
 }
 
-function CoachMainScreenWithPosts({route}) {
+function CoachScreenMatcher({route}) {
+  // A user can land to the mentor screen either through the app or through a deep link
+  // deep links naturally only have the mentor id so we have to check this and get the mentor through the api
+  // this is not the case when navigating through the app where the mentor is available as an object and there
+  // is no need for api calls
+
+  const isDeepLink = typeof route.params.coach === 'string';
+  const [coach, setCoach] = useState(isDeepLink ? null : route.params.coach);
+
+  async function getCoach() {
+    try {
+      let response = await axios.get(
+        `${Config.API_URL}/v1/coaches/${route.params.coach}/`,
+      );
+      setCoach(response.data);
+    } catch (e) {}
+  }
+
+  useEffect(() => {
+    if (isDeepLink) {
+      getCoach();
+    }
+  }, [route.params.coach, isDeepLink]);
+
+  // if route is rendered from a deep link coach needs to be gathered from the api first
+  if (isDeepLink) {
+    if (!coach) {
+      // TODO show a loading screen or something
+      return null;
+    } else {
+      return <CoachMainScreenWithPosts route={route} coach={coach} />;
+    }
+  } else {
+    return <CoachMainScreenWithPosts route={route} coach={coach} />;
+  }
+}
+
+function CoachMainScreenWithPosts({route, coach}) {
   const theme = useTheme();
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
-  const coach = route.params.coach;
-  const MainScreen = <CoachMainScreen2 route={route} />;
+  //const coach = route.params.coach;
+  const MainScreen = <CoachMainScreen2 route={route} coach={coach} />;
   const navigation = useNavigation();
 
   let foundCoach = myCoaches.find((c) => c.surrogate == coach.surrogate);
@@ -245,4 +284,4 @@ function CoachMainScreenWithPosts({route}) {
     </SafeAreaView>
   );
 }
-export default CoachMainScreenWithPosts;
+export default CoachScreenMatcher;
