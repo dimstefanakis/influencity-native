@@ -1,9 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {Text, Button, useTheme} from 'react-native-paper';
 import {useNavigation, CommonActions} from '@react-navigation/native';
 import Material from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import LottieView from 'lottie-react-native';
 import {useSelector, useDispatch, unwrapResult} from 'react-redux';
 import {BigHeader} from '../Headers/Headers';
 import SubmitButton from '../SubmitButton/SubmitButton';
@@ -29,15 +30,21 @@ function CoachSubmissionSent() {
       });
   }
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: theme.colors.background,
         padding: 30,
-      }}>
-      <Material name="emoticon-happy-outline" size={150} color={'gray'} />
+      }}
+      contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
+      {/* <Material name="emoticon-happy-outline" size={150} color={'gray'} /> */}
+      <LottieView
+        source={require('../../common/lottie/smile.json')}
+        autoPlay
+        loop
+        style={{width: '100%'}}
+      />
+
       <Text style={{textAlign: 'center', fontSize: 20, ...theme.fonts.medium}}>
         Congrats! You are one step close to becoming a mentor on Troosh.
       </Text>
@@ -50,7 +57,7 @@ function CoachSubmissionSent() {
           Explore Troosh
         </SubmitButton>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
