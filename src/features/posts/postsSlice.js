@@ -46,10 +46,24 @@ export const getNewPosts = createAsyncThunk(
   },
 );
 
+export const getUnseenPostCount = createAsyncThunk(
+  'posts/getUnseenPostCount',
+  async () => {
+    const url = Config.API_URL + '/v1/unseen_post_count/';
+    try {
+      let response = await axios.get(url);
+      return response.data.unseen_post_count;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
 export const postsSlice = createSlice({
   name: 'posts',
   initialState: {
     posts: [],
+    unseenPostCount: 0,
     next: null,
     coachPostCount: 0,
     hasMore: true,
@@ -117,6 +131,11 @@ export const postsSlice = createSlice({
     [getNewPosts.rejected]: (state, action) => {
       state.feedLoading = false;
     },
+    [getUnseenPostCount.fulfilled]: (state, action) => {
+      state.unseenPostCount = action.payload;
+    },
+    [getUnseenPostCount.pending]: (state, action) => {},
+    [getUnseenPostCount.rejected]: (state, action) => {},
   },
 });
 

@@ -29,6 +29,7 @@ import {enableScreens} from 'react-native-screens';
 import {useGalleryInit} from 'react-native-gallery-toolkit';
 enableScreens();
 import Home from './src/screens/Home';
+import Home2 from './src/screens/Home2';
 import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import ForgotPassword from './src/screens/ForgotPassword';
@@ -39,6 +40,7 @@ import CoachSubmissionSentScreen from './src/screens/CoachSubmissionSentScreen';
 import Notifications from './src/screens/NotificationsScreen';
 import CoachScreen from './src/screens/CoachMainScreen';
 import PostEditor from './src/screens/PostEditor';
+import ViewAllPostsScreen from './src/screens/ViewAllPostsScreen';
 import CommentsEditor from './src/screens/CommentEditor';
 import NewPostsScreen from './src/screens/NewPostsScreen';
 import {
@@ -64,6 +66,7 @@ import WebViewScreen from './src/screens/WebViewScreen';
 import SelectablePostListScreen from './src/screens/SelectablePostListScreen';
 import ProjectLinkedPostsScreen from './src/screens/ProjectLinkedPostsScreen';
 import ProjectCoachScreenDashboardScreen from './src/screens/ProjectCoachScreenDashboardScreen';
+import MyCoachesProjectsScreen from './src/screens/MyCoachesProjects';
 import TeamMentorDashboardScreen from './src/screens/TeamMentorDashboardScreen';
 import CompleteTaskMentorScreen from './src/screens/CompleteTaskMentorScreen';
 import AwardsScreen from './src/screens/AwardsScreen';
@@ -582,6 +585,10 @@ function BottomStackNavigation() {
     (state) => state.authentication,
   );
   const {unreadCount} = useSelector((state) => state.notifications);
+  const preset =
+    Platform.OS == 'ios'
+      ? TransitionPresets.ModalSlideFromBottomIOS
+      : TransitionPresets.ScaleFromCenterAndroid;
 
   // after user logs out he lands here, not sure why
   // navigate him to login
@@ -596,88 +603,76 @@ function BottomStackNavigation() {
   }
 
   return (
-    <BottomStack.Navigator
+    <VanillaStack.Navigator
       //swipeEnabled={false}
-      tabBarPosition="bottom"
-      tabBarOptions={{
-        tabStyle: {backgroundColor: theme.colors.background},
-        style: {
+      mode="modal"
+      headerMode="screen"
+      initialRouteName="Home"
+      screenOptions={{
+        gestureEnabled: true,
+        cardOverlayEnabled: true,
+        ...preset,
+        headerStyle: {
           backgroundColor: theme.colors.background,
-          //height: isKeyboardOpen ? 0 : null,
+          elevation: 0, // remove shadow on Android
+          shadowOpacity: 0, // remove shadow on iOS
         },
-        renderIndicator: () => null,
-        showIcon: true,
-        showLabel: false,
-      }}
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-
-          if (route.name === 'Projects') {
-            return <AntDesign name="rocket1" size={24} color={color} />;
-          }
-
-          if (route.name === 'Notifications') {
-            return (
-              <View style={{position: 'relative'}}>
-                <AntDesign name="bells" size={24} color={color} />
-                {unreadCount == 0 ? null : (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: -10,
-                      right: -10,
-                      borderWidth: 3,
-                      borderColor: theme.colors.background,
-                    }}>
-                    <Badge style={{backgroundColor: theme.colors.primary}}>
-                      {unreadCount}
-                    </Badge>
-                  </View>
-                )}
-              </View>
-            );
-          }
-          if (route.name === 'ProfileScreen') {
-            return (
-              <View>
-                <AntDesign name={'user'} size={24} color={color} />
-                {user.coach && !user.coach.charges_enabled ? (
-                  <View
-                    style={{
-                      position: 'absolute',
-                      top: -10,
-                      right: -10,
-                    }}>
-                    <Badge
-                      style={{
-                        backgroundColor: theme.colors.brandOrange,
-                      }}
-                    />
-                  </View>
-                ) : null}
-              </View>
-            );
-          }
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else {
-            return <AntDesign name={'search1'} size={24} color={color} />;
-          }
-
-          if (route.name === 'Search') {
-            iconName = 'search1';
-          }
-
-          return <AntDesign name={iconName} size={24} color={color} />;
-        },
-      })}>
-      <BottomStack.Screen name="Home" component={HomeStack} />
-      <BottomStack.Screen name="Search" component={SearchScreen} />
-      <BottomStack.Screen name="Projects" component={MyProjectsScreen} />
-      <BottomStack.Screen name="Notifications" component={Notifications} />
-      <BottomStack.Screen name="ProfileScreen" component={ProfileScreen} />
-    </BottomStack.Navigator>
+      }}>
+      <VanillaStack.Screen
+        name="ViewAllPosts"
+        options={{
+          title: '',
+        }}
+        component={ViewAllPostsScreen}
+      />
+      <VanillaStack.Screen
+        name="MyCoachesProjects"
+        options={{
+          title: '',
+        }}
+        component={MyCoachesProjectsScreen}
+      />
+      <VanillaStack.Screen
+        name="Home"
+        options={{
+          title: '',
+          headerShown: false,
+        }}
+        component={HomeStack}
+      />
+      <VanillaStack.Screen
+        name="Search"
+        options={{
+          title: '',
+          headerShown: false,
+        }}
+        component={SearchScreen}
+      />
+      <VanillaStack.Screen
+        name="Projects"
+        options={{
+          title: '',
+          headerShown: false,
+        }}
+        component={MyProjectsScreen}
+      />
+      <VanillaStack.Screen
+        name="Notifications"
+        options={{
+          title: '',
+          headerShown: false,
+        }}
+        component={Notifications}
+      />
+      <VanillaStack.Screen
+        name="ProfileScreen"
+        options={{
+          title: '',
+          headerShown: false,
+        }}
+        component={ProfileScreen}
+      />
+    </VanillaStack.Navigator>
   );
 }
 
@@ -707,7 +702,7 @@ function HomeStack() {
       <>
         <Stack.Screen
           name="Home"
-          component={Home}
+          component={Home2}
           options={{
             headerShown: false,
           }}
