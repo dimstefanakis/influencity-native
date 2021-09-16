@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect} from 'react';
 import {
   View,
   Image,
   StyleSheet,
-  Dimensions,
+  Platform,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
@@ -349,6 +349,18 @@ function Profile() {
       : [],
   );
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SettingsScreen')}
+          style={{padding: Platform.OS == 'ios' ? 0 : 20, paddingRight: 20}}>
+          <Icon name="settings" size={25} color="black" />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation]);
+
   const renderScene = SceneMap({
     first: StudentRoute,
     second: SecondRoute,
@@ -420,21 +432,6 @@ function Profile() {
           height: '100%',
           backgroundColor: theme.colors.background,
         }}>
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 15,
-            right: 15,
-          }}>
-          <View>
-            <Icon
-              name="settings"
-              size={25}
-              color="black"
-              onPress={() => navigation.navigate('SettingsScreen')}
-            />
-          </View>
-        </TouchableOpacity>
         <View
           style={{
             width: '100%',

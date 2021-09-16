@@ -80,6 +80,7 @@ import SplashScreen from './src/flat/SplashScreen/SplashScreen';
 import CoachOnboardScreen from './src/screens/CoachOnboardScreen';
 import StripeConnectOnboardCallbackScreen from './src/flat/StripeConnectOnboardCallback/StripeConnectOnboardCallback';
 import SelectExpertiseScreen from './src/screens/SelectExpertiseScreen';
+import CreatePostOrProjectScreen from './src/screens/CreatePostOrProjectScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
@@ -633,6 +634,14 @@ function BottomStackNavigation() {
         component={MyCoachesProjectsScreen}
       />
       <VanillaStack.Screen
+        name="CreatePostOrProject"
+        options={{
+          title: '',
+        }}
+        component={CreatePostOrProjectScreen}
+      />
+
+      <VanillaStack.Screen
         name="Home"
         options={{
           title: '',
@@ -644,7 +653,6 @@ function BottomStackNavigation() {
         name="Search"
         options={{
           title: '',
-          headerShown: false,
         }}
         component={SearchScreen}
       />
@@ -660,7 +668,6 @@ function BottomStackNavigation() {
         name="Notifications"
         options={{
           title: '',
-          headerShown: false,
         }}
         component={Notifications}
       />
@@ -668,7 +675,6 @@ function BottomStackNavigation() {
         name="ProfileScreen"
         options={{
           title: '',
-          headerShown: false,
         }}
         component={ProfileScreen}
       />

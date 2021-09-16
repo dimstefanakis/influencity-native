@@ -11,6 +11,7 @@ import {notificationsSlice} from './features/notifications/notificationsSlice';
 import {searchSlice} from './features/search/searchSlice';
 import {stripeSlice} from './features/stripeElements/stripeSlice';
 import {awardsSlice} from './features/awards/awardsSlice';
+import { dashboardSlice } from './features/dashboard/dashboardSlice';
 
 export default configureStore({
   reducer: {
@@ -26,5 +27,6 @@ export default configureStore({
     search: searchSlice.reducer,
     stripe: stripeSlice.reducer,
     awards: awardsSlice.reducer,
+    dashboard: dashboardSlice.reducer,
   },
 });
