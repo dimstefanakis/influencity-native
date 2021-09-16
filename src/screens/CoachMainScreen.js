@@ -260,7 +260,7 @@ function CoachMainScreenWithPosts({route, coach}) {
   }
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
       <PostList ListHeaderComponent={MainScreen} coach={coach} />
       <View
         style={{

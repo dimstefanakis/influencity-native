@@ -94,19 +94,19 @@ const config = {
   screens: {
     BottomStackNavigation: {
       screens: {
+        CoachMainScreen: {
+          path: 'mentor/:coach',
+          parse: {
+            coach: (id) => id,
+          },
+          stringify: {
+            coach: (id) => id,
+          },
+        },
         Home: {
           screens: {
             StripeConnectOnboardCallbackScreen: {
               path: 'users/oauth/callback',
-            },
-            CoachMainScreen: {
-              path: 'mentor/:coach',
-              parse: {
-                coach: (id) => id,
-              },
-              stringify: {
-                coach: (id) => id,
-              },
             },
           },
         },
@@ -642,6 +642,15 @@ function BottomStackNavigation() {
       />
 
       <VanillaStack.Screen
+        name="CoachMainScreen"
+        component={CoachScreen}
+        options={({route}) => {
+          //return {title: route.params.coach.name};
+          return {title: '', ...preset};
+        }}
+      />
+
+      <VanillaStack.Screen
         name="Home"
         options={{
           title: '',
@@ -721,22 +730,14 @@ function HomeStack() {
             return {title: '', ...preset};
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="CoachMainScreen"
           component={CoachScreen}
           options={({route}) => {
             //return {title: route.params.coach.name};
             return {title: '', ...preset};
           }}
-          //options={({route}) => ({title: route.params.coach.name})}
-          sharedElements={(route, otherRoute, showing) => {
-            /*if (otherRoute.name !== 'ProjectListScreen') {
-                const coach = route.params.coach;
-                console.log(coach, otherRoute.name);
-                return [`coach.${coach.name}.avatar`];
-              }*/
-          }}
-        />
+        /> */}
         <Stack.Screen
           name="PostScreen"
           component={PostScreen}
