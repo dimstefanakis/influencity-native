@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import {useTheme, Text, Subheading} from 'react-native-paper';
@@ -52,7 +53,7 @@ function Home() {
 
   return (
     <SafeAreaView style={{flex: 1}} forceInset={{ bottom: 'never'}} >
-      <ScrollView>
+      <ScrollView contentContainerStyle={{paddingBottom: 30}}>
         <Header />
         <View>
           <Subheading style={{marginTop: 30, ...styles.spacing}}>
@@ -120,6 +121,7 @@ function CreateButton() {
         alignItems: 'center',
         height: 100,
         minHeight: 100,
+        borderColor: '#FFD29B',
       }}>
       <Pressable
         onPress={handleCreateClick}
@@ -171,6 +173,7 @@ function SwapProfileButton() {
         alignItems: 'center',
         height: 100,
         minHeight: 100,
+        borderColor: '#FFD29B',
       }}>
       <Pressable
         onPress={handleCreateClick}
@@ -592,6 +595,7 @@ function SecondColumn() {
               marginTop: 18,
               paddingRight: 20,
               paddingLeft: 20,
+              textAlign: 'center',
               fontSize: 20,
               ...theme.fonts.medium,
             }}>
@@ -671,6 +675,7 @@ function MentorCreatedProjects() {
               color: '#5A5A5A',
               marginTop: 18,
               paddingRight: 20,
+              textAlign: 'center',
               paddingLeft: 20,
               fontSize: 20,
               ...theme.fonts.medium,
@@ -748,7 +753,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.08,
     shadowRadius: 13.84,
-    elevation: 5,
+    borderColor: '#AAF0D1',
+    borderWidth: Platform.OS == 'ios' ? 0 : 5,
   },
 });
 
