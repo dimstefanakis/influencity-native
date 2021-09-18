@@ -12,6 +12,7 @@ import {
   Chip,
   useTheme,
 } from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 
 function Project({
@@ -67,7 +68,13 @@ function Project({
             : {...styles.surface}
         }>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Avatar.Icon size={30} icon="code-tags" color="white" />
+          <Avatar.Icon
+            size={30}
+            icon={({size, color}) => (
+              <AntDesign name="rocket1" size={size} color="black" />
+            )}
+            color="white"
+          />
           <Title
             style={{
               //color: '#1890ff',
@@ -112,7 +119,13 @@ function ProjectAsSub({project}) {
     <TouchableNativeFeedback onPress={handleProjectClick}>
       <Surface style={{height: 180, width: '47%', ...styles.surface}}>
         <View style={{flex: 1}}>
-          <Avatar.Icon size={40} icon="code-tags" color="white" />
+          <Avatar.Icon
+            size={40}
+            icon={({size, color}) => (
+              <AntDesign name="rocket1" size={size} color="black" />
+            )}
+            color="white"
+          />
           <Text
             style={{
               fontSize: 20,

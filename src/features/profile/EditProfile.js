@@ -115,6 +115,7 @@ function EditProfile() {
             }}>
             <TouchableOpacity onPress={handleChangeAvatar}>
               <Avatar.Image
+                style={{borderColor: 'black', borderWidth: 2}}
                 source={{
                   uri: avatar ? avatar.path : user.subscriber.avatar,
                 }}
@@ -122,12 +123,14 @@ function EditProfile() {
               />
               <IconButton
                 icon="camera"
-                color="white"
+                color="black"
                 style={{
                   backgroundColor: theme.colors.primary,
                   position: 'absolute',
                   top: -10,
                   right: -10,
+                  borderColor: 'black',
+                  borderWidth: 2,
                 }}
                 size={20}
                 onPress={() => console.log('Pressed')}

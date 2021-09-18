@@ -17,6 +17,7 @@ function ProjectsList({route, projectList = []}) {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
+        width: '100%',
       }}>
       {projects.map((project) => {
         return <Project project={project} viewAs={viewAs} />;

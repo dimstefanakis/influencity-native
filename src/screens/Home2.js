@@ -9,7 +9,7 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
-import { SafeAreaView } from 'react-navigation';
+import {SafeAreaView} from 'react-navigation';
 import {useTheme, Text, Subheading} from 'react-native-paper';
 import Config from 'react-native-config';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -52,7 +52,7 @@ function Home() {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}} forceInset={{ bottom: 'never'}} >
+    <SafeAreaView style={{flex: 1}} forceInset={{bottom: 'never'}}>
       <ScrollView contentContainerStyle={{paddingBottom: 30}}>
         <Header />
         <View>
@@ -76,7 +76,7 @@ function Home() {
             <SecondColumn />
           </View>
         )}
-        {type == 'mentor' && (
+        {type == 'mentor' && user.coach && (
           <View
             style={{
               flexDirection: 'row',
@@ -210,8 +210,12 @@ function SwapProfileButton() {
 function Header() {
   const navigation = useNavigation();
 
-  function onProfilePress() {
-    navigation.navigate('ProfileScreen');
+  // function onProfilePress() {
+  //   navigation.navigate('ProfileScreen');
+  // }
+
+  function onSettingsPress() {
+    navigation.navigate('SettingsScreen');
   }
 
   function onNotificationsPress() {
@@ -225,8 +229,8 @@ function Header() {
   return (
     <View style={{marginTop: 20, marginBottom: 10, flexDirection: 'row'}}>
       <View style={{marginLeft: 20, flex: 1}}>
-        <Pressable onPress={onProfilePress}>
-          <AntIcon name="user" size={25} color="#323232" />
+        <Pressable onPress={onSettingsPress}>
+          <AntIcon name="setting" size={25} color="#323232" />
         </Pressable>
       </View>
       <View style={{flexDirection: 'row'}}>
@@ -337,10 +341,13 @@ function FirstColumn() {
 function FirstMentorColumn() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const {user} = useSelector((state) => state.authentication);
+  const {settingUpConnectAccount} = useSelector((state) => state.stripe);
   const [balance, setBalance] = useState(0);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [stripeLoginLink, setStripeLoginLink] = useState(null);
   const [stripeLoginLoading, setStripeLoginLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function getBalance() {
     try {
@@ -368,11 +375,31 @@ function FirstMentorColumn() {
     }
   }
 
-  function handlePress() {
-    navigation.navigate('StripeWebViewScreen', {
-      url: stripeLoginLink,
-      type: 'checkout',
-    });
+  async function handleCreateStripeAccount() {
+    try {
+      const url = `${Config.API_URL}/v1/create_stripe_account_link/`;
+      setLoading(true);
+      let response = await axios.get(url);
+      setLoading(false);
+      navigation.navigate('StripeWebViewScreen', {
+        url: response.data.url,
+        type: 'setup',
+      });
+    } catch (e) {
+      setLoading(false);
+      console.error(e);
+    }
+  }
+
+  async function handlePress() {
+    if (user.coach && user.coach.charges_enabled) {
+      navigation.navigate('StripeWebViewScreen', {
+        url: stripeLoginLink,
+        type: 'checkout',
+      });
+    } else {
+      await handleCreateStripeAccount();
+    }
   }
 
   useEffect(() => {
@@ -395,43 +422,97 @@ function FirstMentorColumn() {
           }}>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <MaterialIcons name="attach-money" size={30} color="#323232" />
-            <Text
-              style={{
-                color: '#5A5A5A',
-                marginTop: 18,
-                paddingRight: 20,
-                paddingLeft: 20,
-                fontSize: 20,
-                ...theme.fonts.medium,
-              }}>
-              Balance
-            </Text>
-            <Text
-              style={{
-                marginTop: 16,
-                paddingRight: 20,
-                paddingLeft: 20,
-                fontSize: 36,
-                ...theme.fonts.medium,
-              }}>
-              {balance.available}€
-            </Text>
-
-            <Text
-              style={{
-                color: '#656565',
-                textAlign: 'center',
-                padding: 20,
-                marginBottom: 30,
-                ...theme.fonts.medium,
-              }}>
-              {balance.pending}€ (available in 7 days)
-            </Text>
+            {user.coach && user.coach.charges_enabled ? (
+              <>
+                <Balance balance={balance} />
+              </>
+            ) : (
+              <SetupStripeAccount />
+            )}
           </View>
         </Pressable>
       </Box>
       <SubscriberData />
     </View>
+  );
+}
+
+function Balance({balance}) {
+  const theme = useTheme();
+  const navigation = useNavigation();
+
+  return (
+    <>
+      <Text
+        style={{
+          color: '#5A5A5A',
+          marginTop: 18,
+          paddingRight: 20,
+          paddingLeft: 20,
+          fontSize: 20,
+          ...theme.fonts.medium,
+        }}>
+        Balance
+      </Text>
+      <Text
+        style={{
+          marginTop: 16,
+          paddingRight: 20,
+          paddingLeft: 20,
+          fontSize: 36,
+          ...theme.fonts.medium,
+        }}>
+        {balance.available}€
+      </Text>
+
+      <Text
+        style={{
+          color: '#656565',
+          textAlign: 'center',
+          padding: 20,
+          marginBottom: 30,
+          ...theme.fonts.medium,
+        }}>
+        {balance.pending}€ (available in 7 days)
+      </Text>
+    </>
+  );
+}
+
+function SetupStripeAccount() {
+  const theme = useTheme();
+  const navigation = useNavigation();
+  const {user} = useSelector((state) => state.authentication);
+  const {settingUpConnectAccount} = useSelector((state) => state.stripe);
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <>
+      <Text
+        style={{
+          color: '#5A5A5A',
+          marginTop: 18,
+          paddingRight: 20,
+          paddingLeft: 20,
+          fontSize: 20,
+          textAlign: 'center',
+          ...theme.fonts.medium,
+        }}>
+        Payout method
+      </Text>
+      <Text
+        style={{
+          color: '#656565',
+          textAlign: 'center',
+          padding: 20,
+          marginBottom: 30,
+          ...theme.fonts.medium,
+        }}>
+        {settingUpConnectAccount
+          ? 'Your account is currently being processed by stripe!'
+          : 'Tap here to setup your payout method on Stripe!'}
+      </Text>
+    </>
   );
 }
 
