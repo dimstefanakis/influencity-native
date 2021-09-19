@@ -8,9 +8,11 @@ import {
   Dimensions,
   Pressable,
   Platform,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-navigation';
-import {useTheme, Text, Subheading} from 'react-native-paper';
+import {useTheme, Text, Subheading, Avatar} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,7 +31,7 @@ import {getMyChatRooms} from '../features/chat/chatSlice';
 import {getMyCoaches} from '../features/myCoaches/myCoachesSlice';
 import {getUnseenPostCount} from '../features/posts/postsSlice';
 import LevelBackground from '../flat/Home/Illustrations/LevelBackground';
-import {useNavigation} from '@react-navigation/native';
+import CoachResult from '../features/search/CoachResult';
 import {toggleType} from '../features/dashboard/dashboardSlice';
 import handleChatEvents from '../features/chat/handleWsEvents';
 import axios from 'axios';
@@ -333,6 +335,7 @@ function FirstColumn() {
           </View>
         </Pressable>
       </Box>
+      <MyCoaches />
       <SupportBox />
     </View>
   );
@@ -660,72 +663,75 @@ function SecondColumn() {
   }, [dispatch, token]);
 
   return (
-    <Pressable onPress={onProjectsPress}>
-      <Box>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 45,
-            width: '100%',
-          }}>
-          <AntIcon name="rocket1" size={30} color="#323232" />
-          <Text
-            style={{
-              color: '#5A5A5A',
-              marginTop: 18,
-              paddingRight: 20,
-              paddingLeft: 20,
-              textAlign: 'center',
-              fontSize: 20,
-              ...theme.fonts.medium,
-            }}>
-            Enrolled projects
-          </Text>
+    <View>
+      <Pressable onPress={onProjectsPress}>
+        <Box>
           <View
             style={{
-              width: '100%',
-              alignItems: 'center',
               justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 45,
+              width: '100%',
             }}>
-            {myProjects && myProjects.length == 0 ? (
-              <Text
-                style={{
-                  color: '#656565',
-                  textAlign: 'center',
-                  padding: 20,
-                  marginTop: 20,
-                  marginBottom: 30,
-                }}>
-                You haven’t enrolled in any projects yet. Join one!
-              </Text>
-            ) : (
-              <View
-                style={{
-                  padding: 20,
-                  marginBottom: 30,
-                  width: '100%',
-                  justifyContent: 'flex-start',
-                }}>
-                {myProjects.map((project) => {
-                  return (
-                    <Text
-                      style={{
-                        marginTop: 20,
-                        textAlign: 'left',
-                        width: '100%',
-                      }}
-                      key={project.name}>
-                      {project.name}
-                    </Text>
-                  );
-                })}
-              </View>
-            )}
+            <AntIcon name="rocket1" size={30} color="#323232" />
+            <Text
+              style={{
+                color: '#5A5A5A',
+                marginTop: 18,
+                paddingRight: 20,
+                paddingLeft: 20,
+                textAlign: 'center',
+                fontSize: 20,
+                ...theme.fonts.medium,
+              }}>
+              Enrolled projects
+            </Text>
+            <View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              {myProjects && myProjects.length == 0 ? (
+                <Text
+                  style={{
+                    color: '#656565',
+                    textAlign: 'center',
+                    padding: 20,
+                    marginTop: 20,
+                    marginBottom: 30,
+                  }}>
+                  You haven’t enrolled in any projects yet. Join one!
+                </Text>
+              ) : (
+                <View
+                  style={{
+                    padding: 20,
+                    marginBottom: 30,
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                  }}>
+                  {myProjects.map((project) => {
+                    return (
+                      <Text
+                        style={{
+                          marginTop: 20,
+                          textAlign: 'left',
+                          width: '100%',
+                        }}
+                        key={project.name}>
+                        {project.name}
+                      </Text>
+                    );
+                  })}
+                </View>
+              )}
+            </View>
           </View>
-        </View>
-      </Box>
-    </Pressable>
+        </Box>
+      </Pressable>
+      <Awards />
+    </View>
   );
 }
 
@@ -807,6 +813,186 @@ function MentorCreatedProjects() {
         </View>
       </Box>
     </Pressable>
+  );
+}
+
+function MyCoaches() {
+  const theme = useTheme();
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {myCoaches} = useSelector((state) => state.myCoaches);
+
+  function onProjectsPress() {
+    navigation.navigate('MyCoachesScreen');
+  }
+
+  return (
+    <Pressable onPress={onProjectsPress}>
+      <Box>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 45,
+            width: '100%',
+          }}>
+          <View
+            style={{
+              height: 30,
+              width: 30,
+              backgroundColor: '#323232',
+              borderRadius: 100,
+            }}
+          />
+          {/* <AntIcon name="rocket1" size={30} color="#323232" /> */}
+          <Text
+            style={{
+              color: '#5A5A5A',
+              marginTop: 18,
+              paddingRight: 20,
+              textAlign: 'center',
+              paddingLeft: 20,
+              fontSize: 20,
+              ...theme.fonts.medium,
+            }}>
+            My mentors
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}>
+            {myCoaches && myCoaches.length == 0 ? (
+              <Text
+                style={{
+                  color: '#656565',
+                  textAlign: 'center',
+                  padding: 20,
+                  marginTop: 20,
+                  marginBottom: 30,
+                }}>
+                You haven’t subscribed to any mentors yet. Find mentors!
+              </Text>
+            ) : (
+              <View
+                style={{
+                  padding: 20,
+                  marginBottom: 30,
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                }}>
+                {myCoaches.map((coach) => {
+                  return <SmallCoach coach={coach} key={coach.name} />;
+                })}
+              </View>
+            )}
+          </View>
+        </View>
+      </Box>
+    </Pressable>
+  );
+}
+
+function SmallCoach({coach}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      {coach.avatar ? (
+        <Avatar.Image source={{uri: coach.avatar}} size={16} />
+      ) : (
+        <Avatar.Icon size={16} icon="face" />
+      )}
+      <Text style={{marginLeft: 5}} ellipsizeMode="tail" numberOfLines={1}>
+        {coach.name}
+      </Text>
+    </View>
+  );
+}
+
+function Awards() {
+  const theme = useTheme();
+  const {myAwards} = useSelector((state) => state.awards);
+
+  return (
+    <View>
+      <Box>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 45,
+            width: '100%',
+          }}>
+          <AntIcon name="Trophy" size={30} color="#323232" />
+          <Text
+            style={{
+              color: '#5A5A5A',
+              marginTop: 18,
+              paddingRight: 20,
+              textAlign: 'center',
+              paddingLeft: 20,
+              fontSize: 20,
+              ...theme.fonts.medium,
+            }}>
+            My awards
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}>
+            {myAwards && myAwards.length == 0 ? (
+              <Text
+                style={{
+                  color: '#656565',
+                  textAlign: 'center',
+                  padding: 20,
+                  marginTop: 20,
+                  marginBottom: 30,
+                }}>
+                You don't have any awards yet.
+              </Text>
+            ) : (
+              <View
+                style={{
+                  padding: 20,
+                  marginBottom: 30,
+                  width: '100%',
+                  justifyContent: 'space-between',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }}>
+                {myAwards.map((award) => {
+                  return (
+                    <View
+                      style={{
+                        marginRight: 20,
+                        borderRadius: 100,
+                      }}>
+                      <Image
+                        source={{uri: award.award.icon}}
+                        style={{height: 20, width: 20}}
+                      />
+                      {/* <Icon name="award" size={20} color="white" /> */}
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        </View>
+      </Box>
+    </View>
   );
 }
 

@@ -81,6 +81,7 @@ import CoachOnboardScreen from './src/screens/CoachOnboardScreen';
 import StripeConnectOnboardCallbackScreen from './src/flat/StripeConnectOnboardCallback/StripeConnectOnboardCallback';
 import SelectExpertiseScreen from './src/screens/SelectExpertiseScreen';
 import CreatePostOrProjectScreen from './src/screens/CreatePostOrProjectScreen';
+import MyCoachesScreen from './src/screens/MyCoachesScreen';
 import store from './src/store';
 import {getUserData} from './src/features/authentication/authenticationSlices';
 import useKeyboardOpen from './src/hooks/useKeyboardOpen';
@@ -680,6 +681,14 @@ function BottomStackNavigation() {
         }}
         component={Notifications}
       />
+      <VanillaStack.Screen
+        name="MyCoachesScreen"
+        options={{
+          title: '',
+        }}
+        component={MyCoachesScreen}
+      />
+
       <VanillaStack.Screen
         name="ProfileScreen"
         options={{
