@@ -4,14 +4,22 @@ import {View, ScrollView} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import ProjectsList from '../features/projects/ProjectList';
 import {getMyCoachesProjects} from '../features/projects/projectsSlice';
 import InformationText from '../flat/Illustrations/InformationText';
+import ActionButton from '../flat/SubmitButton/SubmitButton';
+import EmptyTumbleWeedScreen from '../flat/EmptyTumbleWeedScreen/EmptyTumbleWeedScreen';
 
 function MyCoachesProjectsScreen() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const {myCoachesProjects} = useSelector((state) => state.projects);
   const {myCoaches} = useSelector((state) => state.myCoaches);
+
+  function handleExplorePress() {
+    navigation.navigate('Search');
+  }
 
   return (
     <ScrollView
@@ -33,15 +41,14 @@ function MyCoachesProjectsScreen() {
         </View>
       )}
       {myCoachesProjects.length == 0 && myCoaches.length == 0 && (
-        <View style={{flex: 1, alignItems: 'center'}}>
-          <LottieView
-            source={require('../common/lottie/sad.json')}
-            autoPlay
-            loop
-            style={{width: '60%'}}
-          />
+        <EmptyTumbleWeedScreen>
           <InformationText text="Subscribe mentors to find and join projects" />
-        </View>
+          <View>
+            <ActionButton onPress={handleExplorePress}>
+              Explore coaches
+            </ActionButton>
+          </View>
+        </EmptyTumbleWeedScreen>
       )}
     </ScrollView>
   );

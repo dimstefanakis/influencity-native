@@ -296,6 +296,7 @@ function ViewPostsRow() {
 
 function FirstColumn() {
   const theme = useTheme();
+  const {user} = useSelector((state) => state.authentication);
 
   return (
     <View>
@@ -321,7 +322,7 @@ function FirstColumn() {
                 fontSize: 20,
                 ...theme.fonts.medium,
               }}>
-              Level 1
+              Level {user.subscriber.level}
             </Text>
             <Text
               style={{
@@ -330,7 +331,7 @@ function FirstColumn() {
                 fontSize: 12,
                 ...theme.fonts.medium,
               }}>
-              0/100 XP
+              {user.subscriber.level_progression}/100 XP
             </Text>
           </View>
         </Pressable>
@@ -976,12 +977,13 @@ function Awards() {
                   return (
                     <View
                       style={{
-                        marginRight: 20,
+                        marginRight: 5,
+                        marginTop: 5,
                         borderRadius: 100,
                       }}>
                       <Image
                         source={{uri: award.award.icon}}
-                        style={{height: 20, width: 20}}
+                        style={{height: 30, width: 30}}
                       />
                       {/* <Icon name="award" size={20} color="white" /> */}
                     </View>

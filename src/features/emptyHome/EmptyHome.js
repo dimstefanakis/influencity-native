@@ -13,6 +13,7 @@ function EmptyHome() {
   function handleExplorePress() {
     navigation.navigate('Search');
   }
+
   return (
     <View
       style={{
