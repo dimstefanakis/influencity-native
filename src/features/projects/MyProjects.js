@@ -118,11 +118,11 @@ function MyProjects({viewAs = 'sub'}) {
   );
 }
 
-function ProjectListWrapper({viewAs, children}){
-  if(viewAs=='sub'){
-    return <ScrollView style={{flex: 1}}>{children}</ScrollView>
-  }else{
-    return <View style={{flex: 1}}>{children}</View>
+function ProjectListWrapper({viewAs, children}) {
+  if (viewAs == 'sub') {
+    return <ScrollView style={{flex: 1}}>{children}</ScrollView>;
+  } else {
+    return <View style={{flex: 1}}>{children}</View>;
   }
 }
 

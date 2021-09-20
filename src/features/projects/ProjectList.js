@@ -11,7 +11,14 @@ function ProjectsList({route, projectList = []}) {
   const viewAs = route ? route.params.viewAs : 'sub';
 
   return (
-    <View style={{padding: 10}}>
+    <View
+      style={{
+        padding: 10,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        width: '100%',
+      }}>
       {projects.map((project) => {
         return <Project project={project} viewAs={viewAs} />;
       })}

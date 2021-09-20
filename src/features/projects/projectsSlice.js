@@ -21,7 +21,6 @@ export const getMyProjects = createAsyncThunk(
     const url = Config.API_URL + '/v1/my_projects/';
     try {
       let response = await axios.get(url);
-      console.log(response);
       return response.data;
     } catch (e) {
       console.error(e);
@@ -42,12 +41,26 @@ export const getMyCreatedProjects = createAsyncThunk(
   },
 );
 
+export const getMyCoachesProjects = createAsyncThunk(
+  'projects/getMyCoachesProjects',
+  async () => {
+    const url = Config.API_URL + '/v1/my_coaches_projects/';
+    try {
+      let response = await axios.get(url);
+      return response.data;
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
 export const projectsSlice = createSlice({
   name: 'projects',
   initialState: {
     projects: [],
     myProjects: [],
     createdProjects: [],
+    myCoachesProjects: [],
     selectedProjectTeams: [],
     loading: false,
   },
@@ -77,6 +90,11 @@ export const projectsSlice = createSlice({
     },
     [getMyCreatedProjects.pending]: (state, action) => {},
     [getMyCreatedProjects.rejected]: (state, action) => {},
+    [getMyCoachesProjects.fulfilled]: (state, action) => {
+      state.myCoachesProjects = action.payload;
+    },
+    [getMyCoachesProjects.pending]: (state, action) => {},
+    [getMyCoachesProjects.rejected]: (state, action) => {},
   },
 });
 
