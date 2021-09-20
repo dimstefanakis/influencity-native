@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
@@ -8,19 +8,25 @@ import PostList from '../features/posts/PostList';
 import EmptyTumbleWeedScreen from '../flat/EmptyTumbleWeedScreen/EmptyTumbleWeedScreen';
 import InformationText from '../flat/Illustrations/InformationText';
 import ActionButton from '../flat/SubmitButton/SubmitButton';
+import {markLastSeenPost} from '../features/posts/postsSlice';
 
 function ViewAllPostsScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const {myCoaches} = useSelector((state) => state.myCoaches);
+  const {posts, loading, hasLoadedInitial} = useSelector(
+    (state) => state.posts,
+  );
 
+  console.log('posts2', posts, loading);
   function handleExplorePress() {
     navigation.navigate('Search');
   }
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
-      {myCoaches.length == 0 ? (
+      {posts.length == 0 && hasLoadedInitial ? (
         <EmptyTumbleWeedScreen>
           <InformationText text="You haven't subscribed to any mentors yet" />
           <View>

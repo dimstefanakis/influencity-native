@@ -59,6 +59,21 @@ export const getUnseenPostCount = createAsyncThunk(
   },
 );
 
+export const markLastSeenPost = createAsyncThunk(
+  'posts/markLastSeenPost',
+  async (config, thunkApi) => {
+    const url = Config.API_URL + '/v1/mark_last_seen_post/';
+    try {
+      const {id} = config;
+      const formData = new FormData();
+      formData.append('id', id);
+      let response = await axios.post(url, formData);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
 export const postsSlice = createSlice({
   name: 'posts',
   initialState: {
@@ -136,6 +151,11 @@ export const postsSlice = createSlice({
     },
     [getUnseenPostCount.pending]: (state, action) => {},
     [getUnseenPostCount.rejected]: (state, action) => {},
+    [markLastSeenPost.fulfilled]: (state, action) => {
+      //state.unseenPostCount = action.payload;
+    },
+    [markLastSeenPost.pending]: (state, action) => {},
+    [markLastSeenPost.rejected]: (state, action) => {},
   },
 });
 

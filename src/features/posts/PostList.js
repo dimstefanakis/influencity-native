@@ -7,6 +7,7 @@ import Config from 'react-native-config';
 import {getPosts} from '../posts/postsSlice';
 import PostItem from './PostItem';
 import useGetPosts from './hooks/useGetPosts';
+import {markLastSeenPost} from '../posts/postsSlice';
 import axios from 'axios';
 
 function PostList({ListHeaderComponent = null, showProfile = true, coach}) {
@@ -36,6 +37,13 @@ function HomePostList({ListHeaderComponent}) {
   useEffect(() => {
     loadMore('initial');
   }, []);
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      dispatch(markLastSeenPost({id: posts[0].id}));
+    }
+  }, [posts]);
+
   const renderItem = ({item}) => <PostItem post={item} />;
 
   return (
