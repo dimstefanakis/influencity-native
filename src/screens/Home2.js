@@ -38,6 +38,7 @@ import axios from 'axios';
 
 function Home() {
   const theme = useTheme();
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const {user} = useSelector((state) => state.authentication);
   const {myCoaches, loading} = useSelector((state) => state.myCoaches);
@@ -53,11 +54,17 @@ function Home() {
     dispatch(getMyChatRooms());
   }, []);
 
+  function onNamePress() {
+    if (user.is_coach) {
+      navigation.navigate('CoachMainScreen', {coach: user.coach});
+    }
+  }
+
   return (
     <SafeAreaView style={{flex: 1}} forceInset={{bottom: 'never'}}>
       <ScrollView contentContainerStyle={{paddingBottom: 30}}>
         <Header />
-        <View>
+        <Pressable onPress={onNamePress}>
           <Subheading style={{marginTop: 30, ...styles.spacing}}>
             Welcome back!
           </Subheading>
@@ -65,7 +72,7 @@ function Home() {
             style={{fontSize: 34, ...theme.fonts.medium, ...styles.spacing}}>
             {user.subscriber.name}
           </Text>
-        </View>
+        </Pressable>
         {user.is_coach && <MentorButtons />}
         {type == 'mentee' && <ViewPostsRow />}
         {type == 'mentee' && (
