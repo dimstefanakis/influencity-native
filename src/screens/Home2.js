@@ -251,11 +251,17 @@ function Header() {
 
 function ViewPostsRow() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const {token} = useSelector((state) => state.authentication);
   const {unseenPostCount} = useSelector((state) => state.posts);
 
   function handlePress() {
     navigation.navigate('ViewAllPosts');
   }
+
+  useEffect(() => {
+    dispatch(getUnseenPostCount());
+  }, [dispatch, token]);
 
   return (
     <Pressable
@@ -654,13 +660,12 @@ function SecondColumn() {
     //setNavigationBarColor();
     dispatch(getMyTiers());
     dispatch(getMyTeams());
-    dispatch(getPaymentMethod());
-    dispatch(getMyAwards());
-    dispatch(getMyCreatedProjects());
+    //dispatch(getPaymentMethod());
+    //dispatch(getMyAwards());
+    //dispatch(getMyCreatedProjects());
     dispatch(getMyCoachesProjects());
     dispatch(getMyProjects());
-    dispatch(getMyCoaches());
-    dispatch(getUnseenPostCount());
+    //dispatch(getMyCoaches());
   }, [dispatch, token]);
 
   return (
@@ -740,12 +745,17 @@ function MentorCreatedProjects() {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {token} = useSelector((state) => state.authentication);
   const {createdProjects} = useSelector((state) => state.projects);
 
   function onProjectsPress() {
     navigation.navigate('MyCreatedProjectsScreen');
   }
+
+  useEffect(() => {
+    //setNavigationBarColor();
+    dispatch(getMyCreatedProjects());
+  }, [dispatch, token]);
 
   return (
     <Pressable onPress={onProjectsPress}>
@@ -821,12 +831,16 @@ function MyCoaches() {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const {user, loading, token} = useSelector((state) => state.authentication);
+  const {token} = useSelector((state) => state.authentication);
   const {myCoaches} = useSelector((state) => state.myCoaches);
 
   function onProjectsPress() {
     navigation.navigate('MyCoachesScreen');
   }
+
+  useEffect(() => {
+    dispatch(getMyCoaches());
+  }, [dispatch, token]);
 
   return (
     <Pressable onPress={onProjectsPress}>
@@ -920,7 +934,13 @@ function SmallCoach({coach}) {
 
 function Awards() {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const {token} = useSelector((state) => state.authentication);
   const {myAwards} = useSelector((state) => state.awards);
+
+  useEffect(() => {
+    dispatch(getMyAwards());
+  }, [dispatch, token]);
 
   return (
     <View>

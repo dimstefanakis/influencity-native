@@ -18,7 +18,7 @@ function StripeConnectOnboardCallback() {
   const dispatch = useDispatch();
 
   function handleGotItClick() {
-    navigation.navigate('ProfileScreen');
+    navigation.navigate('BottomStackNavigation');
   }
 
   useEffect(() => {

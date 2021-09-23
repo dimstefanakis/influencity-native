@@ -19,7 +19,6 @@ function ViewAllPostsScreen() {
     (state) => state.posts,
   );
 
-  console.log('posts2', posts, loading);
   function handleExplorePress() {
     navigation.navigate('Search');
   }
