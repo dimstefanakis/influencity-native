@@ -115,7 +115,10 @@ function EditProfile() {
             }}>
             <TouchableOpacity onPress={handleChangeAvatar}>
               <Avatar.Image
-                style={{borderColor: 'black', borderWidth: 2}}
+                style={{
+                  borderColor: 'black',
+                  borderWidth: avatar || user.subscriber.avatar ? 0 : 2,
+                }}
                 source={{
                   uri: avatar ? avatar.path : user.subscriber.avatar,
                 }}

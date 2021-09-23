@@ -650,7 +650,17 @@ function BottomStackNavigation() {
           return {title: '', ...preset};
         }}
       />
-
+      <VanillaStack.Screen
+        name="PostScreen"
+        component={PostScreen}
+        options={({route}) => {
+          return {title: '', ...preset};
+        }}
+        // sharedElements={(route, otherRoute, showing) => {
+        //   const post = route.params.post;
+        //   return [`post.${post.id}.text`];
+        // }}
+      />
       <VanillaStack.Screen
         name="Home"
         options={{
@@ -747,19 +757,17 @@ function HomeStack() {
             return {title: '', ...preset};
           }}
         /> */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="PostScreen"
           component={PostScreen}
           options={({route}) => {
-            //return {title: route.params.coach.name};
             return {title: '', ...preset};
           }}
-          //options={({route}) => ({title: route.params.coach.name})}
           sharedElements={(route, otherRoute, showing) => {
             const post = route.params.post;
             return [`post.${post.id}.text`];
           }}
-        />
+        /> */}
         <Stack.Screen
           name="NewPostsScreen"
           component={NewPostsScreen}

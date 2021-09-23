@@ -18,7 +18,7 @@ function PostScreen({route}) {
     // index 0 corresponds to part 1
     const part = index + 1;
     return (
-      <View>
+      <View style={{backgroundColor: theme.colors.background}}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           {index != 0 ? <VerticalLine /> : null}
           <View
