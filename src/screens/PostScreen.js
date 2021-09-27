@@ -41,8 +41,8 @@ function PostScreen({route}) {
   };
 
   return (
-    <View style={{flexGrow: 1}}>
-      {isProcessing ? (
+    <ScrollView style={{flexGrow: 1, backgroundColor: theme.colors.background}}>
+      {!isProcessing ? (
         <View
           style={{
             width: '100%',
@@ -66,13 +66,17 @@ function PostScreen({route}) {
       ) : null}
 
       <View>
+        {/* TODO
+          FlatList does not work because of the ScrollView above. If isProcessing
+          is true then the ScrollView is needed because it would hide the bottom of the post
+        */}
         <FlatList
           data={chainedPosts}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

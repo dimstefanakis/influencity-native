@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Dimensions, FlatList, View, StyleSheet} from 'react-native';
+import {Dimensions, FlatList, View, StyleSheet, ScrollView} from 'react-native';
 import {IconButton, Colors} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Image from 'react-native-fast-image';
@@ -45,10 +45,25 @@ function Gallery({images, videos}) {
           height: height,
           justifyContent: 'center',
         }}>
-        <Image
-          source={{uri: item.image}}
-          style={{height: ratio * width, width: width}}
-        />
+        {/* Hack for zooming images
+          OK BABY
+        */}
+        <ScrollView
+          contentContainerStyle={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+          maximumZoomScale={5}
+          scrollEnabled={true}
+          minimumZoomScale={1}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          <Image
+            source={{uri: item.image}}
+            style={{height: ratio * width, width: width}}
+          />
+        </ScrollView>
       </View>
     );
   }

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useRef} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {View, Image, Dimensions, Animated, PanResponder} from 'react-native';
 import {IconButton, Colors} from 'react-native-paper';
 import Modal from 'react-native-modal';
@@ -11,6 +11,30 @@ import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import axios from 'axios';
 
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
+
+/**
+ * A React Hook which updates when the orientation changes
+ * @returns whether the user is in 'PORTRAIT' or 'LANDSCAPE'
+ */
+export function useDimensions() {
+  // State to hold the connection status
+  const [dimensions, setDimensions] = useState({window, screen});
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({window, screen}) => {
+        setDimensions({window, screen});
+      },
+    );
+    return () => subscription?.remove();
+  });
+
+  return dimensions;
+}
+
 function MediaGalleryFullScreen({
   images,
   videos,
@@ -19,6 +43,7 @@ function MediaGalleryFullScreen({
   firstItem = 0,
 }) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const dimensions = useDimensions();
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
   const pan = useRef(new Animated.ValueXY()).current;
@@ -82,7 +107,7 @@ function MediaGalleryFullScreen({
             type: 'm3u8',
           }}
           style={{
-            width: screenWidth,
+            width: dimensions.window.width,
             minHeight: 200,
           }}
         />
@@ -135,8 +160,8 @@ function MediaGalleryFullScreen({
             layout="stack"
             firstItem={firstItem}
             onSnapToItem={handleSnapToItem}
-            sliderWidth={screenWidth}
-            itemWidth={screenWidth}
+            sliderWidth={dimensions.window.width}
+            itemWidth={dimensions.window.width}
             slideStyle={{justifyContent: 'center', alignItems: 'center'}}
             data={[...images, ...videos]}
             renderItem={handleMultiTypeRender}
@@ -149,8 +174,9 @@ function MediaGalleryFullScreen({
 
 function ImageItem({item, index}) {
   console.log('imageItem');
+  const dimensions = useDimensions();
 
-  let ratio = Dimensions.get('window').width / item.width;
+  let ratio = dimensions.window.width / item.width;
 
   return (
     <Animated.View
