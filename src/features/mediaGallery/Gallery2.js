@@ -1,11 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Dimensions, FlatList, View, StyleSheet, ScrollView} from 'react-native';
-import {IconButton, Colors} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import {Dimensions, FlatList, View, ScrollView, Platform} from 'react-native';
+import {IconButton, Colors, useTheme} from 'react-native-paper';
+import {ThemeProvider, useNavigation} from '@react-navigation/native';
 import Image from 'react-native-fast-image';
 import Video from 'react-native-video';
 import Config from 'react-native-config';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 const dimensions = Dimensions.get('window');
 
@@ -13,6 +14,7 @@ const {width, height} = Dimensions.get('window');
 
 function Gallery({images, videos}) {
   const navigation = useNavigation();
+  const theme = useTheme();
 
   function renderVideos({item, index}) {
     console.log(`${Config.MUX_API_URL}/video/v1/assets/${item.asset_id}`);
@@ -45,25 +47,50 @@ function Gallery({images, videos}) {
           height: height,
           justifyContent: 'center',
         }}>
-        {/* Hack for zooming images
+        {/* Hack for zooming images (only works for IOS)
           OK BABY
         */}
-        <ScrollView
-          contentContainerStyle={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-          maximumZoomScale={5}
-          scrollEnabled={true}
-          minimumZoomScale={1}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}>
-          <Image
-            source={{uri: item.image}}
-            style={{height: ratio * width, width: width}}
-          />
-        </ScrollView>
+        {Platform.OS == 'ios' ? (
+          <ScrollView
+            contentContainerStyle={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}
+            maximumZoomScale={5}
+            scrollEnabled={true}
+            minimumZoomScale={1}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}>
+            <Image
+              source={{uri: item.image}}
+              style={{height: ratio * width, width: width}}
+            />
+          </ScrollView>
+        ) : (
+          <View
+            collapsable={false}
+            style={{
+              backgroundColor: theme.colors.background,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+            }}>
+            <ImageZoom
+              cropWidth={width}
+              cropHeight={height}
+              imageWidth={width}
+              imageHeight={ratio * width}>
+              <Image
+                source={{uri: item.image}}
+                style={{
+                  height: ratio * width,
+                  width: width,
+                }}
+              />
+            </ImageZoom>
+          </View>
+        )}
       </View>
     );
   }
