@@ -42,7 +42,7 @@ function PostScreen({route}) {
 
   return (
     <ScrollView style={{flexGrow: 1, backgroundColor: theme.colors.background}}>
-      {!isProcessing ? (
+      {isProcessing ? (
         <View
           style={{
             width: '100%',

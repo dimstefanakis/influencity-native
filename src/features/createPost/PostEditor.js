@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   Keyboard,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {
@@ -243,6 +244,8 @@ function PostEditor({
   const [images, setImages] = useState([]);
   const [fileData, setData] = useState('');
   const [attachedProject, setAttachedProject] = useState(null);
+  // used for dynamically allocating height to the text input component
+  const [textInputMarginBottom, setTextInputMarginBottom] = useState(80);
 
   function buttonActive(_posts) {
     return _posts.some((_post) => {
@@ -346,6 +349,11 @@ function PostEditor({
     });
   }
 
+  function handleOnLayout(event) {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    setTextInputMarginBottom(height);
+  }
+
   useEffect(() => {
     // update post with the corresponding attached project
     if (attachedProject) {
@@ -365,24 +373,33 @@ function PostEditor({
   console.log(post);
   return (
     <View
+      contentContainerStyle={{
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        minHeight: '100%',
+        height: '100%',
+      }}
       style={{
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '100%',
         minHeight: '100%',
         height: '100%',
+
+        width: '100%',
         backgroundColor: theme.colors.background,
       }}>
       <View
         style={{
           backgroundColor: theme.colors.background,
           width: '100%',
-          zIndex: 100000,
           // this fixes a bug where text input would lose focus when keyboard was open
           marginTop: 40,
         }}>
         <TextInput
-          style={{backgroundColor: theme.colors.background}}
+          style={{
+            backgroundColor: theme.colors.background,
+            marginBottom: textInputMarginBottom,
+          }}
           multiline
           mode="flat"
           label="Post your knowledge"
@@ -390,7 +407,14 @@ function PostEditor({
           onChangeText={handleChangeText}
         />
       </View>
-      <View style={{width: '100%'}}>
+      <View
+        onLayout={handleOnLayout}
+        style={{
+          width: '100%',
+          position: 'absolute',
+          bottom: 0,
+          zIndex: 200000,
+        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -432,76 +456,51 @@ function PostEditor({
             );
           })}
         </View>
-        {attachedProject ? (
+        <View>
+          {attachedProject ? (
+            <View
+              style={{
+                width: '100%',
+                padding: 10,
+                backgroundColor: theme.colors.background,
+              }}>
+              <Text style={{fontSize: 20, ...theme.fonts.medium}}>
+                Attached project
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 10,
+                  marginBottom: 10,
+                }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 5,
+                    backgroundColor: '#f7f7f9',
+                    borderRadius: 100,
+                  }}
+                  onPress={() => setAttachedProject(null)}>
+                  <Icon size={14} name="close" color="gray" />
+                </TouchableOpacity>
+                <Avatar.Icon
+                  size={30}
+                  icon="code-tags"
+                  color="white"
+                  style={{marginLeft: 5}}
+                />
+                <Text style={{marginLeft: 5, ...theme.fonts.medium}}>
+                  {attachedProject.name}
+                </Text>
+              </View>
+            </View>
+          ) : null}
           <View
             style={{
-              width: '100%',
-              padding: 10,
-              backgroundColor: theme.colors.background,
+              flexDirection: 'row',
+              height: 80,
             }}>
-            <Text style={{fontSize: 20, ...theme.fonts.medium}}>
-              Attached project
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 10,
-                marginBottom: 10,
-              }}>
-              <TouchableOpacity
-                style={{
-                  padding: 5,
-                  backgroundColor: '#f7f7f9',
-                  borderRadius: 100,
-                }}
-                onPress={() => setAttachedProject(null)}>
-                <Icon size={14} name="close" color="gray" />
-              </TouchableOpacity>
-              <Avatar.Icon
-                size={30}
-                icon="code-tags"
-                color="white"
-                style={{marginLeft: 5}}
-              />
-              <Text style={{marginLeft: 5, ...theme.fonts.medium}}>
-                {attachedProject.name}
-              </Text>
-            </View>
-          </View>
-        ) : null}
-        <View
-          style={{
-            flexDirection: 'row',
-            height: 80,
-            backgroundColor: theme.colors.background,
-          }}>
-          <TouchableNativeFeedback onPress={handleSelectImages}>
-            <View
-              style={{
-                width: '33%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon size={24} name="camera-outline" />
-              <Subheading style={{fontSize: 12}}>Add media</Subheading>
-            </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback onPress={chainNewPost}>
-            <View
-              style={{
-                width: '33%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon size={24} name="link-variant" />
-              <Subheading style={{fontSize: 12}}>Chain posts</Subheading>
-            </View>
-          </TouchableNativeFeedback>
-          {isComment ? null : (
-            <TouchableNativeFeedback onPress={handleAttachProjectPress}>
+            <TouchableNativeFeedback onPress={handleSelectImages}>
               <View
                 style={{
                   width: '33%',
@@ -509,11 +508,37 @@ function PostEditor({
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}>
-                <AntDesign size={24} name="rocket1" />
-                <Subheading style={{fontSize: 12}}>Attach project</Subheading>
+                <Icon size={24} name="camera-outline" />
+                <Subheading style={{fontSize: 12}}>Add media</Subheading>
               </View>
             </TouchableNativeFeedback>
-          )}
+            <TouchableNativeFeedback onPress={chainNewPost}>
+              <View
+                style={{
+                  width: '33%',
+                  height: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon size={24} name="link-variant" />
+                <Subheading style={{fontSize: 12}}>Chain posts</Subheading>
+              </View>
+            </TouchableNativeFeedback>
+            {isComment ? null : (
+              <TouchableNativeFeedback onPress={handleAttachProjectPress}>
+                <View
+                  style={{
+                    width: '33%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <AntDesign size={24} name="rocket1" />
+                  <Subheading style={{fontSize: 12}}>Attach project</Subheading>
+                </View>
+              </TouchableNativeFeedback>
+            )}
+          </View>
         </View>
       </View>
     </View>

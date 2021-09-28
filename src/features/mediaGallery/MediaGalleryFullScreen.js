@@ -11,8 +11,8 @@ import Video from 'react-native-video';
 import VideoPlayer from 'react-native-video-controls';
 import axios from 'axios';
 
-const window = Dimensions.get("window");
-const screen = Dimensions.get("screen");
+const window = Dimensions.get('window');
+const screen = Dimensions.get('screen');
 
 /**
  * A React Hook which updates when the orientation changes
@@ -130,7 +130,8 @@ function MediaGalleryFullScreen({
       onBackButtonPress={() => setModalVisible(false)}
       backdropOpacity={1}
       onSwipeComplete={() => setModalVisible(false)}>
-      <GestureHandlerRootView style={{flex: 1, width: '100%'}}>
+      <GestureHandlerRootView
+        style={{height: dimensions.screen.height, width: '100%'}}>
         <Animated.View
           style={{
             // transform: [{translateX: pan.x}, {translateY: pan.y}],
@@ -141,8 +142,8 @@ function MediaGalleryFullScreen({
           <View
             style={{
               position: 'absolute',
-              top: 0,
-              left: 0,
+              top: 30,
+              left: -10,
               height: 80,
               width: 80,
               justifyContent: 'center',
