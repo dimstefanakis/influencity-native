@@ -19,17 +19,17 @@ import axios from 'axios';
 
 function ProjectCoachScreenDashboard({route}) {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   const {createdProjects} = useSelector((state) => state.projects);
   let {project} = route.params;
 
   // get project from redux to not have stale data
   project = createdProjects.find((p) => p.id == project.id);
-  if (!project) {
-    navigation.goBack();
-  }
+  console.log("createdProjects", createdProjects)
+
   const {overlapContainer, avatarContainer, avatar} = styles;
   const theme = useTheme();
-  const navigation = useNavigation();
   const [teams, setTeams] = useState([]);
   const [tierOneTeams, setTierOneTeams] = useState([]);
   const [tierTwoTeams, setTierTwoTeams] = useState([]);
@@ -74,6 +74,12 @@ function ProjectCoachScreenDashboard({route}) {
       ),
     });
   }, []);
+
+  if (!project) {
+    navigation.goBack();
+    return null;
+  }
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.spacing}>

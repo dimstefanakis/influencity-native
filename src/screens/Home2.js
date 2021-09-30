@@ -669,7 +669,7 @@ function SecondColumn() {
     dispatch(getMyTeams());
     //dispatch(getPaymentMethod());
     //dispatch(getMyAwards());
-    //dispatch(getMyCreatedProjects());
+    dispatch(getMyCreatedProjects());
     dispatch(getMyCoachesProjects());
     dispatch(getMyProjects());
     //dispatch(getMyCoaches());
@@ -761,7 +761,7 @@ function MentorCreatedProjects() {
 
   useEffect(() => {
     //setNavigationBarColor();
-    dispatch(getMyCreatedProjects());
+    // dispatch(getMyCreatedProjects());
   }, [dispatch, token]);
 
   return (
