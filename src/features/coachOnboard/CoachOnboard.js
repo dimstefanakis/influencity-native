@@ -83,10 +83,9 @@ function PayNextStep({text}) {
   return (
     <StepWrapper>
       <Text>
-        <Text>Setup your payout method to accept payments. Tap on your </Text>
-        <Text style={{...theme.fonts.medium}}>
-          Profile > Dashboard > Payout method
-        </Text>
+        <Text>Setup your payout method to accept payments. Tap on the </Text>
+        <Text style={{...theme.fonts.medium}}>Payout method </Text>
+        <Text>box on your mentor dashboard</Text>
       </Text>
     </StepWrapper>
   );

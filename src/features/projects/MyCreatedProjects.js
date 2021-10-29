@@ -103,8 +103,15 @@ function MyCreatedProjects({route, viewAs = 'coach'}) {
               }}>
               In order to be able to create projects you need to setup your
               payout method in your{' '}
-              <Text style={{...theme.fonts.medium}}>
-                Profile > Dashboard > Setup account
+              <Text style={{...theme.fonts.medium}}>Payout method </Text>
+              <Text
+                style={{
+                  fontSize: 16,
+                  margin: 20,
+                  maxWidth: 300,
+                  color: '#6f6f6f',
+                }}>
+                box on your mentor dashboard
               </Text>
             </Text>
           </View>
