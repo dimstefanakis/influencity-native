@@ -68,7 +68,11 @@ export const forgotPassword = createAsyncThunk(
     try {
       let formData = new FormData();
       formData.append('email', email);
-      let response = await axios.post(url, formData);
+      let response = await fetch(url, {
+        method: 'post',
+        body: formData,
+      });
+      let data = await response.json();
     } catch (e) {}
   },
 );
