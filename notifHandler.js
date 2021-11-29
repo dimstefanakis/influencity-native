@@ -13,14 +13,14 @@ export const notifHandler = () => {
       const formData = new FormData();
       let uri = '';
       if (Platform.OS == 'ios') {
-        formData.append('registration_id', token);
+        formData.append('registration_id', token.token);
         formData.append('active', true);
         uri = `${Config.API_URL}/v1/device/apns/`;
       } else {
-        formData.append('registration_id', token);
+        formData.append('registration_id', token.token);
         formData.append('cloud_message_type', 'FCM');
         formData.append('active', true);
-        uri = `${Config.API_URL}/v1/device/apns/`;
+        uri = `${Config.API_URL}/v1/device/gcm/`;
       }
 
       try {
