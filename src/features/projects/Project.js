@@ -86,7 +86,7 @@ function Project({
           </Title>
         </View>
         <Paragraph style={{marginTop: 5}}>{project.description}</Paragraph>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'column'}}>
           <Subheading style={{...theme.fonts.medium}}>
             Difficulty: {project.difficulty}
           </Subheading>
