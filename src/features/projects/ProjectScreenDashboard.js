@@ -66,7 +66,6 @@ function ProjectScreenDashboard({route}) {
   const {myChatRooms} = useSelector((state) => state.chat);
   // do this so state gets updated each time the redux tree is updated
   let project = myProjects.find((p) => p.id == route.params.project.id); //|| myProjects[0];
-  console.log('team', project);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -129,8 +128,6 @@ function ProjectAsNonMember({project}) {
   const {myCoaches} = useSelector((state) => state.myCoaches);
   let foundCoach = myCoaches.find((c) => c.surrogate == project.coach_data.id);
 
-  console.log('coach', JSON.stringify(foundCoach, null, 2));
-  console.log('coach', myCoaches, project.coach_data.id);
   async function joinProject() {
     navigation.navigate('ProjectPaymentScreen', {
       coach: foundCoach,
@@ -195,6 +192,10 @@ function ProjectAsNonMember({project}) {
       <Subheading
         style={{...theme.fonts.medium, marginLeft: 20, marginRight: 20}}>
         Difficulty: {project.difficulty}
+      </Subheading>
+      <Subheading
+        style={{...theme.fonts.medium, marginLeft: 20, marginRight: 20}}>
+        Team size: {project.team_size == 1 ? 'Solo' : project.team_size}
       </Subheading>
       {project.prerequisites.length > 0 ? (
         <PreviewPrerequisites project={project} />

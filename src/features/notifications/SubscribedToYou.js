@@ -10,6 +10,9 @@ function SubscribedToYou({notification}) {
   const navigation = useNavigation();
 
   let timeSinceText = timeSince(new Date(notification.timestamp));
+  if (!notification.actor) {
+    return null;
+  }
 
   return (
     <TouchableNativeFeedback>

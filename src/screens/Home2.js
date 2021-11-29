@@ -217,7 +217,9 @@ function SwapProfileButton() {
 }
 
 function Header() {
+  const theme = useTheme();
   const navigation = useNavigation();
+  const {unreadCount} = useSelector((state) => state.notifications);
 
   // function onProfilePress() {
   //   navigation.navigate('ProfileScreen');
@@ -243,8 +245,26 @@ function Header() {
         </Pressable>
       </View>
       <View style={{flexDirection: 'row'}}>
-        <Pressable onPress={onNotificationsPress}>
+        <Pressable
+          onPress={onNotificationsPress}
+          style={{position: 'relative'}}>
           <AntIcon name="bells" size={25} color="#323232" />
+          {unreadCount > 0 && (
+            <View
+              style={{
+                backgroundColor: theme.colors.primary,
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'absolute',
+                top: -10,
+                right: -10,
+                width: 25,
+                height: 25,
+                borderRadius: 100,
+              }}>
+              <Text>{unreadCount}</Text>
+            </View>
+          )}
         </Pressable>
         <Pressable
           onPress={onSearchPress}
@@ -905,6 +925,7 @@ function MyCoaches() {
                   marginBottom: 30,
                   width: '100%',
                   justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
                 }}>
                 {myCoaches.map((coach) => {
                   return <SmallCoach coach={coach} key={coach.name} />;
@@ -923,6 +944,7 @@ function SmallCoach({coach}) {
     <View
       style={{
         flex: 1,
+        marginTop: 20,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1005,7 +1027,7 @@ function Awards() {
                     <View
                       style={{
                         marginRight: 5,
-                        marginTop: 5,
+                        marginTop: 20,
                         borderRadius: 100,
                       }}>
                       <Image

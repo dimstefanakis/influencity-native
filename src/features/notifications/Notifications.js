@@ -51,9 +51,13 @@ function Notifications() {
           <EmptyNotifications />
         ) : (
           <ScrollView>
-            {notifications.map((notification) => {
-              return <NotificationRender notification={notification} />;
-            })}
+            {notifications
+              // actor may be null in case the user has deleted his account
+              // better to handle this on the backend
+              .filter((notification) => notification.actor)
+              .map((notification) => {
+                return <NotificationRender notification={notification} />;
+              })}
           </ScrollView>
         )
       ) : (
@@ -64,7 +68,6 @@ function Notifications() {
 }
 
 function NotificationRender({notification}) {
-  console.log('notification', notification.verb);
   if (notification.verb == 'just posted') {
     return <JustPosted notification={notification} />;
   } else if (notification.verb == 'mentioned you') {

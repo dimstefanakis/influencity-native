@@ -14,6 +14,7 @@ import {
 } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 function Project({
   project,
@@ -89,6 +90,9 @@ function Project({
           <Subheading style={{...theme.fonts.medium}}>
             Difficulty: {project.difficulty}
           </Subheading>
+          <Subheading style={{...theme.fonts.medium}}>
+            Team size: {project.team_size == 1 ? 'Solo' : project.team_size}
+          </Subheading>
         </View>
         {viewAs == 'coach' ? (
           <>
@@ -110,6 +114,9 @@ function Project({
 function ProjectAsSub({project}) {
   const theme = useTheme();
   const navigation = useNavigation();
+  const {myProjects} = useSelector((state) => state.projects);
+  // do this so state gets updated each time the redux tree is updated
+  let foundProject = myProjects.find((p) => p.id == project.id); //|| myProjects[0];
 
   function handleProjectClick() {
     navigation.navigate('ProjectDashboardScreen', {project: project});
@@ -136,7 +143,8 @@ function ProjectAsSub({project}) {
             {project.name}
           </Text>
         </View>
-        <ProgressBar project={project} />
+        {/* HERE */}
+        {foundProject && <ProgressBar project={project} />}
       </Surface>
     </TouchableNativeFeedback>
   );

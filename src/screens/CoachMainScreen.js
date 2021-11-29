@@ -259,6 +259,10 @@ function CoachMainScreenWithPosts({route, coach}) {
     return user.coach?.surrogate == coach?.surrogate || foundCoach;
   }
 
+  function changeSubcriptionShown() {
+    return user.coach?.surrogate != coach?.surrogate && foundCoach;
+  }
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background}}>
       <PostList ListHeaderComponent={MainScreen} coach={coach} />
@@ -268,7 +272,7 @@ function CoachMainScreenWithPosts({route, coach}) {
           margin: 16,
           right: 0,
           left: 0,
-          bottom: 0,
+          bottom: 30,
           justifyContent: 'center',
           alignItems: 'center',
         }}>
@@ -280,6 +284,14 @@ function CoachMainScreenWithPosts({route, coach}) {
             onPress={handleBecomeMemberPress}
           />
         )}
+        {changeSubcriptionShown() ? (
+          <FAB
+            style={{backgroundColor: '#ffd29b'}}
+            label="Change subscription"
+            icon="plus-circle"
+            onPress={handleBecomeMemberPress}
+          />
+        ) : null}
       </View>
     </SafeAreaView>
   );
