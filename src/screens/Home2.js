@@ -31,7 +31,7 @@ import {getMyChatRooms} from '../features/chat/chatSlice';
 import {getMyCoaches} from '../features/myCoaches/myCoachesSlice';
 import {getUnseenPostCount} from '../features/posts/postsSlice';
 import LevelBackground from '../flat/Home/Illustrations/LevelBackground';
-import CoachResult from '../features/search/CoachResult';
+import CircularProgressBar from '../flat/CircularProgressBar/CircularProgressBar';
 import {toggleType} from '../features/dashboard/dashboardSlice';
 import handleChatEvents from '../features/chat/handleWsEvents';
 import axios from 'axios';
@@ -678,6 +678,27 @@ function SecondColumn() {
   const dispatch = useDispatch();
   const {user, loading, token} = useSelector((state) => state.authentication);
   const {myProjects} = useSelector((state) => state.projects);
+  let completedTasks = 0;
+  let allTasks = 0;
+
+  // get data for the circular progress bar
+  if (myProjects && myProjects.length > 0) {
+    // get completed tasks for each project
+    completedTasks = myProjects.map((project) => {
+      return project.milestones.reduce(
+        (total, x) => (x.status == 'accepted' ? total + 1 : total),
+        0,
+      );
+    });
+
+    completedTasks = completedTasks.reduce((acc, curr) => acc + curr, 0);
+
+    // get the count of all tasks
+    allTasks = myProjects.reduce(
+      (acc, curr) => acc + curr.milestones.length,
+      0,
+    );
+  }
 
   function onProjectsPress() {
     navigation.navigate('MyCoachesProjects');
@@ -706,7 +727,17 @@ function SecondColumn() {
               marginTop: 45,
               width: '100%',
             }}>
-            <AntIcon name="rocket1" size={30} color="#323232" />
+            {/* <AntIcon name="rocket1" size={30} color="#323232" /> */}
+            {myProjects && myProjects.length == 0 ? (
+              <AntIcon name="rocket1" size={30} color="#323232" />
+            ) : (
+              <CircularProgressBar
+                progress={(completedTasks / allTasks) * 100}
+                completedTasks={completedTasks}
+                allTasks={allTasks}
+              />
+            )}
+
             <Text
               style={{
                 color: '#5A5A5A',
@@ -717,7 +748,9 @@ function SecondColumn() {
                 fontSize: 20,
                 ...theme.fonts.medium,
               }}>
-              Enrolled projects
+              {myProjects && myProjects.length == 0
+                ? 'Enrolled projects'
+                : 'Completed tasks'}
             </Text>
             <View
               style={{
