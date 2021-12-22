@@ -33,6 +33,7 @@ import {getUnseenPostCount} from '../features/posts/postsSlice';
 import LevelBackground from '../flat/Home/Illustrations/LevelBackground';
 import CircularProgressBar from '../flat/CircularProgressBar/CircularProgressBar';
 import {toggleType} from '../features/dashboard/dashboardSlice';
+import { getUnreadCount } from '../features/notifications/notificationsSlice';
 import handleChatEvents from '../features/chat/handleWsEvents';
 import axios from 'axios';
 
@@ -218,8 +219,14 @@ function SwapProfileButton() {
 
 function Header() {
   const theme = useTheme();
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const {unreadCount} = useSelector((state) => state.notifications);
+
+  // get unread notification count but don't get the notifications yet
+  useEffect(() => {
+    dispatch(getUnreadCount());
+  }, []);
 
   // function onProfilePress() {
   //   navigation.navigate('ProfileScreen');

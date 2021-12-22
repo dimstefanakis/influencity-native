@@ -154,26 +154,18 @@ function ProjectAsNonMember({project}) {
     if (!foundCoach) {
       return true;
     }
-    // users are not able to join projects if they are not subscribed or
-    // they have already subscribed with the free subscription or
-    // they have already subscribed with the tier 1 subscription and have already joined 1 project
-
-    return (
-      foundCoach?.tier_full.tier == 'FR'
-      // || (foundCoach?.tier_full.tier == 'T1' &&
-      //   project.coach_data.number_of_projects_joined == 1)
-    );
   }
 
   function getDisabledText() {
-    if (foundCoach?.tier_full.tier == 'FR') {
-      return 'Upgrade to Basic Tier to join projects!';
-    } else if (
-      foundCoach?.tier_full.tier == 'T1' &&
-      project.coach_data.number_of_projects_joined == 1
-    ) {
-      return 'You can only join 1 project with Basic Tier subscription. Upgrade to Tier 2 to get access to all projects!';
-    }
+    // if (foundCoach?.tier_full.tier == 'FR') {
+    //   return 'Upgrade to Basic Tier to join projects!';
+    // } else if (
+    //   foundCoach?.tier_full.tier == 'T1' &&
+    //   project.coach_data.number_of_projects_joined == 1
+    // ) {
+    //   return 'You can only join 1 project with Basic Tier subscription. Upgrade to Tier 2 to get access to all projects!';
+    // }
+    return 'Subscribe to this mentor to join projects';
   }
 
   return (

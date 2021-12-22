@@ -28,10 +28,8 @@ function Notifications() {
     (state) => state.notifications,
   );
 
-  console.log('notifications', notifications);
   useEffect(() => {
     dispatch(getMyNotifications());
-    dispatch(getUnreadCount());
   }, []);
 
   useEffect(() => {

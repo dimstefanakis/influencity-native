@@ -69,10 +69,6 @@ function Benefits({tier}) {
   const theme = useTheme();
   const benefits = tier.benefits;
 
-  if (tier.tier == 'FR') {
-    return null;
-  }
-
   return (
     <View style={{width: '100%', alignItems: 'center'}}>
       <Text
@@ -88,34 +84,24 @@ function Benefits({tier}) {
         <>
           <View style={styles.benefit}>
             <Dot />
-            <Text>Wide variety of regular content</Text>
+            <Text>Direct chat with your mentor</Text>
           </View>
           <View style={styles.benefit}>
             <Dot />
-            <Text>Access to one group project</Text>
+            <Text>Get a free project monthly</Text>
           </View>
           <View style={styles.benefit}>
             <Dot />
-            <Text>Get awarded for your progress</Text>
+            <Text style={{lineHeight: 20}}>
+              Get continuously updated resources by your mentor
+            </Text>
           </View>
         </>
       ) : (
         <>
           <View style={styles.benefit}>
             <Dot />
-            <Text style={{...theme.fonts.medium}}>All the previous and...</Text>
-          </View>
-          <View style={styles.benefit}>
-            <Dot />
-            <Text>All the content your mentor has to offer</Text>
-          </View>
-          <View style={styles.benefit}>
-            <Dot />
-            <Text>Access to all group projects</Text>
-          </View>
-          <View style={styles.benefit}>
-            <Dot />
-            <Text>Direct feedback from your mentor</Text>
+            <Text>Wide variety of regular content</Text>
           </View>
         </>
       )}

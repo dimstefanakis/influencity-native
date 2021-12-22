@@ -246,7 +246,7 @@ function ProjectPayment({route}) {
           </Text>
           {foundCoach?.coupon?.valid ? (
             <Text style={{color: '#3e3e3e'}}>
-              Your first project on every coach is free!
+              Your first project on every mentor is free!
             </Text>
           ) : (
             <Text style={{color: '#3e3e3e'}}>paid once</Text>
