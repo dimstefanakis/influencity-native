@@ -250,7 +250,6 @@ export const authenticationSlice = createSlice({
       state.checkingForToken = false;
       state.token = action.payload.token;
       state.user = action.payload.user;
-      console.log('intttt', action.payload.interceptor)
       state.axiosInterceptor = action.payload.interceptor;
     },
     [getUserData.pending]: (state, action) => {

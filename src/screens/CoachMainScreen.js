@@ -36,7 +36,7 @@ function CoachMainScreen2({route, coach}) {
             fontSize: 16,
             marginLeft: 20,
           }}>
-          {coachPostCount} pieces of knowdlege
+          {coachPostCount} pieces of knowledge
         </Text>
         {hasLoadedInitialCoachPosts ? null : (
           <View
